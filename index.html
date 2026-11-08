@@ -236,22 +236,6 @@ a { color: inherit; }
   .nav[data-state="open"] .nav-links a { padding: 13px 16px; font-size: var(--fs-body); }
 }
 
-/* Vergleichs-Schalter (nur Entwurf) */
-.top-switch {
-  position: fixed; z-index: 29; top: calc(env(safe-area-inset-top, 0px) + 24px); right: max(16px, env(safe-area-inset-right, 0px));
-  display: flex; gap: 2px; padding: 3px; border-radius: var(--radius-pill); background: #FFFFFF;
-  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.06), 0 8px 24px rgb(0 0 0 / 0.16);
-}
-.top-switch button {
-  height: 30px; padding: 0 12px; border: 0; border-radius: var(--radius-pill); cursor: pointer; background: transparent;
-  color: var(--brand-ink); font: inherit; font-size: var(--fs-small); font-weight: 500; white-space: nowrap;
-  transition: background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out);
-}
-.top-switch button[aria-pressed="true"] { background: var(--brand-ink); color: #FFFFFF; }
-@media (max-width: 760px) {
-  .top-switch { top: auto; right: auto; left: 50%; translate: -50% 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 12px); }
-  .top-switch button { padding: 0 9px; font-size: var(--fs-label); }
-}
 
 
 /* ---------- Projekt-Poster: jedes Projekt bringt Farbe + Schrift mit (später aus dem CMS) ---------- */
@@ -285,9 +269,6 @@ a { color: inherit; }
 .hero h1 .line:nth-child(2) > span { animation-delay: calc(var(--stagger) * 2); }
 .hero h1 .line:nth-child(3) > span { animation-delay: calc(var(--stagger) * 4); }
 .hero-actions { animation: fade-up var(--dur-slow) var(--ease-out) 500ms both; display: grid; justify-items: center; gap: var(--space-2); }
-/* nur auf dem iPhone sichtbar: iOS gibt den Bewegungssensor erst nach einem Tipp frei */
-.motion-btn { min-height: 44px; padding: 0 12px; border: 0; background: none; cursor: pointer; color: var(--muted); font: inherit; font-size: var(--fs-small); text-decoration: underline; text-underline-offset: 3px; }
-.motion-btn[hidden] { display: none; }
 
 .hero-inner { pointer-events: none; }
 .hero-inner > * { pointer-events: auto; }
@@ -296,6 +277,7 @@ a { color: inherit; }
 .float {
   position: absolute; display: block; pointer-events: auto; text-decoration: none; color: inherit;
   animation: float-in 1200ms var(--ease-out) both;
+  -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
   transition: rotate 600ms var(--ease-out), scale 600ms var(--ease-out);
 }
 .float-card {
@@ -306,7 +288,7 @@ a { color: inherit; }
   animation: var(--drift, drift-a) var(--drift-t, 8s) cubic-bezier(0.37, 0, 0.63, 1) var(--drift-at, 0s) infinite;
 }
 /* Ruhezustand: jede Kachel schwebt in eigenem Takt; beim Hover hält sie an */
-.float:is(:hover, :focus-visible) .float-card { animation-play-state: paused; }
+.float:is(:hover, :focus-visible, :active) .float-card { animation-play-state: paused; }
 .f1 { --drift: drift-a; --drift-t: 8.6s; --drift-at: -1.2s; }
 .f2 { --drift: drift-b; --drift-t: 10.4s; --drift-at: -6.3s; }
 .f3 { --drift: drift-a; --drift-t: 9.3s; --drift-at: -4.1s; }
@@ -333,9 +315,9 @@ a { color: inherit; }
 }
 .cursor-tag.is-on { opacity: 1; scale: 1; }
 /* Hover wie im Framer-Entwurf: Kachel richtet sich auf und wird etwas größer */
-.float:is(:hover, :focus-visible) { z-index: 3; rotate: 0deg; scale: 1.06; }
-.float:is(:hover, :focus-visible) .float-card { box-shadow: 0 40px 80px rgb(0 0 0 / 0.55), 0 10px 110px -10px color-mix(in srgb, var(--glow) 45%, transparent); }
-.float:is(:hover, :focus-visible) .pa { transform: scale(1.04); }
+.float:is(:hover, :focus-visible, :active) { z-index: 3; rotate: 0deg; scale: 1.06; }
+.float:is(:hover, :focus-visible, :active) .float-card { box-shadow: 0 40px 80px rgb(0 0 0 / 0.55), 0 10px 110px -10px color-mix(in srgb, var(--glow) 45%, transparent); }
+.float:is(:hover, :focus-visible, :active) .pa { transform: scale(1.04); }
 .f1 { width: calc(var(--fu) * 22); aspect-ratio: 4 / 3; left: -3%; top: -7%; rotate: 12deg; animation-delay: 250ms; }
 .f2 { width: calc(var(--fu) * 19); aspect-ratio: 3 / 4; left: 0.5%; top: 41%; rotate: -9deg; animation-delay: 400ms; }
 .f3 { width: calc(var(--fu) * 21); aspect-ratio: 4 / 3; left: 20%; bottom: -5%; rotate: -4deg; animation-delay: 520ms; }
@@ -343,12 +325,18 @@ a { color: inherit; }
 .f5 { width: calc(var(--fu) * 15); aspect-ratio: 3 / 4; right: -1%; top: 33%; rotate: 11deg; animation-delay: 460ms; }
 .f6 { width: calc(var(--fu) * 21); aspect-ratio: 4 / 3; right: 16%; bottom: -11%; rotate: 14deg; animation-delay: 580ms; }
 @media (max-width: 900px) {
-  .hero { min-height: 0; padding-bottom: var(--space-8); grid-template-columns: minmax(0, 1fr); } /* sonst macht der Inhalt die Spalte breiter als das Handy */
-  .floats { position: relative; inset: auto; display: flex; justify-content: center; margin-top: var(--space-8); height: 190px; grid-row: 2; width: min(100%, 428px); }
-  .float { position: relative; inset: auto; width: 31%; max-width: 170px; margin-inline: -2.5%; aspect-ratio: 3 / 4; translate: none !important; }
-  .float:nth-child(n+4) { display: none; }
+  /* drei Projekte oben, Claim mit Button, drei Projekte unten */
+  .hero {
+    min-height: 0; padding-top: calc(env(safe-area-inset-top, 0px) + 100px); padding-bottom: var(--space-8);
+    grid-template-columns: minmax(0, 1fr) repeat(3, minmax(0, min(31vw, 133px))) minmax(0, 1fr);
+  }
+  .hero-inner { grid-row: 2; grid-column: 1 / -1; margin-block: var(--space-7); }
+  .floats { display: contents; }
+  .float { position: relative; inset: auto; width: auto; justify-self: stretch; margin-inline: -8px; aspect-ratio: 3 / 4; }
+  .f1, .f2, .f3 { grid-row: 1; } .f4, .f5, .f6 { grid-row: 3; }
+  .f1, .f4 { grid-column: 2; } .f2, .f5 { grid-column: 3; z-index: 1; } .f3, .f6 { grid-column: 4; }
   .float-card { --d: 0.6; }
-  .f1 { rotate: -8deg; } .f2 { rotate: 4deg; z-index: 1; } .f3 { rotate: 9deg; }
+  .f1 { rotate: -8deg; } .f2 { rotate: 4deg; } .f3 { rotate: 9deg; } .f4 { rotate: 7deg; } .f5 { rotate: -4deg; } .f6 { rotate: -9deg; }
 }
 @keyframes rise { from { transform: translateY(105%); } to { transform: none; } }
 @keyframes fade-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
@@ -364,6 +352,15 @@ a { color: inherit; }
 @media (min-width: 720px) { .work { --pad: 40px; } }
 .slider-ctrl { display: flex; gap: var(--space-2); }
 @media (max-width: 719px) { .slider-ctrl { display: none; } } /* auf dem Handy wird gewischt */
+@media (max-width: 719px) {
+  .work .section-head { justify-content: center; text-align: center; }
+  .work { --work-top: 48px; }
+  /* Punkte und „+20“ in einer Zeile mit Luft dazwischen, Button mittig darunter */
+  .slider .slider-foot { display: grid; grid-template-columns: auto auto; justify-content: space-between; align-items: center; gap: var(--space-5) var(--space-4); }
+  .slider .slider-more { display: contents; }
+  .slider-more .btn { grid-column: 1 / -1; justify-self: center; }
+  .cap-text b { white-space: normal; font-size: 0.9375rem; line-height: 1.25; } /* lange Titel nicht abschneiden */
+}
 .slider { --slide-w: min(980px, 64vw); --gap: 20px; --glow-room: 96px; position: relative; }
 @media (max-width: 719px) { .slider { --slide-w: 86vw; --gap: 12px; --glow-room: 64px; } }
 .work .section-head, .slider-foot { position: relative; z-index: 2; }
@@ -460,6 +457,7 @@ a { color: inherit; }
   .step:nth-child(1) .step-arrow { top: -48px; bottom: auto; right: -7%; }
   .step:nth-child(2) .step-arrow { bottom: -72px; right: -10%; }
 }
+@media (max-width: 899px) { .step-card { min-height: 0; } .step-body { padding-top: var(--space-4); } }
 @media (hover: hover) { .step-card:hover { rotate: 0deg; translate: 0 calc(var(--drop) - 6px); } }
 
 .pills { display: flex; flex-wrap: wrap; gap: var(--space-2); }
@@ -539,8 +537,13 @@ a { color: inherit; }
   /* sitzt auf der unteren rechten Ecke des GIFs und ragt nur so weit über die Kachel, wie Abstand + Innenabstand der Nachbarkacheln erlauben */
   position: absolute; z-index: 4; right: -18px; bottom: -14px; width: var(--sw);
   rotate: -6deg; cursor: grab; user-select: none;
-  filter: drop-shadow(0 10px 14px rgb(0 0 0 / 0.28)) drop-shadow(0 2px 3px rgb(0 0 0 / 0.18));
-  transition: rotate 450ms var(--ease-out), translate 450ms var(--ease-out), filter 450ms var(--ease-out);
+  transition: rotate 450ms var(--ease-out), translate 450ms var(--ease-out);
+}
+/* Schatten als eigene Ebene statt CSS-filter: Safari zeichnet filter + clip-path auf dem Handy fehlerhaft */
+.sticker-shadow {
+  position: absolute; inset: 0; border-radius: var(--sr); pointer-events: none;
+  box-shadow: 0 var(--sy, 10px) var(--sb, 14px) rgb(0 0 0 / var(--sa, 0.28)), 0 2px 3px rgb(0 0 0 / 0.18);
+  transition: box-shadow 450ms var(--ease-out);
 }
 /* Die Grafik ist im SVG um 3° gedreht: hier gerade gerückt und randlos zugeschnitten, damit die Ecke exakt sitzt */
 .sticker-body {
@@ -557,8 +560,8 @@ a { color: inherit; }
   transition: width 380ms var(--ease-out), height 380ms var(--ease-out);
 }
 .sticker.scrolling .sticker-body, .sticker.scrolling .sticker-flap { transition-duration: 90ms; }
-.sticker.settled:hover { --hp: 38px; rotate: -3deg; translate: 0 -5px; filter: drop-shadow(0 18px 22px rgb(0 0 0 / 0.3)) drop-shadow(0 3px 4px rgb(0 0 0 / 0.18)); }
-@media (max-width: 759px) { .sticker { --sw: min(46vw, 190px); right: 10px; bottom: -14px; } } /* Handy: nur nach unten über die Kachel */
+.sticker.settled:hover { --hp: 38px; --sy: 18px; --sb: 22px; --sa: 0.3; rotate: -3deg; translate: 0 -5px; }
+@media (max-width: 759px) { .sticker { --sw: min(46vw, 190px); right: 10px; bottom: -14px; } .sticker-shadow { display: none; } } /* Handy: nur nach unten über die Kachel */
 
 /* Kleine runde Bedienknöpfe: Play/Pause am Porträt, Zurücklegen bei den Stickern */
 .media-btn {
@@ -596,9 +599,11 @@ a { color: inherit; }
   100% { transform: none; }
 }
 .skill { position: absolute; left: 0; top: 0; rotate: var(--r, 0deg); cursor: grab; user-select: none; touch-action: none;
-  filter: drop-shadow(0 4px 6px rgb(0 0 0 / 0.18)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.15));
-  transition: scale 200ms var(--ease-out), filter 200ms var(--ease-out); }
-.skill svg { display: block; width: calc(var(--w) * var(--k) * 1px); height: auto; overflow: visible; filter: url(#diecut); }
+  transition: scale 200ms var(--ease-out); }
+/* --pad: Platz im SVG für den weißen Rand, damit nichts über die Box hinausragt und der Schatten überall sauber ist */
+.skill svg { --pad: 6; display: block; width: calc((var(--w) + 2 * var(--pad)) * var(--k) * 1px); height: auto; margin: calc(var(--pad) * var(--k) * -1px); filter: drop-shadow(0 3px 4px rgb(0 0 0 / 0.24)); }
+.skill svg .cut :is(path, rect, circle, line) { fill: #FFFFFF; stroke: #FFFFFF; stroke-width: 10.2; stroke-linejoin: round; stroke-linecap: round; }
+.skill svg .cut .thick { stroke-width: 18; }
 .skill svg :is(path, rect, circle, line) { stroke: var(--brand-ink); stroke-width: 2.2; stroke-linejoin: round; stroke-linecap: round; }
 .skill svg .thick { stroke-width: 10; }
 .skill svg text { font-family: var(--font-sans); font-weight: 600; font-size: 12px !important; /* überall gleich groß */ fill: var(--brand-ink); text-anchor: middle; stroke: none; }
@@ -610,7 +615,8 @@ a { color: inherit; }
   25% { rotate: calc(var(--r, 0deg) + 5deg); }
   75% { rotate: calc(var(--r, 0deg) - 5deg); }
 }
-.skill.grabbing { cursor: grabbing; scale: 1.1; filter: drop-shadow(0 14px 18px rgb(0 0 0 / 0.22)) drop-shadow(0 2px 3px rgb(0 0 0 / 0.15)); }
+.skill.grabbing { cursor: grabbing; scale: 1.1; }
+.skill.grabbing svg { filter: drop-shadow(0 12px 14px rgb(0 0 0 / 0.3)); }
 @media (max-width: 759px) { .sticker-sheet { min-height: 380px; } }
 
 .clients { margin-top: var(--space-9); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
@@ -629,7 +635,7 @@ a { color: inherit; }
 .marquee-group img { display: block; width: auto; max-width: none; user-select: none; }
 /* Handy: zwei Zeilen mit je vier Logos, gegenläufig. Der Scrollweg zeigt jedes Logo einmal. */
 .marquee-m { display: none; }
-.m-row { display: flex; align-items: center; gap: 44px; width: max-content; padding-inline: 24px; will-change: transform; }
+.m-row { display: flex; align-items: center; gap: 44px; width: max-content; will-change: transform; }
 .m-row img { display: block; width: auto; max-width: none; user-select: none; }
 @media (max-width: 759px) {
   .marquee { display: none; }
@@ -642,7 +648,8 @@ a { color: inherit; }
   .marquee-group { transform: none; flex-wrap: wrap; flex: 1; row-gap: var(--space-5); }
   .marquee-group[aria-hidden] { display: none; }
   .marquee-m { width: auto; margin-inline: 0; -webkit-mask-image: none; mask-image: none; }
-  .m-row { width: auto; padding-inline: 0; flex-wrap: wrap; row-gap: var(--space-5); transform: none !important; }
+  .m-row { width: auto; flex-wrap: wrap; row-gap: var(--space-5); transform: none !important; }
+  .m-row li[aria-hidden] { display: none; }
 }
 
 /* ---------- Projekte als weiße Karte über dem schwarzen Hero ---------- */
@@ -698,6 +705,7 @@ main > .contact-stage { padding-top: var(--space-5); background: linear-gradient
   transition: background-color var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out), scale var(--dur-fast) var(--ease-out);
 }
 .social svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+@media (max-width: 959px) { .social { justify-content: center; margin-top: calc(var(--space-5) * -1); } }
 @media (hover: hover) { .social a:hover { background: #FFFFFF; color: var(--brand-ink); } }
 .social a:active { scale: 0.94; background: #FFFFFF; color: var(--brand-ink); }
 
@@ -707,6 +715,10 @@ main > .contact-stage { padding-top: var(--space-5); background: linear-gradient
   transition: background-color var(--dur-fast) var(--ease-out);
 }
 .fill::placeholder { color: var(--muted); opacity: 0.75; }
+.story .fill { caret-color: var(--brand-ink); }
+.story .fill:not(:placeholder-shown) { color: var(--brand-yellow); border-bottom-color: var(--brand-yellow); } /* eingegebener Text und Linie gelb */
+.story .fill:not(:placeholder-shown):focus { box-shadow: 0 1.5px 0 var(--brand-yellow); }
+.story .fill:-webkit-autofill { -webkit-text-fill-color: var(--brand-yellow); -webkit-box-shadow: inset 0 0 0 100px #FFFFFF; }
 .fill:focus { outline: none; box-shadow: 0 1.5px 0 var(--brand-ink); }
 .fill:-webkit-autofill { -webkit-text-fill-color: var(--brand-ink); transition: background-color 99999s; }
 .fill.is-missing { background-color: rgb(254 195 30 / 0.4); }
@@ -794,14 +806,6 @@ footer {
     <circle cx="440" cy="440" r="350" fill="none" stroke="currentColor" stroke-width="80"/>
     <path d="M597.6 349 A182 182 0 1 0 606.3 514" fill="none" stroke="currentColor" stroke-width="80"/>
   </symbol>
-  <filter id="diecut" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
-    <!-- weichzeichnen und hart abschneiden: ergibt einen gleichmäßigen, rund laufenden weißen Rand (kein eckiger Versatz) -->
-    <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="soft"/>
-    <feComponentTransfer in="soft" result="grow"><feFuncA type="linear" slope="24" intercept="-0.9"/></feComponentTransfer>
-    <feFlood flood-color="#FFFFFF"/>
-    <feComposite in2="grow" operator="in" result="edge"/>
-    <feMerge><feMergeNode in="edge"/><feMergeNode in="SourceGraphic"/></feMerge>
-  </filter>
   <symbol id="arrow" viewBox="0 0 12 12">
     <path d="M2.5 9.5 L9.5 2.5 M3.8 2.5 H9.5 V8.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
   </symbol>
@@ -822,10 +826,6 @@ footer {
 </header>
 
 <!-- Entwurfs-Werkzeug: oberen Bereich dunkel oder weiß vergleichen -->
-<div class="top-switch" id="top-switch" role="group" aria-label="Farbvariante vergleichen (nur Entwurf)">
-  <button type="button" data-v="card" aria-pressed="true">Weiße Karte</button>
-  <button type="button" data-v="fade" aria-pressed="false">Fade</button>
-</div>
 <div class="cursor-tag" id="cursor-tag" aria-hidden="true"></div>
 
 <main id="start">
@@ -841,7 +841,6 @@ footer {
         </h1>
         <div class="hero-actions">
           <a class="btn" href="#arbeiten"><span class="btn-label">Projekte ansehen</span><span class="btn-dot" aria-hidden="true"><svg><use href="#arrow"/></svg></span></a>
-          <button class="motion-btn" id="motion-btn" type="button" hidden>Karten mit dem Handy bewegen</button>
         </div>
       </div>
       <div class="floats" id="floats" aria-hidden="true">
@@ -958,7 +957,7 @@ footer {
         <div class="tile t-portrait reveal" style="--i:0">
           <div class="portrait-img"><img id="portrait-gif" src="assets/portrait-still.jpg" alt="Clemens zieht sich die Kapuze vom Kopf" loading="lazy"></div>
           <button class="portrait-play" type="button" id="portrait-play" aria-pressed="false" aria-label="Animation abspielen"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.8c0-.8.9-1.3 1.6-.9l7.3 4.9c.6.4.6 1.4 0 1.8l-7.3 4.9c-.7.4-1.6-.1-1.6-.9z"/></svg></button>
-          <div class="sticker" id="sticker"><div class="sticker-body"><img src="assets/sticker.svg" alt="Namens-Sticker: Hello, my name is Clem!"></div><span class="sticker-flap" aria-hidden="true"></span></div>
+          <div class="sticker" id="sticker"><span class="sticker-shadow" aria-hidden="true"></span><div class="sticker-body"><img src="assets/sticker.svg" alt="Namens-Sticker: Hello, my name is Clem!"></div><span class="sticker-flap" aria-hidden="true"></span></div>
         </div>
 
         <div class="tile t-text reveal" style="--i:1">
@@ -1061,9 +1060,9 @@ footer {
         </div>
       </div>
       <nav class="social" aria-label="Weitere Wege zu mir">
-        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg></a>
-        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
-        <a class="social-mail" href="#" aria-label="Direkt per Mail anfragen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="m22 6-10 7L2 6"/></svg></a>
+        <a href="https://www.instagram.com/schahsedi/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg></a>
+        <a href="https://www.linkedin.com/in/clemens-schah-sedi-49a781193/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        <a class="social-mail" href="mailto:mail@schahsedi.com?subject=Projektanfrage%20%C3%BCber%20schahsedi.com&amp;body=Hallo%20Clemens%2C%0A%0Aich%20habe%20ein%20Projekt%2C%20bei%20dem%20ich%20deine%20Unterst%C3%BCtzung%20gut%20gebrauchen%20k%C3%B6nnte.%0A%0AWorum%20es%20geht%3A%0AZeitrahmen%3A%0ABudget%3A%0A%0AViele%20Gr%C3%BC%C3%9Fe%0A" aria-label="Direkt per Mail anfragen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="m22 6-10 7L2 6"/></svg></a>
       </nav>
     </form>
   </section>
@@ -1336,7 +1335,7 @@ footer {
   function clearLift(el) { el.style.translate = ''; el.style.opacity = ''; el.style.visibility = ''; }
   function floatsUpdate() {
     var card = root.dataset.work === 'card';
-    if (calm) { clearLift(heroInner); clearLift(floatsWrap); floatEls.forEach(function (f) { f.style.translate = ''; }); return; }
+    if (calm) { clearLift(heroInner); clearLift(floatsWrap); floatEls.forEach(clearLift); return; }
     var y = window.scrollY;
     var p = Math.min(1, y / (hero.offsetHeight * 0.6)); // 0 = oben, 1 = Projects ist da
     var fade = String(Math.max(0, 1 - Math.pow(p, 1.6)));
@@ -1348,16 +1347,18 @@ footer {
       heroInner.style.visibility = p >= 1 ? 'hidden' : '';
     } else clearLift(heroInner);
     if (!wideHero.matches) {
-      // schmal liegen die Kacheln im Fluss unter dem Claim und gehen als Gruppe mit
-      floatEls.forEach(function (f) { f.style.translate = ''; });
-      if (card) {
-        floatsWrap.style.translate = lift;
-        floatsWrap.style.opacity = fade;
-        floatsWrap.style.visibility = p >= 1 ? 'hidden' : '';
-      } else clearLift(floatsWrap);
+      // schmal hat der Wrapper keine eigene Box: gleiche Parallaxe wie am Desktop, Ausblenden je Kachel
+      floatEls.forEach(function (f) {
+        var speed = parseFloat(f.dataset.speed) + (card ? 0.7 : 0);
+        f.style.translate = '0 ' + (-y * speed - p * p * 260).toFixed(1) + 'px';
+        f.style.opacity = fade;
+        f.style.visibility = p >= 1 ? 'hidden' : '';
+      });
+      clearLift(floatsWrap);
       return;
     }
     floatsWrap.style.translate = '';
+    floatEls.forEach(function (f) { f.style.opacity = ''; f.style.visibility = ''; });
     floatEls.forEach(function (f) {
       var speed = parseFloat(f.dataset.speed);
       if (card) speed += 0.7; // der Hero klebt: Kacheln ziehen selbst nach oben weg
@@ -1369,10 +1370,11 @@ footer {
   }
   // Tag am Mauszeiger: Text aus dem aria-label der Kachel, läuft leicht nach
   var cursorTag = document.getElementById('cursor-tag');
-  var tagOn = false, tagRaf = 0, tagFor = null, mx = 0, my = 0, tx = 0, ty = 0;
+  var tagOn = false, tagRaf = 0, tagFor = null, mx = 0, my = 0, tx = 0, ty = 0, tagTouch = false, tagTimer = 0;
   function tagTarget() {
     var w = cursorTag.offsetWidth, h = cursorTag.offsetHeight;
-    var x = mx + 16, y = my + 20;
+    var x = mx + 16, y = tagTouch ? my - h - 28 : my + 20; // beim Finger darüber, sonst verdeckt er das Tag
+    if (tagTouch) x = Math.max(12, mx - w / 2);
     if (x + w > window.innerWidth - 12) x = mx - w - 12;
     if (y + h > window.innerHeight - 12) y = my - h - 12;
     return [x, y];
@@ -1399,8 +1401,22 @@ footer {
   }
   window.addEventListener('pointermove', function (e) {
     mx = e.clientX; my = e.clientY;
-    setTag(e.pointerType === 'mouse' && e.target.closest ? e.target.closest('.float, .social-mail') : null);
+    if (e.pointerType !== 'mouse') return;
+    tagTouch = false;
+    setTag(e.target.closest ? e.target.closest('.float, .social-mail') : null);
   }, { passive: true });
+  // Touch: kurz gedrückt halten zeigt das Tag; beim Scrollen bricht der Browser den Druck ab, dann erscheint nichts
+  window.addEventListener('pointerdown', function (e) {
+    if (e.pointerType === 'mouse' || !e.target.closest) return;
+    var el = e.target.closest('.float');
+    if (!el) return;
+    mx = e.clientX; my = e.clientY;
+    clearTimeout(tagTimer);
+    tagTimer = setTimeout(function () { tagTouch = true; setTag(el); }, 120);
+  }, { passive: true });
+  ['pointerup', 'pointercancel'].forEach(function (t) {
+    window.addEventListener(t, function (e) { if (e.pointerType !== 'mouse') { clearTimeout(tagTimer); setTag(null); } }, { passive: true });
+  });
   document.documentElement.addEventListener('mouseleave', function () { setTag(null); });
   // Kachel scrollt unter dem ruhenden Mauszeiger weg
   window.addEventListener('scroll', function () {
@@ -1427,20 +1443,25 @@ footer {
   function leanZero() { leanCards.forEach(function (c) { c.tx = 0; c.ty = 0; }); leanKick(); }
 
   if (!calm) {
-    // Desktop: nahe Kacheln ziehen stärker; direkt unter dem Mauszeiger lässt der Zug nach, damit nichts zappelt
-    window.addEventListener('pointermove', function (e) {
-      if (e.pointerType !== 'mouse') return;
-      if (!wideHero.matches || window.scrollY > hero.offsetHeight * 0.6) { leanZero(); return; }
-      var base = floatsWrap.getBoundingClientRect(), reach = window.innerWidth * 0.8;
+    // Nahe Kacheln ziehen stärker; direkt unter Mauszeiger oder Finger lässt der Zug nach, damit nichts zappelt
+    function leanTo(x, y) {
+      if (window.scrollY > hero.offsetHeight * 0.6) { leanZero(); return; }
+      var wide = wideHero.matches, base = (wide ? floatsWrap : hero).getBoundingClientRect(), reach = window.innerWidth * 0.8, k = wide ? 1 : 0.75;
       leanCards.forEach(function (c) {
-        var dx = e.clientX - (base.left + c.el.offsetLeft + c.el.offsetWidth / 2);
-        var dy = e.clientY - (base.top + c.el.offsetTop + c.el.offsetHeight / 2);
+        var dx = x - (base.left + c.el.offsetLeft + c.el.offsetWidth / 2);
+        var dy = y - (base.top + c.el.offsetTop + c.el.offsetHeight / 2);
         var d = Math.sqrt(dx * dx + dy * dy) || 1;
-        var pull = 22 * c.depth * (0.3 + 0.7 * Math.max(0, 1 - d / reach)) * Math.min(1, d / 180);
+        var pull = 22 * k * c.depth * (0.3 + 0.7 * Math.max(0, 1 - d / reach)) * Math.min(1, d / 180);
         c.tx = dx / d * pull; c.ty = dy / d * pull;
       });
       leanKick();
-    }, { passive: true });
+    }
+    window.addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse') leanTo(e.clientX, e.clientY); }, { passive: true });
+    function leanTouch(e) { if (e.touches[0]) leanTo(e.touches[0].clientX, e.touches[0].clientY); }
+    window.addEventListener('touchstart', leanTouch, { passive: true });
+    window.addEventListener('touchmove', leanTouch, { passive: true });
+    window.addEventListener('touchend', leanZero, { passive: true });
+    window.addEventListener('touchcancel', leanZero, { passive: true });
     document.documentElement.addEventListener('mouseleave', leanZero);
 
     // Handy: Neigung relativ zur Haltung; die Mitte wandert langsam mit, damit jede Haltung als Ruhelage gilt
@@ -1460,20 +1481,8 @@ footer {
       leanKick();
     }
     function startTilt() { window.addEventListener('deviceorientation', onTilt, { passive: true }); }
-    if (window.matchMedia('(hover: none) and (pointer: coarse)').matches && window.DeviceOrientationEvent) {
-      if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-        var motionBtn = document.getElementById('motion-btn'), motionOff = false;
-        try { motionOff = localStorage.getItem('motion-off') === '1'; } catch (err) {}
-        motionBtn.hidden = motionOff;
-        motionBtn.addEventListener('click', function () {
-          motionBtn.hidden = true;
-          DeviceOrientationEvent.requestPermission().then(function (state) {
-            if (state === 'granted') startTilt();
-            else { try { localStorage.setItem('motion-off', '1'); } catch (err) {} }
-          }).catch(function () {});
-        });
-      } else startTilt();
-    }
+    // iOS verlangt dafür eine ausdrückliche Freigabe per Tipp: dort bleibt es beim Schweben
+    if (window.matchMedia('(hover: none) and (pointer: coarse)').matches && window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission !== 'function') startTilt();
   }
 
   var floatTick = false;
@@ -1591,7 +1600,7 @@ footer {
     sticker.style.setProperty('--peel', (lift * h * 0.92).toFixed(1) + 'px');
     if (t >= 1) {
       sticker.classList.add('settled');
-      sticker.style.opacity = ''; sticker.style.rotate = ''; sticker.style.translate = ''; sticker.style.scale = ''; sticker.style.filter = '';
+      sticker.style.opacity = ''; sticker.style.rotate = ''; sticker.style.translate = ''; sticker.style.scale = ''; ['--sy', '--sb', '--sa'].forEach(function (k) { sticker.style.removeProperty(k); });
       return;
     }
     sticker.classList.remove('settled');
@@ -1599,7 +1608,9 @@ footer {
     sticker.style.rotate = (-6 - lift * 12).toFixed(2) + 'deg';
     sticker.style.translate = (lift * 18).toFixed(1) + 'px ' + (-lift * 34).toFixed(1) + 'px';
     sticker.style.scale = (1 + lift * 0.08).toFixed(3);
-    sticker.style.filter = 'drop-shadow(0 ' + (10 + lift * 26).toFixed(1) + 'px ' + (14 + lift * 22).toFixed(1) + 'px rgb(0 0 0 / ' + (0.28 - lift * 0.08).toFixed(3) + ')) drop-shadow(0 2px 3px rgb(0 0 0 / 0.18))';
+    sticker.style.setProperty('--sy', (10 + lift * 26).toFixed(1) + 'px');
+    sticker.style.setProperty('--sb', (14 + lift * 22).toFixed(1) + 'px');
+    sticker.style.setProperty('--sa', (0.28 - lift * 0.08).toFixed(3));
   }
   var stickTick = false, scrollTimer = 0;
   window.addEventListener('scroll', function () {
@@ -1616,6 +1627,15 @@ footer {
   // ---------- Skill-Sticker: frei verschiebbar (Maus und Touch) ----------
   var sheet = document.getElementById('sticker-sheet');
   var skills = Array.prototype.slice.call(sheet.querySelectorAll('.skill'));
+  // Weißer Sticker-Rand: dieselben Formen dick und weiß darunter, Platz dafür im viewBox
+  skills.forEach(function (sk) {
+    var svg = sk.querySelector('svg'), vb = svg.getAttribute('viewBox').split(' ').map(Number), P = 6;
+    var cut = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    cut.setAttribute('class', 'cut');
+    Array.prototype.forEach.call(svg.querySelectorAll('path, rect, circle, line'), function (n) { cut.appendChild(n.cloneNode(true)); });
+    svg.insertBefore(cut, svg.firstChild);
+    svg.setAttribute('viewBox', (vb[0] - P) + ' ' + (vb[1] - P) + ' ' + (vb[2] + 2 * P) + ' ' + (vb[3] + 2 * P));
+  });
   var MOBILE = [[0, 3], [36, 0], [72, 3], [0, 25], [38, 42], [66, 38], [0, 62], [58, 70]];
   var narrowSheet = window.matchMedia('(max-width: 759px)');
   var zTop = 1;
@@ -1702,6 +1722,15 @@ footer {
       im.style.height = Math.round(parseFloat(im.style.height) * 0.85) + 'px';
       row.appendChild(c);
     });
+    // weitere Sätze derselben Logos: die Zeile läuft in beide Richtungen endlos
+    row.dataset.n = part.length;
+    var first = Array.prototype.slice.call(row.children);
+    for (var rep = 0; rep < 4; rep++) first.forEach(function (li) {
+      var d = li.cloneNode(true);
+      d.setAttribute('aria-hidden', 'true');
+      d.querySelector('img').alt = '';
+      row.appendChild(d);
+    });
     mWrap.appendChild(row);
     return row;
   });
@@ -1713,14 +1742,11 @@ footer {
     var mNow = window.scrollY, mRun = false;
     function mDraw() {
       if (mNarrow.matches) {
-        // Fortschritt: Zeilen kommen unten ins Bild (0) bis sie im oberen Drittel sind (1)
-        var vh = window.innerHeight, vw = mWrap.clientWidth;
-        var top = mWrap.getBoundingClientRect().top + window.scrollY - mNow;
-        var p = Math.max(0, Math.min(1, (vh * 0.95 - top) / (vh * 0.65)));
         mRows.forEach(function (row, i) {
-          var over = row.scrollWidth - vw;
-          var x = over <= 0 ? -over / 2 : (i === 0 ? -over * (1 - p) : -over * p); // Zeile 1 nach rechts, Zeile 2 nach links
-          row.style.transform = 'translate3d(' + x.toFixed(1) + 'px,0,0)';
+          // Länge eines Satzes; Versatz läuft modulo, also nie ans Ende. Zeile 1 nach rechts, Zeile 2 nach links
+          var set = row.children[+row.dataset.n].offsetLeft - row.children[0].offsetLeft || 1;
+          var off = ((mNow * 0.5 * (i === 0 ? -1 : 1)) % set + set) % set;
+          row.style.transform = 'translate3d(' + (-off).toFixed(1) + 'px,0,0)';
         });
         return;
       }
@@ -1738,16 +1764,6 @@ footer {
     window.addEventListener('resize', mDraw);
     mDraw();
   }
-
-  // Vergleichs-Schalter: Projekte als Karte über dem Hero oder Fade
-  var topSwitch = document.getElementById('top-switch');
-  topSwitch.addEventListener('click', function (e) {
-    var b = e.target.closest('button');
-    if (!b) return;
-    Array.prototype.forEach.call(topSwitch.children, function (x) { x.setAttribute('aria-pressed', String(x === b)); });
-    if (b.dataset.v === 'card') root.dataset.work = 'card'; else delete root.dataset.work;
-    pickTone(); floatsUpdate(); stageUpdate();
-  });
 
   // Scroll-Reveals
   if (!calm && 'IntersectionObserver' in window) {
@@ -1771,7 +1787,6 @@ footer {
       c.setAttribute('aria-pressed', String(on));
     });
   });
-  document.querySelector('.social').addEventListener('click', function (e) { var a = e.target.closest('a'); if (a && a.getAttribute('href') === '#') e.preventDefault(); }); // Adressen kommen aus dem CMS
   // Felder im Satz wachsen mit dem Text
   var fills = Array.prototype.slice.call(document.querySelectorAll('input.fill'));
   var fillRuler = document.createElement('span');
@@ -1784,7 +1799,7 @@ footer {
     fillRuler.style.letterSpacing = cs.letterSpacing;
     fillRuler.style.textTransform = cs.textTransform;
     fillRuler.textContent = el.value || el.placeholder;
-    var w = Math.ceil(fillRuler.getBoundingClientRect().width + 10);
+    var w = Math.ceil(fillRuler.getBoundingClientRect().width + 12);
     if (el === fNameEl) {
       // Name bleibt immer komplett sichtbar: wird er zu lang, schrumpft die Schrift, statt im Feld zu scrollen
       fillRuler.textContent = 'Hey ,';

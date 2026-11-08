@@ -3,3 +3,4 @@ c-vergleich.html
 node_modules/
 dist/
 .astro/
+.claude/
