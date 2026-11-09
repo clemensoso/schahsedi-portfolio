@@ -1,0 +1,31 @@
+---
+import home from '../data/home.json';
+import Poster from './Poster.astro';
+---
+<section class="work" id="arbeiten" data-nav="Projects" aria-labelledby="arbeiten-title">
+      <div class="wrap section-head reveal">
+        <h2 class="display" id="arbeiten-title">Ausgewählte Arbeiten</h2>
+        <div class="slider-ctrl">
+          <button class="arrow-btn prev" type="button" id="prev" aria-label="Vorheriges Projekt" aria-controls="track"><svg aria-hidden="true"><use href="#arrow"/></svg></button>
+          <button class="arrow-btn next" type="button" id="next" aria-label="Nächstes Projekt" aria-controls="track"><svg aria-hidden="true"><use href="#arrow"/></svg></button>
+        </div>
+      </div>
+
+      <div class="slider reveal" id="slider" aria-roledescription="Karussell" aria-label="Ausgewählte Projekte">
+        <div class="track" id="track">
+          {home.slides.map((s) => (
+            <a class="slide" style={`--glow:${s.glow}`} href="#arbeiten" draggable="false" aria-label={s.title}>
+              <Poster image={s.image} imageMobile={s.imageMobile} pos={s.pos} />
+              <div class="cap"><span class="cap-text"><b>{s.title}</b></span><span class="btn-dot" aria-hidden="true"><svg><use href="#arrow"/></svg></span></div>
+            </a>
+          ))}
+        </div>
+        <div class="wrap slider-foot">
+          <div class="dots" id="dots"></div>
+          <div class="slider-more">
+            <p>+20 weitere Projekte</p>
+            <a class="btn secondary" href="#arbeiten"><span class="btn-label">Alle Projekte</span><span class="btn-dot" aria-hidden="true"><svg><use href="#arrow"/></svg></span></a>
+          </div>
+        </div>
+      </div>
+    </section>

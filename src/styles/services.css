@@ -1,0 +1,43 @@
+/* ---------- Leistungen (hell) ---------- */
+.services { padding-block: clamp(16px, 2vw, 32px) var(--section-gap); }
+.services .about-head { margin-bottom: var(--space-5); }
+/* Drei leicht gefächerte Karten, Look der Bento-Kacheln; Pfeile führen von Schritt zu Schritt */
+.steps { display: grid; gap: 72px; grid-template-columns: minmax(0, 1fr); padding-block: var(--space-5) var(--space-3); }
+.step { --tilt: 0deg; --drop: 0px; position: relative; display: grid; }
+/* Die Karte kippt und reagiert auf Hover, der Pfeil hängt am ruhigen li und bleibt stehen */
+.step-card {
+  display: flex; flex-direction: column;
+  padding: clamp(24px, 2.2vw, 32px);
+  background: #FFFFFF; border: 1px solid #E9E6E0; border-radius: 20px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 14px 34px -14px rgb(0 0 0 / 0.14);
+  rotate: var(--tilt); translate: 0 var(--drop);
+  transition: rotate 800ms var(--ease-out), translate 700ms var(--ease-out);
+}
+.step:nth-child(1) { --tilt: -1.4deg; }
+.step:nth-child(2) { --tilt: 1.1deg; }
+.step:nth-child(3) { --tilt: -0.9deg; }
+.step.pre:not(.in) .step-card { rotate: 0deg; }
+.step.pre.in { transition: opacity var(--dur-slow) var(--ease-out) calc(var(--i, 0) * 110ms), transform var(--dur-slow) var(--ease-out) calc(var(--i, 0) * 110ms); }
+.step-num { align-self: flex-start; padding: 3px 12px; border-radius: var(--radius-pill); background: var(--brand-yellow); color: var(--brand-ink); font-size: var(--fs-small); font-weight: 600; line-height: 1.5; }
+.step h3 { margin-top: var(--space-4); font-size: clamp(1.45rem, 2.1vw, 1.9rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.28; }
+.step-body { padding-top: var(--space-4); display: grid; gap: var(--space-4); }
+.step p { color: var(--muted); }
+.step .pills li { border-color: #DCD9D2; }
+.step-arrow { position: absolute; z-index: 1; left: 50%; bottom: -47px; width: 56px; height: auto; margin-left: -28px; rotate: 90deg; overflow: visible; fill: none; stroke: var(--fg); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+.step-arrow path { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.step.pre:not(.in) .step-arrow path { stroke-dashoffset: 1; }
+.step.pre.in .step-arrow path { transition: stroke-dashoffset 700ms var(--ease-draw) 500ms; }
+.step.pre.in .step-arrow path + path { transition-delay: 1100ms; transition-duration: 250ms; }
+@media (min-width: 900px) {
+  .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 1.5vw, 24px); padding-block: 84px 92px; }
+  .step:nth-child(1) { --tilt: -3deg; --drop: 18px; }
+  .step:nth-child(2) { --tilt: 0deg; }
+  .step:nth-child(3) { --tilt: 2.6deg; --drop: 10px; }
+  .step-arrow { width: clamp(96px, 9.5vw, 136px); left: auto; margin-left: 0; rotate: 0deg; }
+  .step:nth-child(1) .step-arrow { top: -48px; bottom: auto; right: -7%; }
+  .step:nth-child(2) .step-arrow { bottom: -72px; right: -10%; }
+}
+@media (hover: hover) { .step-card:hover { rotate: 0deg; translate: 0 calc(var(--drop) - 6px); } }
+
+.pills { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.pills li { font-size: var(--fs-small); border: 1px solid var(--chip-border); border-radius: var(--radius-pill); padding: 5px 12px; }

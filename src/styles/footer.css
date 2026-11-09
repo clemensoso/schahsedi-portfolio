@@ -1,0 +1,28 @@
+/* ---------- Footer (dunkel) ---------- */
+footer {
+  /* klebt am unteren Rand hinter <main>: die gelbe Karte fährt nach oben weg und gibt ihn frei */
+  position: sticky; bottom: 0; z-index: 0;
+  --bg: #111111; --fg: #FFFFFF; --muted: #A5A198; --line: #2E2D2A;
+  background: var(--bg); color: var(--fg);
+  /* reicht 64px unter die Karte, damit in deren unteren Ecken immer Schwarz zu sehen ist */
+  margin-top: -64px;
+  padding: calc(var(--space-8) + 64px) 0 var(--space-6);
+  overflow: hidden;
+}
+.foot { display: flex; justify-content: space-between; gap: var(--space-3) var(--space-5); flex-wrap: wrap; align-items: center; max-width: var(--content-max); margin: var(--space-7) auto 0; padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); font-size: var(--fs-small); }
+@media (min-width: 720px) { .foot { padding-inline: 40px; } }
+.foot-links { display: flex; gap: var(--space-5); flex-wrap: wrap; align-items: center; font-size: var(--fs-small); }
+.link {
+  text-decoration: none; font-weight: 500; padding-bottom: 3px;
+  background: linear-gradient(var(--brand-yellow), var(--brand-yellow)) 0 100% / 0% 2px no-repeat,
+              linear-gradient(var(--line), var(--line)) 0 100% / 100% 1px no-repeat;
+  transition: background-size var(--dur-slow) var(--ease-out);
+}
+.link:hover { background-size: 100% 2px, 100% 1px; }
+/* Durchlaufendes Band: zwei gleiche Gruppen, die Schleife springt genau um eine Gruppe */
+.foot-band { font-size: clamp(1.5rem, 4.6vw, 4.75rem); line-height: 1.3; color: #2B2A28; } /* hebt sich nur leicht vom Footer ab */
+.foot-track { display: flex; width: max-content; animation: foot-run 48s linear infinite; }
+.foot-group { display: flex; flex: none; }
+.foot-unit { display: flex; align-items: center; gap: 0.24em; padding-right: 0.7em; white-space: nowrap; }
+.foot-unit svg { width: 1.365em; height: 1.365em; flex: none; transform: translateY(-0.035em); } /* Ring so hoch wie die Versalien der Display-Schrift, auf deren Mitte */
+@keyframes foot-run { to { transform: translateX(-50%); } }

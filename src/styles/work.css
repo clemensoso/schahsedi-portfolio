@@ -1,0 +1,74 @@
+/* ---------- Arbeiten (dunkel): Projekt-Slider ---------- */
+.work {
+  --pad: 16px;
+  --work-top: clamp(var(--pad), calc((100vw - var(--content-max)) / 2 + var(--pad)), 110px); /* oben so viel Luft wie links zur Kartenkante */
+  padding-block: var(--work-top) var(--section-gap);
+  scroll-margin-top: calc(44px - var(--work-top)); /* Sprung zu Projects landet an der Headline, nicht in der Luft darüber */
+}
+@media (min-width: 720px) { .work { --pad: 40px; } }
+.slider-ctrl { display: flex; gap: var(--space-2); }
+@media (max-width: 719px) { .slider-ctrl { display: none; } } /* auf dem Handy wird gewischt */
+@media (max-width: 719px) {
+  .work .section-head { justify-content: center; text-align: center; }
+  .work { --work-top: 48px; }
+  /* Punkte und „+20“ in einer Zeile mit Luft dazwischen, Button mittig darunter */
+  .slider .slider-foot { display: grid; grid-template-columns: auto auto; justify-content: space-between; align-items: center; gap: var(--space-5) var(--space-4); }
+  .slider .slider-more { display: contents; }
+  .slider-more .btn { grid-column: 1 / -1; justify-self: center; }
+  .cap-text b { white-space: normal; font-size: 0.9375rem; line-height: 1.25; } /* lange Titel nicht abschneiden */
+}
+.slider { --slide-w: min(980px, 64vw); --gap: 20px; --glow-room: 96px; position: relative; }
+@media (max-width: 719px) { .slider { --slide-w: 86vw; --gap: 12px; --glow-room: 64px; } }
+.work .section-head, .slider-foot { position: relative; z-index: 2; }
+.work .section-head { align-items: flex-start; } /* Headline sitzt exakt am oberen Innenabstand */
+.track {
+  position: relative; display: flex; gap: var(--gap);
+  overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none;
+  padding-inline: calc((100% - var(--slide-w)) / 2);
+  padding-block: var(--glow-room); margin-block: calc(var(--glow-room) * -1); /* Raum, damit der Glow nicht abgeschnitten wird */
+  cursor: grab; user-select: none; -webkit-user-select: none;
+}
+.track::-webkit-scrollbar { display: none; }
+.track.dragging { scroll-snap-type: none; cursor: grabbing; }
+.slide {
+  flex: none; width: var(--slide-w); aspect-ratio: 16 / 9; scroll-snap-align: center;
+  position: relative; border-radius: var(--radius-l); overflow: hidden; text-decoration: none; color: inherit;
+  -webkit-user-drag: none; opacity: 0.45;
+  box-shadow: 0 0 0 0 transparent;
+  transition: opacity var(--dur-slow) var(--ease-out), box-shadow 1100ms var(--ease-out);
+}
+.slide.is-active {
+  opacity: 1;
+  box-shadow: 0 18px 40px -20px rgb(0 0 0 / 0.22); /* neutral statt Projektfarbe: gesättigte Farben leuchteten viel stärker als dunkle */
+}
+@media (max-width: 719px) { .slide { aspect-ratio: 4 / 5; } }
+.slide:is(:hover, :focus-visible) .pa { transform: scale(1.04); }
+.slide:focus-visible { outline-offset: 4px; }
+
+/* Einheitliche Bildunterschrift: gehört zum Schah-Sedi-Rahmen, nicht zum Projekt */
+.cap {
+  position: absolute; left: var(--space-4); bottom: var(--space-4); z-index: 2; max-width: calc(100% - 2 * var(--space-4));
+  display: flex; align-items: center; gap: var(--space-4);
+  padding: 6px 6px 6px 20px; border-radius: 26px;
+  background: var(--brand-paper); color: var(--brand-ink); box-shadow: 0 10px 30px rgb(0 0 0 / 0.18);
+}
+.cap-text { display: grid; line-height: 1.3; min-width: 0; }
+.cap-text b { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cap .btn-dot { --dot: 40px; background: var(--brand-yellow); color: var(--brand-ink); }
+.slide:is(:hover, :focus-visible) .cap .btn-dot { background: var(--brand-ink); color: var(--brand-yellow); }
+.slide:is(:hover, :focus-visible) .cap .btn-dot svg { transform: rotate(45deg); }
+
+.slider-foot { margin-top: var(--space-6); display: flex; justify-content: space-between; align-items: center; gap: var(--space-5); flex-wrap: wrap; }
+.dots { display: flex; gap: 8px; align-items: center; }
+.dot {
+  position: relative; width: 10px; height: 10px; padding: 0; border: 0; border-radius: 99px; overflow: hidden; cursor: pointer;
+  background: var(--line); transition: width var(--dur-base) var(--ease-out);
+}
+.dot::after { content: ""; position: absolute; inset: 0; background: var(--fg); transform-origin: left; transform: scaleX(0); }
+.dot.is-active { width: 44px; }
+.dot.is-active::after { animation: dot-fill var(--dur-slide) linear forwards; }
+.slider.paused .dot.is-active::after { animation-play-state: paused; }
+.slider.no-auto .dot.is-active::after { animation: none; transform: none; }
+@keyframes dot-fill { to { transform: scaleX(1); } }
+.slider-more { display: flex; gap: var(--space-5); align-items: center; flex-wrap: wrap; }
+.slider-more p { color: var(--muted); }

@@ -1,0 +1,57 @@
+/* ---------- Navigation: immer weiß, oben ausgeklappt, beim Scrollen nur der aktuelle Bereich ---------- */
+.nav-bar {
+  position: fixed; inset: 0 0 auto; z-index: 30;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 16px);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; justify-content: center; pointer-events: none;
+}
+.nav {
+  pointer-events: auto; position: relative;
+  display: flex; align-items: center; gap: 4px; padding: 6px; max-width: 100%;
+  background: #FFFFFF; color: var(--brand-ink); white-space: nowrap; overflow: hidden;
+  border-radius: 30px; box-shadow: 0 0 0 1px rgb(0 0 0 / 0.06), 0 10px 40px rgb(0 0 0 / 0.18);
+  transition: width 560ms var(--ease-out);
+}
+.nav-logo {
+  flex: none; width: 40px; height: 40px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--brand-ink); color: #FFFFFF;
+}
+.nav-logo svg { width: 28px; height: 28px; will-change: transform; }
+.nav-links { display: flex; gap: 2px; }
+.nav-links a, .nav-current {
+  position: relative; overflow: hidden; isolation: isolate;
+  padding: 9px 14px; border-radius: var(--radius-pill);
+  font-size: var(--fs-small); font-weight: 500; text-decoration: none;
+}
+.nav-links a > span { position: relative; z-index: 1; transition: color 200ms var(--ease-draw); }
+.nav-links a .scribble { color: var(--brand-yellow); }
+.nav-links a:is(:hover, :focus-visible) > span { color: var(--brand-ink); transition-delay: 300ms; }
+.nav-links a:is(:hover, :focus-visible) { background-color: var(--brand-yellow); transition: background-color 0s linear var(--dur-draw-in); }
+.nav-links a[aria-current="true"] { background: #F1EFEA; }
+.nav-current { padding-inline: 12px 16px; }
+.nav-toggle {
+  flex: none; width: 40px; height: 40px; border-radius: 50%; border: 0; padding: 0; cursor: pointer;
+  background: var(--brand-ink); color: #FFFFFF; display: grid; place-items: center; margin-left: 2px;
+}
+.nav-toggle i { position: absolute; width: 16px; height: 1.8px; border-radius: 2px; background: currentColor; transition: transform var(--dur-base) var(--ease-out); }
+.nav-toggle i:first-child { transform: translateY(-3.5px); }
+.nav-toggle i:last-child { transform: translateY(3.5px); }
+.nav-toggle[aria-expanded="true"] i:first-child { transform: rotate(45deg); }
+.nav-toggle[aria-expanded="true"] i:last-child { transform: rotate(-45deg); }
+.nav-toggle:hover { background: var(--brand-yellow); color: var(--brand-ink); }
+.nav-toggle { position: relative; }
+
+.nav[data-state="full"] .nav-current, .nav[data-state="full"] .nav-toggle { display: none; }
+.nav[data-state="mini"] .nav-links { display: none; }
+.nav[data-state="open"] .nav-current { display: none; }
+.nav-links, .nav-current { animation: nav-in 420ms var(--ease-out) both; }
+@keyframes nav-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* Handy: kein Platz für alle Links in einer Zeile, also klappt die Pill zu einer Karte auf */
+@media (max-width: 640px) {
+  .nav[data-state="open"] { flex-wrap: wrap; min-width: min(100%, 340px); }
+  .nav[data-state="open"] .nav-toggle { margin-left: auto; }
+  .nav[data-state="open"] .nav-links { order: 3; flex-basis: 100%; flex-direction: column; padding: 6px 0 2px; }
+  .nav[data-state="open"] .nav-links a { padding: 13px 16px; font-size: var(--fs-body); }
+}

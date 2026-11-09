@@ -1,0 +1,68 @@
+/* v3, abgespeckt: fester Schah-Sedi-Rahmen (Nav, Buttons, Footer), wenige bewusste Tonwechsel
+   (dunkel → hell → gelb → dunkel), und die Projekte bringen ihr eigenes Mini-Branding mit. */
+
+@property --bg { syntax: "<color>"; inherits: true; initial-value: #111111; }
+@property --fg { syntax: "<color>"; inherits: true; initial-value: #FFFFFF; }
+@property --muted { syntax: "<color>"; inherits: true; initial-value: #A5A198; }
+@property --line { syntax: "<color>"; inherits: true; initial-value: #2E2D2A; }
+@property --accent-text { syntax: "<color>"; inherits: true; initial-value: #FEC31E; }
+@property --hl-bg { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --sec-bg { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --chip-border { syntax: "<color>"; inherits: true; initial-value: #4A4842; }
+
+:root {
+  --brand-yellow: #FEC31E;
+  --brand-ink: #222222;
+  --brand-paper: #FFFFFF;
+  --brand-night: #111111; /* deutlich dunklerer Seitengrund für dunkle Abschnitte */
+
+  /* Ton: dunkel (Standard) */
+  --bg: #111111; --fg: #FFFFFF; --muted: #A5A198; --line: #2E2D2A;
+  --accent: #FEC31E; --accent-text: #FEC31E; --hl-bg: transparent;
+  --sec-bg: transparent; --chip-border: #4A4842;
+  color-scheme: dark;
+
+  --font-display: "Boldonse", "Arial Black", "Helvetica Neue", system-ui, sans-serif;
+  --font-sans: "Geist Variable", "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --fs-display: clamp(2.1rem, 6.6vw, 6.4rem);
+  --fs-h1: clamp(1.35rem, 2.6vw, 2.1rem); /* Zwischenüberschriften, bewusst zurückhaltend */
+  --fs-h2: clamp(1.4rem, 3vw, 2.4rem);
+  --fs-h3: 1.25rem;
+  --fs-body-l: clamp(1.1rem, 1.6vw, 1.35rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-label: 0.75rem;
+  --lh-display: 1.32;
+  --lh-tight: 1.35;
+  --lh-body: 1.6;
+
+  --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 24px;
+  --space-6: 32px; --space-7: 48px; --space-8: 64px; --space-9: 96px;
+  --section-gap: clamp(88px, 12vw, 160px);
+  --content-max: 1360px;
+  --radius-s: 6px; --radius-m: 14px; --radius-l: 28px; --radius-pill: 999px;
+
+  --dur-fast: 160ms; --dur-base: 320ms; --dur-slow: 700ms; --dur-reveal: 1000ms; --dur-tone: 750ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-draw: cubic-bezier(0.45, 0, 0.55, 1);
+  --dur-draw-in: 850ms; --dur-draw-out: 550ms;
+  --dur-slide: 6s;
+  --stagger: 70ms;
+
+  transition: --bg var(--dur-tone) var(--ease-in-out), --fg var(--dur-tone) var(--ease-in-out),
+    --muted var(--dur-tone) var(--ease-in-out), --line var(--dur-tone) var(--ease-in-out),
+    --accent-text var(--dur-tone) var(--ease-in-out), --hl-bg var(--dur-tone) var(--ease-in-out),
+    --sec-bg var(--dur-tone) var(--ease-in-out), --chip-border var(--dur-tone) var(--ease-in-out);
+}
+:root[data-tone="light"] {
+  --bg: #FFFFFF; --fg: #222222; --muted: #5E5B55; --line: #DCD9D2;
+  --accent-text: #222222; --hl-bg: #FEC31E;
+  --sec-bg: #FFFFFF; --chip-border: #222222;
+}
+:root[data-tone="yellow"] {
+  --bg: #FEC31E; --fg: #222222; --muted: #4D3F12; --line: #D9A619;
+  --accent-text: #222222; --hl-bg: #FFFFFF;
+  --sec-bg: transparent; --chip-border: #222222;
+}

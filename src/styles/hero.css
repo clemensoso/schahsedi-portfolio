@@ -1,0 +1,86 @@
+/* ---------- Hero (dunkel): Claim mittig, Projekte liegen angeschnitten an den Rändern (wie im Framer-Entwurf) ---------- */
+.hero {
+  position: relative; overflow-x: clip; overflow-y: visible; min-height: max(100svh, 640px); /* unten nicht clippen: die Kacheln ragen in den Abstand zu Projects */
+  display: grid; place-items: center;
+  padding-block: calc(env(safe-area-inset-top, 0px) + 120px) 120px;
+}
+.hero-inner { position: relative; z-index: 2; display: grid; justify-items: center; gap: var(--space-7); text-align: center; }
+.hero h1 { font-size: clamp(min(2rem, 9.4vw), 7vw, 8.6rem); }
+/* Desktop: richtet sich auch nach der Fensterhöhe, damit der Hero auf Laptops nicht erschlägt */
+@media (min-width: 901px) { .hero h1 { font-size: clamp(3.4rem, min(5.4vw, 10.5svh), 7rem); } }
+.hero h1 .line > span { animation: rise var(--dur-reveal) var(--ease-out) both; }
+.hero h1 .line:nth-child(2) > span { animation-delay: calc(var(--stagger) * 2); }
+.hero h1 .line:nth-child(3) > span { animation-delay: calc(var(--stagger) * 4); }
+.hero-actions { animation: fade-up var(--dur-slow) var(--ease-out) 500ms both; display: grid; justify-items: center; gap: var(--space-2); }
+
+.hero-inner { pointer-events: none; }
+.hero-inner > * { pointer-events: auto; }
+.floats { --fu: min(0.82vw, 1.45svh); position: absolute; inset: 0; z-index: 1; pointer-events: none; will-change: opacity; } /* --fu: Kachel-Maß aus Breite und Höhe */
+/* .float trägt Lage + Parallaxe (translate per JS), .float-card den Inhalt und den Glow in Projektfarbe */
+.float {
+  position: absolute; display: block; pointer-events: auto; text-decoration: none; color: inherit;
+  animation: float-in 1200ms var(--ease-out) both;
+  -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
+  transition: rotate 600ms var(--ease-out), scale 600ms var(--ease-out);
+}
+.float-card {
+  position: absolute; inset: 0; border-radius: var(--radius-m); overflow: hidden;
+  box-shadow: 0 30px 60px rgb(0 0 0 / 0.5), 0 10px 80px -10px color-mix(in srgb, var(--glow) 32%, transparent);
+  transition: box-shadow 600ms var(--ease-out);
+  --d: 1; will-change: transform, translate;
+  animation: var(--drift, drift-a) var(--drift-t, 8s) cubic-bezier(0.37, 0, 0.63, 1) var(--drift-at, 0s) infinite;
+}
+/* Ruhezustand: jede Kachel schwebt in eigenem Takt; beim Hover hält sie an */
+.float:is(:hover, :focus-visible, :active) .float-card { animation-play-state: paused; }
+.f1 { --drift: drift-a; --drift-t: 8.6s; --drift-at: -1.2s; }
+.f2 { --drift: drift-b; --drift-t: 10.4s; --drift-at: -6.3s; }
+.f3 { --drift: drift-a; --drift-t: 9.3s; --drift-at: -4.1s; }
+.f4 { --drift: drift-b; --drift-t: 7.9s; --drift-at: -2.7s; }
+.f5 { --drift: drift-a; --drift-t: 11.2s; --drift-at: -8s; }
+.f6 { --drift: drift-b; --drift-t: 9.8s; --drift-at: -5.2s; }
+@keyframes drift-a {
+  0%, 100% { transform: none; }
+  30% { transform: translate(calc(var(--d) * 5px), calc(var(--d) * -14px)) rotate(calc(var(--d) * 1.1deg)); }
+  65% { transform: translate(calc(var(--d) * -6px), calc(var(--d) * -5px)) rotate(calc(var(--d) * -0.8deg)); }
+}
+@keyframes drift-b {
+  0%, 100% { transform: none; }
+  35% { transform: translate(calc(var(--d) * -6px), calc(var(--d) * 11px)) rotate(calc(var(--d) * -1deg)); }
+  70% { transform: translate(calc(var(--d) * 5px), calc(var(--d) * -8px)) rotate(calc(var(--d) * 0.9deg)); }
+}
+/* Tag hängt am Mauszeiger (Position per JS) */
+.cursor-tag {
+  position: fixed; left: 0; top: 0; z-index: 28; pointer-events: none; will-change: transform;
+  background: #FFFFFF; color: var(--brand-ink); border-radius: var(--radius-pill);
+  padding: 6px 12px; font-size: var(--fs-small); font-weight: 500; white-space: nowrap;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.06), 0 8px 24px rgb(0 0 0 / 0.25);
+  opacity: 0; scale: 0.85; transform-origin: 0 0; transition: opacity 180ms var(--ease-out), scale 260ms var(--ease-out);
+}
+.cursor-tag.is-on { opacity: 1; scale: 1; }
+/* Hover wie im Framer-Entwurf: Kachel richtet sich auf und wird etwas größer */
+.float:is(:hover, :focus-visible, :active) { z-index: 3; rotate: 0deg; scale: 1.06; }
+.float:is(:hover, :focus-visible, :active) .float-card { box-shadow: 0 40px 80px rgb(0 0 0 / 0.55), 0 10px 110px -10px color-mix(in srgb, var(--glow) 45%, transparent); }
+.float:is(:hover, :focus-visible, :active) .pa { transform: scale(1.04); }
+.f1 { width: calc(var(--fu) * 22); aspect-ratio: 4 / 3; left: -3%; top: -7%; rotate: 12deg; animation-delay: 250ms; }
+.f2 { width: calc(var(--fu) * 19); aspect-ratio: 3 / 4; left: 0.5%; top: 41%; rotate: -9deg; animation-delay: 400ms; }
+.f3 { width: calc(var(--fu) * 21); aspect-ratio: 4 / 3; left: 20%; bottom: -5%; rotate: -4deg; animation-delay: 520ms; }
+.f4 { width: calc(var(--fu) * 18); aspect-ratio: 1 / 1.1; right: 1.5%; top: -9%; rotate: -8deg; animation-delay: 320ms; }
+.f5 { width: calc(var(--fu) * 15); aspect-ratio: 3 / 4; right: -1%; top: 33%; rotate: 11deg; animation-delay: 460ms; }
+.f6 { width: calc(var(--fu) * 21); aspect-ratio: 4 / 3; right: 16%; bottom: -11%; rotate: 14deg; animation-delay: 580ms; }
+@media (max-width: 900px) {
+  /* drei Projekte oben, Claim mit Button, drei Projekte unten */
+  .hero {
+    min-height: 0; padding-top: calc(env(safe-area-inset-top, 0px) + 100px); padding-bottom: var(--space-8);
+    grid-template-columns: minmax(0, 1fr) repeat(3, minmax(0, min(31vw, 133px))) minmax(0, 1fr);
+  }
+  .hero-inner { grid-row: 2; grid-column: 1 / -1; margin-block: var(--space-7); }
+  .floats { display: contents; }
+  .float { position: relative; inset: auto; width: auto; justify-self: stretch; margin-inline: -8px; aspect-ratio: 3 / 4; }
+  .f1, .f2, .f3 { grid-row: 1; } .f4, .f5, .f6 { grid-row: 3; }
+  .f1, .f4 { grid-column: 2; } .f2, .f5 { grid-column: 3; z-index: 1; } .f3, .f6 { grid-column: 4; }
+  .float-card { --d: 0.6; }
+  .f1 { rotate: -8deg; } .f2 { rotate: 4deg; } .f3 { rotate: 9deg; } .f4 { rotate: 7deg; } .f5 { rotate: -4deg; } .f6 { rotate: -9deg; }
+}
+@keyframes rise { from { transform: translateY(105%); } to { transform: none; } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+@keyframes float-in { from { opacity: 0; transform: translateY(60px) scale(0.9); } to { opacity: 1; transform: none; } }

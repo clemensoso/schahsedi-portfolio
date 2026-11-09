@@ -1,0 +1,4 @@
+/* ---------- Projekt-Poster: jedes Projekt bringt Farbe + Schrift mit (später aus dem CMS) ---------- */
+.poster { position: absolute; inset: 0; overflow: hidden; background: #1C1C1B; }
+.poster .pa { display: block; width: 100%; height: 100%; transition: transform 900ms var(--ease-out); }
+.poster img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 50% 50%); -webkit-user-drag: none; user-select: none; pointer-events: none; }

@@ -1,0 +1,21 @@
+---
+import home from '../data/home.json';
+import Poster from './Poster.astro';
+---
+<section class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero-inner">
+        <h1 class="display" id="hero-title">
+          <span class="line"><span>Shaping brands</span></span>
+          <span class="line"><span>from insights</span></span>
+          <span class="line"><span>to impact</span></span>
+        </h1>
+        <div class="hero-actions">
+          <a class="btn" href="#arbeiten"><span class="btn-label">Projekte ansehen</span><span class="btn-dot" aria-hidden="true"><svg><use href="#arrow"/></svg></span></a>
+        </div>
+      </div>
+      <div class="floats" id="floats" aria-hidden="true">
+        {home.heroTiles.map((t, i) => (
+          <a class={`float f${i + 1}`} href="#arbeiten" style={`--glow:${t.glow}`} data-speed={t.speed} aria-label={t.label} tabindex="-1"><span class="float-card"><Poster image={t.image} pos={t.pos} /></span></a>
+        ))}
+      </div>
+    </section>

@@ -1,0 +1,13 @@
+---
+import { asset } from '../lib/asset.js';
+// Projektbild: optional eigenes Hochformat fürs Handy, --pos ist der Bildausschnitt
+const { image, imageMobile, pos } = Astro.props;
+const style = pos ? `--pos:${pos}` : undefined;
+---
+<div class="poster">
+  {imageMobile ? (
+    <picture class="pa"><source media="(max-width: 719px)" srcset={asset(`projects/${imageMobile}`)} /><img src={asset(`projects/${image}`)} alt="" draggable="false" style={style} /></picture>
+  ) : (
+    <img class="pa" src={asset(`projects/${image}`)} alt="" draggable="false" style={style} />
+  )}
+</div>

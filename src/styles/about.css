@@ -1,0 +1,182 @@
+/* ---------- Personal (hell): Bento Grid, über dem Porträt klebt der Namens-Sticker ---------- */
+.about { padding-bottom: var(--space-7); } /* kurz halten: die gelbe Karte soll früh auftauchen */
+.about-head { display: grid; justify-items: center; gap: var(--space-4); margin-bottom: var(--space-7); }
+.about-head h2 { font-size: clamp(min(1.9rem, 8vw), 4.2vw, 3.6rem); line-height: 1.42; max-width: 15em; }
+.about .about-head h2 { max-width: 19em; } /* zwei Sätze, zwei Zeilen */
+.about-head p { font-size: var(--fs-body-l); color: var(--muted); max-width: 30em; }
+
+.bento { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr);
+  --bg: #FFFFFF; --fg: #222222; --sec-bg: #FFFFFF; } /* Kacheln sind immer weiß: Buttons darin unabhängig vom Seitenton */
+/* Kacheln erscheinen nacheinander (gleiche Reveal-Bewegung wie überall, nur gestaffelt) */
+.bento > .tile.pre { transform: translateY(32px) scale(0.98); }
+.bento > .tile.pre.in { transform: none; transition-delay: calc(var(--i, 0) * 90ms); }
+/* Kacheln: weiß, feine Kontur, weicher Schatten */
+.tile {
+  position: relative; border-radius: 20px; padding: clamp(22px, 2.2vw, 30px);
+  background: #FFFFFF; color: var(--brand-ink);
+  border: 1px solid #E9E6E0;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 14px 34px -14px rgb(0 0 0 / 0.14);
+}
+.t-portrait { padding: 0; min-height: 440px; border: 0; }
+.t-text { display: grid; align-content: space-between; gap: var(--space-6); }
+.t-text .big { font-size: clamp(1.2rem, 1.7vw, 1.5rem); font-weight: 600; line-height: 1.38; letter-spacing: -0.015em; text-wrap: pretty; }
+.t-text p:not(.big) { color: #5E5B55; max-width: 30em; }
+.t-cv { display: grid; gap: var(--space-6); align-content: space-between; }
+.cv-list { display: grid; gap: var(--space-5); }
+/* Logo und Textblock gleich hoch: Oberkante und Unterkante bündig */
+.cv-item { --logo: 64px; display: grid; grid-template-columns: var(--logo) minmax(0, 1fr); gap: var(--space-4); align-items: stretch; }
+.cv-logo { width: var(--logo); height: var(--logo); border-radius: 14px; overflow: hidden; display: grid; place-items: center; background: var(--brand-ink); color: #FFFFFF; }
+.cv-logo svg { width: 70%; height: 70%; }
+.cv-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cv-text { height: var(--logo); display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; line-height: 1.2; }
+.cv-logo.more { background: #F1EFEA; color: #5E5B55; font-weight: 600; }
+.cv-more { display: flex; align-items: center; height: var(--logo); --line: #222222; }
+.cv-text small { font-size: 0.75rem; font-weight: 500; background: #F1EFEA; color: #5E5B55; border-radius: var(--radius-pill); padding: 2px 9px; }
+.cv-text b { font-weight: 600; }
+.cv-text .where { color: #5E5B55; font-size: var(--fs-small); }
+.t-stat { display: grid; align-content: space-between; gap: var(--space-4); }
+.t-stat .num { font-family: var(--font-display); font-size: clamp(1.9rem, 3vw, 2.6rem); line-height: 1.3; }
+.t-stat p { color: #5E5B55; max-width: 20em; }
+.t-skills { --tile-pad: clamp(22px, 2.2vw, 30px); display: grid; gap: var(--tile-pad); grid-template-columns: minmax(0, 1fr); overflow: hidden; }
+.t-skills h3 { font-size: var(--fs-h3); font-weight: 600; line-height: var(--lh-tight); }
+.t-skills .skills-copy { display: grid; gap: var(--space-4); align-content: center; justify-items: start; }
+.t-skills .skills-copy p { color: #5E5B55; max-width: 26em; }
+
+@media (min-width: 760px) {
+  .bento { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .t-portrait { grid-column: 1 / 4; grid-row: 1 / 3; }
+  .t-text { grid-column: 4 / 7; grid-row: 1 / 3; }
+  .t-cv { grid-column: 1 / 4; }
+  .t-stat { grid-column: 4 / 7; }
+  .t-skills { grid-column: 1 / -1; grid-template-columns: minmax(210px, 3fr) minmax(0, 9fr); }
+}
+@media (min-width: 1080px) {
+  .bento { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .t-portrait { grid-column: 1 / 5; grid-row: 1 / 3; }
+  .t-text { grid-column: 5 / 9; grid-row: 1 / 3; }
+  .t-cv { grid-column: 9 / 13; grid-row: 1; }
+  .t-stat { grid-column: 9 / 13; grid-row: 2; }
+}
+
+/* Porträt: das Hoodie-GIF aus dem Framer-Entwurf */
+.portrait-img { position: absolute; inset: 0; border-radius: 20px; overflow: hidden; background: #1B1B1A; }
+.portrait-img img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; display: block; }
+
+/* Namens-Sticker (SVG aus dem Framer-Entwurf).
+   Beim Runterscrollen klebt er sich selbst auf: erst ist eine große Ecke umgeklappt, die sich glatt streicht.
+   Beim Hover löst sich die Ecke wieder ein Stück. --peel kommt per JS vom Scrollen, --hp vom Hover. */
+.sticker {
+  --peel: 0px; --hp: 0px; --pp: max(var(--peel), var(--hp));
+  --sw: clamp(200px, 19vw, 280px);
+  --sr: calc(var(--sw) * 14 / 229); /* Eckenradius der SVG-Grafik (14 von 229 Einheiten), in px */
+  /* sitzt auf der unteren rechten Ecke des GIFs und ragt nur so weit über die Kachel, wie Abstand + Innenabstand der Nachbarkacheln erlauben */
+  position: absolute; z-index: 4; right: -18px; bottom: -14px; width: var(--sw);
+  rotate: -6deg; cursor: grab; user-select: none;
+  transition: rotate 450ms var(--ease-out), translate 450ms var(--ease-out);
+}
+/* Die Grafik ist im SVG um 3° gedreht: hier gerade gerückt und randlos zugeschnitten, damit die Ecke exakt sitzt */
+.sticker-body {
+  position: relative; aspect-ratio: 229 / 152.6; border-radius: var(--sr); overflow: hidden;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pp)), calc(100% - var(--pp)) 100%, 0 100%);
+  transition: clip-path 380ms var(--ease-out);
+}
+.sticker-body img { position: absolute; width: 103.37%; max-width: none; left: -1.68%; top: -3.87%; rotate: 3deg; display: block; pointer-events: none; }
+.sticker-flap {
+  position: absolute; right: 0; bottom: 0; width: var(--pp); height: var(--pp); pointer-events: none;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  background: linear-gradient(135deg, #CFCAC0 0%, #F4F2EE 38%, #FFFFFF 62%, #E6E2DA 100%);
+  border-top-left-radius: var(--sr); /* die umgeklappte Spitze ist die Stickerecke: gleicher Radius */
+  transition: width 380ms var(--ease-out), height 380ms var(--ease-out);
+}
+.sticker.scrolling .sticker-body, .sticker.scrolling .sticker-flap { transition-duration: 90ms; }
+.sticker.settled:hover { --hp: 38px; rotate: -3deg; translate: 0 -5px; }
+@media (max-width: 759px) { .sticker { --sw: min(46vw, 190px); right: 10px; bottom: -14px; } } /* Handy: nur nach unten über die Kachel */
+
+/* Kleine runde Bedienknöpfe: Play/Pause am Porträt, Zurücklegen bei den Stickern */
+.media-btn {
+  position: absolute; z-index: 5; width: 40px; height: 40px; border-radius: 50%; border: 1px solid #E9E6E0; padding: 0;
+  display: grid; place-items: center; cursor: pointer; background: #FFFFFF; color: var(--brand-ink);
+  box-shadow: 0 6px 16px rgb(0 0 0 / 0.14);
+  transition: background var(--dur-base) var(--ease-out), scale var(--dur-fast) var(--ease-out), opacity var(--dur-base) var(--ease-out);
+}
+.media-btn svg { width: 16px; height: 16px; }
+.media-btn svg path { fill: currentColor; }
+.media-btn:hover { background: var(--brand-yellow); }
+.media-btn:active { scale: 0.92; }
+/* Porträt: nur ein blasses Play als Zeichen „GIF steht“. Während es läuft, ausgeblendet. */
+.portrait-play { position: absolute; z-index: 3; left: 12px; bottom: 12px; width: 36px; height: 36px; padding: 0; border: 0; background: none; display: grid; place-items: center; cursor: pointer; color: #FFFFFF; opacity: 0.5; transition: opacity var(--dur-base) var(--ease-out); }
+.portrait-play svg { width: 18px; height: 18px; }
+.portrait-play svg path { fill: currentColor; }
+.portrait-play[aria-pressed="true"] { opacity: 0; }
+.sheet-reset { right: var(--tile-pad); bottom: var(--tile-pad); }
+.sheet-reset { z-index: 9999; } /* liegt immer über den Stickern */
+.sheet-reset svg path { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.sheet-reset:hover svg { rotate: 360deg; }
+.sheet-reset svg { transition: rotate 600ms var(--ease-out); }
+.sheet-reset[hidden] { display: grid; opacity: 0; pointer-events: none; }
+.skill.returning { transition: left 650ms var(--ease-out), top 650ms var(--ease-out), scale 200ms var(--ease-out); }
+
+/* Skills als Sticker zum Herumschieben: einfache Line-Formen, Text mit gleichen Randabständen */
+.sticker-sheet { --k: 1.1; position: relative; min-height: 290px; align-self: stretch; }
+/* dezenter Hinweis „lässt sich bewegen“: ab und zu hebt sich ein Sticker kurz an und wackelt */
+.skill.nudge { animation: nudge 900ms var(--ease-out); }
+@keyframes nudge {
+  0% { transform: none; }
+  30% { transform: translateY(-6px) rotate(-3deg) scale(1.03); }
+  55% { transform: translateY(-4px) rotate(2.5deg) scale(1.03); }
+  80% { transform: translateY(-1px) rotate(-1deg); }
+  100% { transform: none; }
+}
+.skill { position: absolute; left: 0; top: 0; rotate: var(--r, 0deg); cursor: grab; user-select: none; touch-action: none;
+  transition: scale 200ms var(--ease-out); }
+/* --pad: Platz im SVG für den weißen Rand, damit nichts über die Box hinausragt und der Schatten überall sauber ist */
+.skill svg { --pad: 6; display: block; width: calc((var(--w) + 2 * var(--pad)) * var(--k) * 1px); height: auto; margin: calc(var(--pad) * var(--k) * -1px); filter: drop-shadow(0 3px 4px rgb(0 0 0 / 0.24)); }
+.skill svg .cut :is(path, rect, circle, line) { fill: #FFFFFF; stroke: #FFFFFF; stroke-width: 10.2; stroke-linejoin: round; stroke-linecap: round; }
+.skill svg .cut .thick { stroke-width: 18; }
+.skill svg :is(path, rect, circle, line) { stroke: var(--brand-ink); stroke-width: 2.2; stroke-linejoin: round; stroke-linecap: round; }
+.skill svg .thick { stroke-width: 10; }
+.skill svg text { font-family: var(--font-sans); font-weight: 600; font-size: 12px !important; /* überall gleich groß */ fill: var(--brand-ink); text-anchor: middle; stroke: none; }
+.skill svg text.light { fill: #FFFFFF; }
+.skill:hover { scale: 1.05; }
+@media (hover: hover) { .skill:hover:not(.grabbing, .returning, .nudge) { animation: skill-wiggle 1100ms ease-in-out infinite; } }
+@keyframes skill-wiggle {
+  0%, 100% { rotate: var(--r, 0deg); }
+  25% { rotate: calc(var(--r, 0deg) + 5deg); }
+  75% { rotate: calc(var(--r, 0deg) - 5deg); }
+}
+.skill.grabbing { cursor: grabbing; scale: 1.1; }
+.skill.grabbing svg { filter: drop-shadow(0 12px 14px rgb(0 0 0 / 0.3)); }
+@media (max-width: 759px) { .sticker-sheet { min-height: 380px; } }
+
+.clients { margin-top: var(--space-9); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
+.clients-title { font-size: var(--fs-h3); font-weight: 600; line-height: var(--lh-tight); }
+/* Logo-Band: läuft über die volle Fensterbreite, Ränder blenden weich aus */
+.marquee {
+  --marquee-gap: clamp(48px, 6vw, 96px);
+  display: flex; width: 100vw; margin-inline: calc(50% - 50vw); overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee-group {
+  flex: none; display: flex; align-items: center; gap: var(--marquee-gap); padding-right: var(--marquee-gap);
+  transform: translate3d(var(--mx, 0px), 0, 0); will-change: transform; /* Position kommt vom Scrollen */
+}
+.marquee-group img { display: block; width: auto; max-width: none; user-select: none; }
+/* Handy: zwei Zeilen mit je vier Logos, gegenläufig. Der Scrollweg zeigt jedes Logo einmal. */
+.marquee-m { display: none; }
+.m-row { display: flex; align-items: center; gap: 44px; width: max-content; will-change: transform; }
+.m-row img { display: block; width: auto; max-width: none; user-select: none; }
+@media (max-width: 759px) {
+  .marquee { display: none; }
+  .marquee-m { display: grid; gap: var(--space-6); width: 100vw; margin-inline: calc(50% - 50vw); overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee { width: auto; margin-inline: 0; -webkit-mask-image: none; mask-image: none; }
+  .marquee-group { transform: none; flex-wrap: wrap; flex: 1; row-gap: var(--space-5); }
+  .marquee-group[aria-hidden] { display: none; }
+  .marquee-m { width: auto; margin-inline: 0; -webkit-mask-image: none; mask-image: none; }
+  .m-row { width: auto; flex-wrap: wrap; row-gap: var(--space-5); transform: none !important; }
+  .m-row li[aria-hidden] { display: none; }
+}

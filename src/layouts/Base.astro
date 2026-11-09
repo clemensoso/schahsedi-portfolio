@@ -1,0 +1,19 @@
+---
+import '@fontsource/boldonse/400.css';
+import '@fontsource-variable/geist/wght.css';
+import '../styles/global.css';
+
+const { title = 'Schah Sedi' } = Astro.props;
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

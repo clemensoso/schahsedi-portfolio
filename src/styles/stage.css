@@ -1,0 +1,20 @@
+/* ---------- Projekte als weiße Karte über dem schwarzen Hero ---------- */
+:root[data-work="card"] { background: var(--brand-night); } /* Überscrollen oben und unten bleibt schwarz */
+/* Schwarzer Grund hinter der Karte: ist der Hero kürzer als das Fenster, darf durch die Lücke nicht der Footer scheinen */
+:root[data-work="card"] .top-stage { background: var(--brand-night); }
+:root[data-work="card"] #hero-block {
+  /* Hero behält seine dunklen Farben, unabhängig vom Seitenton */
+  --bg: #111111; --fg: #FFFFFF; --muted: #A5A198; --line: #2E2D2A;
+  --accent-text: #FEC31E; --hl-bg: transparent; --sec-bg: transparent; --chip-border: #4A4842;
+  color: var(--fg);
+  position: sticky; z-index: 0; /* top per JS: bei niedrigen Fenstern klebt die Unterkante */
+}
+:root[data-work="card"] #work-block {
+  --bg: #FFFFFF; --fg: #222222; --muted: #5E5B55; --line: #DCD9D2;
+  --accent-text: #222222; --hl-bg: #FEC31E; --sec-bg: #FFFFFF; --chip-border: #222222;
+  color: var(--fg);
+  position: relative; z-index: 1;
+  border-radius: clamp(28px, 4vw, 56px) clamp(28px, 4vw, 56px) 0 0;
+  transform-origin: 50% 0;
+  translate: 0 var(--rise, 0px); scale: var(--grow, 1);
+}
