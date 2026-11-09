@@ -1,40 +1,30 @@
+---
+import process from '../data/process.json';
+
+// Pfeile von Karte 1 zu 2 und von 2 zu 3
+const arrows = [
+  `<svg class="step-arrow" viewBox="0 0 140 56" aria-hidden="true"><path pathLength="1" d="M4 50C14 20 54 4 132 19"/><path pathLength="1" d="M111 5 133 19 108 30"/></svg>`,
+  `<svg class="step-arrow" viewBox="0 0 140 56" aria-hidden="true"><path pathLength="1" d="M4 8C30 42 78 52 133 28"/><path pathLength="1" d="M108 26 134 27 120 49"/></svg>`,
+];
+---
 <section class="services wrap" id="leistungen" data-nav="Services" aria-labelledby="leistungen-title">
       <div class="about-head center reveal">
-        <h2 class="display" id="leistungen-title">Und so entstehen unsere Projekte:</h2>
-        <p>Viele Marken gehen unter, weil sie nicht wissen, was sie besonders macht. Das finden wir zusammen heraus, in drei Schritten.</p>
+        <h2 class="display" id="leistungen-title">{process.title}</h2>
+        <p>{process.intro}</p>
       </div>
       <ol class="steps">
-        <li class="step reveal" style="--i:0">
-          <div class="step-card">
-          <span class="step-num">01</span>
-          <h3>Strategie &amp; Identität</h3>
-          <div class="step-body">
-            <p>Ziel festlegen, nach links und rechts schauen und den besten Weg für deine Marke finden.</p>
-            <ul class="pills"><li>Workshops</li><li>Markenanalyse</li><li>Marktrecherche</li></ul>
-          </div>
-          </div>
-          <svg class="step-arrow" viewBox="0 0 140 56" aria-hidden="true"><path pathLength="1" d="M4 50C14 20 54 4 132 19"/><path pathLength="1" d="M111 5 133 19 108 30"/></svg>
-        </li>
-        <li class="step reveal" style="--i:1">
-          <div class="step-card">
-          <span class="step-num">02</span>
-          <h3>Idee &amp; Branding</h3>
-          <div class="step-body">
-            <p>Wir formen, wie deine Marke spricht und aussieht, damit dein Publikum endlich wieder etwas fühlt.</p>
-            <ul class="pills"><li>Kreativkonzepte</li><li>Art Direction</li><li>Brand Design</li></ul>
-          </div>
-          </div>
-          <svg class="step-arrow" viewBox="0 0 140 56" aria-hidden="true"><path pathLength="1" d="M4 8C30 42 78 52 133 28"/><path pathLength="1" d="M108 26 134 27 120 49"/></svg>
-        </li>
-        <li class="step reveal" style="--i:2">
-          <div class="step-card">
-          <span class="step-num">03</span>
-          <h3>Creative Assets</h3>
-          <div class="step-body">
-            <p>Die Marke wird lebendig, an jedem Berührungspunkt. Print, Digital, Außenwerbung: Was gebraucht wird, wird gebaut.</p>
-            <ul class="pills"><li>Packaging</li><li>UX / UI</li><li>Editorial</li><li>Kampagnen</li></ul>
-          </div>
-          </div>
-        </li>
+        {process.steps.map((step, i) => (
+          <li class="step reveal" style={`--i:${i}`}>
+            <div class="step-card">
+              <span class="step-num">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{step.title}</h3>
+              <div class="step-body">
+                <p>{step.text}</p>
+                <ul class="pills">{step.tags.map((tag) => <li>{tag}</li>)}</ul>
+              </div>
+            </div>
+            {arrows[i] && <Fragment set:html={arrows[i]} />}
+          </li>
+        ))}
       </ol>
     </section>

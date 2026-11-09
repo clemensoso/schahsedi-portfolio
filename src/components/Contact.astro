@@ -1,40 +1,49 @@
+---
+import contact from '../data/contact.json';
+import site from '../data/site.json';
+
+// Platzhalter wie {firma} im Text werden zu Eingabefeldern
+const parts = (text) => text.split(/(\{\w+\})/).filter(Boolean);
+const mailto = `mailto:${site.mailAddress}?subject=${encodeURIComponent(site.mailSubject)}&body=${encodeURIComponent(site.mailBody)}`;
+---
 <section class="contact" id="kontakt" data-nav="Contact" aria-labelledby="kontakt-title">
     <form class="contact-inner" id="contact-form" novalidate>
-      <h2 class="display" id="kontakt-title"><span class="hey">Hey <input class="fill" id="f-name" name="name" type="text" placeholder="dein Name" autocomplete="given-name" aria-label="Dein Name" maxlength="40" required>,</span> bist du bereit für was Neues?</h2>
+      <h2 class="display" id="kontakt-title"><span class="hey">{parts(contact.greeting).map((p) => p === '{name}'
+        ? <input class="fill" id="f-name" name="name" type="text" placeholder={contact.namePlaceholder} autocomplete="given-name" aria-label="Dein Name" maxlength="40" required>
+        : p)}</span> {contact.question}</h2>
       <div class="story">
-        <p>Dann erzähl mal<span id="echo-name"></span>. Du bist gerade bei <input class="fill" name="company" type="text" placeholder="Firma oder Projekt" autocomplete="organization" aria-label="Firma oder Projekt">, und am meisten beschäftigt dich <input class="fill" name="topic" type="text" placeholder="das, was nervt" aria-label="Was dich gerade beschäftigt">.</p>
+        <p>{parts(contact.storyIntro).map((p) => p === '{echo}' ? <span id="echo-name"></span>
+          : p === '{firma}' ? <input class="fill" name="company" type="text" placeholder={contact.companyPlaceholder} autocomplete="organization" aria-label={contact.companyPlaceholder}>
+          : p === '{thema}' ? <input class="fill" name="topic" type="text" placeholder={contact.topicPlaceholder} aria-label="Was dich gerade beschäftigt">
+          : p)}</p>
         <div class="story-block">
-          <p id="q-help">Anpacken könnten wir zusammen:</p>
+          <p id="q-help">{contact.helpQuestion}</p>
           <div class="choice" role="group" aria-labelledby="q-help">
-            <button type="button" class="chip" aria-pressed="false"><span>Branding</span></button>
-            <button type="button" class="chip" aria-pressed="false"><span>Website</span></button>
-            <button type="button" class="chip" aria-pressed="false"><span>Packaging</span></button>
-            <button type="button" class="chip" aria-pressed="false"><span>360° Kampagne</span></button>
-            <button type="button" class="chip" aria-pressed="false"><span>Erstmal Mittagessen</span></button>
+            {contact.helpOptions.map((o) => <button type="button" class="chip" aria-pressed="false"><span>{o}</span></button>)}
           </div>
         </div>
         <div class="story-block">
-          <p id="q-when">Losgehen soll es:</p>
+          <p id="q-when">{contact.whenQuestion}</p>
           <div class="choice" role="group" aria-labelledby="q-when" data-single>
-            <button type="button" class="chip" aria-pressed="false"><span>Am liebsten gestern</span></button>
-            <button type="button" class="chip" aria-pressed="false"><span>In den nächsten Wochen</span></button>
-            <button type="button" class="chip" aria-pressed="false"><span>Irgendwann dieses Jahr</span></button>
+            {contact.whenOptions.map((o) => <button type="button" class="chip" aria-pressed="false"><span>{o}</span></button>)}
           </div>
         </div>
-        <p>Spätestens nach zwei Werktagen antworte ich dir an <input class="fill" id="f-mail" name="email" type="email" placeholder="deine@adresse.de" autocomplete="email" aria-label="Deine E-Mail-Adresse" required>.</p>
+        <p>{parts(contact.mailSentence).map((p) => p === '{email}'
+          ? <input class="fill" id="f-mail" name="email" type="email" placeholder={contact.mailPlaceholder} autocomplete="email" aria-label="Deine E-Mail-Adresse" required>
+          : p)}</p>
         <div class="story-block">
-          <p id="q-more">Und sonst so?</p>
-          <textarea class="fill" id="f-msg" name="message" rows="1" placeholder="Alles, was sonst nicht reinpasst" aria-labelledby="q-more"></textarea>
+          <p id="q-more">{contact.moreQuestion}</p>
+          <textarea class="fill" id="f-msg" name="message" rows="1" placeholder={contact.morePlaceholder} aria-labelledby="q-more"></textarea>
         </div>
         <div class="form-foot">
-          <button class="btn" type="submit"><span class="btn-label">Ja, ich bin bereit</span><span class="btn-dot" aria-hidden="true"><svg><use href="#arrow"/></svg></span></button>
-          <small id="form-note" role="status">Deine Angaben nutze ich nur, um dir zu antworten. Mehr dazu in der Datenschutzerklärung.</small>
+          <button class="btn" type="submit"><span class="btn-label">{contact.button}</span><span class="btn-dot" aria-hidden="true"><svg><use href="#arrow"/></svg></span></button>
+          <small id="form-note" role="status">{contact.privacyNote}</small>
         </div>
       </div>
       <nav class="social" aria-label="Weitere Wege zu mir">
-        <a href="https://www.instagram.com/schahsedi/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg></a>
-        <a href="https://www.linkedin.com/in/clemens-schah-sedi-49a781193/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
-        <a class="social-mail" href="mailto:mail@schahsedi.com?subject=Projektanfrage%20%C3%BCber%20schahsedi.com&amp;body=Hallo%20Clemens%2C%0A%0Aich%20habe%20ein%20Projekt%2C%20bei%20dem%20ich%20deine%20Unterst%C3%BCtzung%20gut%20gebrauchen%20k%C3%B6nnte.%0A%0AWorum%20es%20geht%3A%0AZeitrahmen%3A%0ABudget%3A%0A%0AViele%20Gr%C3%BC%C3%9Fe%0A" aria-label="Direkt per Mail anfragen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="m22 6-10 7L2 6"/></svg></a>
+        <a href={site.instagram} target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg></a>
+        <a href={site.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        <a class="social-mail" href={mailto} aria-label={site.mailLabel}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="m22 6-10 7L2 6"/></svg></a>
       </nav>
     </form>
   </section>

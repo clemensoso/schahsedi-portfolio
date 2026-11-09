@@ -6,8 +6,8 @@ const style = pos ? `--pos:${pos}` : undefined;
 ---
 <div class="poster">
   {imageMobile ? (
-    <picture class="pa"><source media="(max-width: 719px)" srcset={asset(`projects/${imageMobile}`)} /><img src={asset(`projects/${image}`)} alt="" draggable="false" style={style} /></picture>
+    <picture class="pa"><source media="(max-width: 719px)" srcset={asset(imageMobile)} /><img src={asset(image)} alt="" draggable="false" style={style} /></picture>
   ) : (
-    <img class="pa" src={asset(`projects/${image}`)} alt="" draggable="false" style={style} />
+    <img class="pa" src={asset(image)} alt="" draggable="false" style={style} />
   )}
 </div>

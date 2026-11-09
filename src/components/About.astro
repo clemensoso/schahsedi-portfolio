@@ -1,50 +1,51 @@
 ---
 import { asset } from '../lib/asset.js';
+import about from '../data/about.json';
 ---
 <section class="about wrap" id="ueber-mich" data-nav="Personal" aria-labelledby="about-title">
       <div class="about-head center reveal">
-        <h2 class="display" id="about-title">Wer hat das alles gemacht?<br>Gut, dass du fragst.</h2>
-        <p>Ich, Clemens. Kommunikationsdesigner, Dozent und Gründer von Studio Schah Sedi.</p>
+        <h2 class="display" id="about-title">{about.titleLines.map((line, i) => <>{i > 0 && <br />}{line}</>)}</h2>
+        <p>{about.intro}</p>
       </div>
       <div class="bento">
         <div class="tile t-portrait reveal" style="--i:0">
-          <div class="portrait-img"><img id="portrait-gif" data-gif={asset('portrait.gif')} src={asset('portrait-still.jpg')} alt="Clemens zieht sich die Kapuze vom Kopf" loading="lazy"></div>
+          <div class="portrait-img"><img id="portrait-gif" data-gif={asset(about.portrait.animation)} src={asset(about.portrait.still)} alt={about.portrait.alt} loading="lazy"></div>
           <button class="portrait-play" type="button" id="portrait-play" aria-pressed="false" aria-label="Animation abspielen"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.8c0-.8.9-1.3 1.6-.9l7.3 4.9c.6.4.6 1.4 0 1.8l-7.3 4.9c-.7.4-1.6-.1-1.6-.9z"/></svg></button>
           <div class="sticker" id="sticker"><div class="sticker-body"><img src={asset('sticker.svg')} alt="Namens-Sticker: Hello, my name is Clem!"></div><span class="sticker-flap" aria-hidden="true"></span></div>
         </div>
 
         <div class="tile t-text reveal" style="--i:1">
-          <p class="big">Ich glaube an Kommunikation, die hängen bleibt. Die einen kurz innehalten lässt, zum Nachdenken bringt oder zum Lächeln.</p>
-          <p>Das Studio ist mein Spielplatz und deine Startrampe. Zusammen bauen wir Marken, die sich richtig anfühlen, gut aussehen und einen Eindruck hinterlassen, über den man redet.</p>
+          <p class="big">{about.quote}</p>
+          <p>{about.text}</p>
         </div>
 
         <div class="tile t-cv reveal" style="--i:2">
           <div class="cv-list">
+            {about.cv.map((entry) => (
+              <div class="cv-item">
+                {entry.logo
+                  ? <span class="cv-logo"><img src={asset(entry.logo)} alt={entry.logoAlt || ''}></span>
+                  : <span class="cv-logo" aria-hidden="true"><svg><use href="#logo"/></svg></span>}
+                <span class="cv-text"><small>{entry.period}</small><b>{entry.role}</b><span class="where">{entry.place}</span></span>
+              </div>
+            ))}
             <div class="cv-item">
-              <span class="cv-logo" aria-hidden="true"><svg><use href="#logo"/></svg></span>
-              <span class="cv-text"><small>2018 – heute</small><b>Gründer &amp; Creative</b><span class="where">Studio Schah Sedi</span></span>
-            </div>
-            <div class="cv-item">
-              <span class="cv-logo"><img src={asset('srh-logo.png')} alt="SRH"></span>
-              <span class="cv-text"><small>2024 – heute</small><b>Dozent</b><span class="where">SRH University Berlin</span></span>
-            </div>
-            <div class="cv-item">
-              <span class="cv-logo more" aria-hidden="true">+3</span>
-              <span class="cv-more"><a class="link" href="#cv" title="Eigene Seite, folgt">Vollständiger CV</a></span>
+              <span class="cv-logo more" aria-hidden="true">{about.cvMore}</span>
+              <span class="cv-more"><a class="link" href="#cv" title="Eigene Seite, folgt">{about.cvLink}</a></span>
             </div>
           </div>
         </div>
 
         <div class="tile t-stat reveal" style="--i:3">
-          <span class="num">40+</span>
-          <p>abgeschlossene Designprojekte in 12 Branchen und 3 Ländern</p>
+          <span class="num">{about.statNumber}</span>
+          <p>{about.statText}</p>
         </div>
 
         <div class="tile t-skills reveal" style="--i:4">
           <div class="skills-copy">
-            <h3>Was ich mitbringe</h3>
-            <p>Alles, was deine Marke von langweilig zu unvergesslich bringt. Und wenn du etwas ganz Spezielles brauchst, kenne ich jemanden, der jemanden kennt.</p>
-            <a class="btn" href="#kontakt"><span class="btn-label">Lass uns reden</span><span class="btn-dot" aria-hidden="true"><svg><use href="#arrow"/></svg></span></a>
+            <h3>{about.skillsTitle}</h3>
+            <p>{about.skillsText}</p>
+            <a class="btn" href="#kontakt"><span class="btn-label">{about.skillsButton}</span><span class="btn-dot" aria-hidden="true"><svg><use href="#arrow"/></svg></span></a>
           </div>
           <button class="media-btn sheet-reset" type="button" id="sheet-reset" aria-label="Sticker zurücklegen" title="Sticker zurücklegen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
           <ul class="sticker-sheet" id="sticker-sheet" aria-label="Schwerpunkte">
@@ -60,17 +61,10 @@ import { asset } from '../lib/asset.js';
         </div>
       </div>
       <div class="clients">
-        <h3 class="clients-title reveal">Ein paar der Unternehmen, mit denen ich zusammenarbeiten durfte:</h3>
+        <h3 class="clients-title reveal">{about.clientsTitle}</h3>
         <div class="marquee" id="marquee">
           <ul class="marquee-group">
-            <li><img src={asset('logos/kurpfalz.png')} alt="Kurpfalz Weinstuben" style="height:39px" width="118" height="39" draggable="false"></li>
-            <li><img src={asset('logos/srh.png')} alt="SRH" style="height:58px" width="75" height="58" draggable="false"></li>
-            <li><img src={asset('logos/karls.png')} alt="Karls Erlebnisdorf" style="height:58px" width="68" height="58" draggable="false"></li>
-            <li><img src={asset('logos/emmy.png')} alt="emmy scooter" style="height:38px" width="121" height="38" draggable="false"></li>
-            <li><img src={asset('logos/fu-berlin.png')} alt="Freie Universität Berlin" style="height:33px" width="139" height="33" draggable="false"></li>
-            <li><img src={asset('logos/aeropress.png')} alt="AeroPress" style="height:34px" width="136" height="34" draggable="false"></li>
-            <li><img src={asset('logos/supreme-surf.png')} alt="Supreme Surf Rostock" style="height:46px" width="100" height="46" draggable="false"></li>
-            <li><img src={asset('logos/allesfreunde.png')} alt="allesfreunde" style="height:24px" width="194" height="24" draggable="false"></li>
+            {about.clients.map((c) => <li><img src={asset(c.logo)} alt={c.name} style={`height:${c.height}px`} draggable="false"></li>)}
           </ul>
         </div>
       </div>

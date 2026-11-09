@@ -1,0 +1,38 @@
+{
+  "title": "Ausgewählte Arbeiten",
+  "moreText": "+20 weitere Projekte",
+  "moreButton": "Alle Projekte",
+  "slides": [
+    {
+      "title": "Better. Brand Design",
+      "image": "/assets/projects/better-poster.webp",
+      "imageMobile": "/assets/projects/better-ubahn.webp"
+    },
+    {
+      "title": "Emmy Scooter Design",
+      "image": "/assets/projects/emmy.webp",
+      "imageMobile": "/assets/projects/emmy-mobile.webp"
+    },
+    {
+      "title": "Aeropress Packaging Design",
+      "image": "/assets/projects/packaging-flug.webp",
+      "imageMobile": "/assets/projects/packaging-stand.webp"
+    },
+    {
+      "title": "Experimental Poster Design",
+      "image": "/assets/projects/sky.webp",
+      "pos": "50% 55%"
+    },
+    {
+      "title": "Riso Typo Experimente",
+      "image": "/assets/projects/art-up.webp",
+      "pos": "50% 45%"
+    },
+    {
+      "title": "allesacid Kollektion",
+      "image": "/assets/projects/tshirt-flat.webp",
+      "imageMobile": "/assets/projects/tshirt-back.webp",
+      "pos": "50% 52%"
+    }
+  ]
+}

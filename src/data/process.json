@@ -1,0 +1,34 @@
+{
+  "title": "Und so entstehen unsere Projekte:",
+  "intro": "Viele Marken gehen unter, weil sie nicht wissen, was sie besonders macht. Das finden wir zusammen heraus, in drei Schritten.",
+  "steps": [
+    {
+      "title": "Strategie & Identität",
+      "text": "Ziel festlegen, nach links und rechts schauen und den besten Weg für deine Marke finden.",
+      "tags": [
+        "Workshops",
+        "Markenanalyse",
+        "Marktrecherche"
+      ]
+    },
+    {
+      "title": "Idee & Branding",
+      "text": "Wir formen, wie deine Marke spricht und aussieht, damit dein Publikum endlich wieder etwas fühlt.",
+      "tags": [
+        "Kreativkonzepte",
+        "Art Direction",
+        "Brand Design"
+      ]
+    },
+    {
+      "title": "Creative Assets",
+      "text": "Die Marke wird lebendig, an jedem Berührungspunkt. Print, Digital, Außenwerbung: Was gebraucht wird, wird gebaut.",
+      "tags": [
+        "Packaging",
+        "UX / UI",
+        "Editorial",
+        "Kampagnen"
+      ]
+    }
+  ]
+}

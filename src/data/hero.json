@@ -1,0 +1,42 @@
+{
+  "lines": [
+    "Shaping brands",
+    "from insights",
+    "to impact"
+  ],
+  "button": "Projekte ansehen",
+  "tiles": [
+    {
+      "label": "Experimental Poster Design",
+      "image": "/assets/projects/sky.webp",
+      "glow": "#6F7FA8"
+    },
+    {
+      "label": "Better. Brand Design",
+      "image": "/assets/projects/better-mayo.webp",
+      "glow": "#C6DB5C"
+    },
+    {
+      "label": "Aeropress Packaging Design",
+      "image": "/assets/projects/packaging-flug.webp",
+      "glow": "#8A5A2E"
+    },
+    {
+      "label": "Riso Typo Experimente",
+      "image": "/assets/projects/art-up.webp",
+      "glow": "#38B6E8",
+      "pos": "60% 50%"
+    },
+    {
+      "label": "allesacid Kollektion",
+      "image": "/assets/projects/tshirt-back.webp",
+      "glow": "#B9A58A",
+      "pos": "50% 35%"
+    },
+    {
+      "label": "Better. Brand Design",
+      "image": "/assets/projects/better-poster.webp",
+      "glow": "#C6DB5C"
+    }
+  ]
+}

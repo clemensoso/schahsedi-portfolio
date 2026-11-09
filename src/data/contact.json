@@ -1,0 +1,28 @@
+{
+  "greeting": "Hey {name},",
+  "question": "bist du bereit für was Neues?",
+  "namePlaceholder": "dein Name",
+  "storyIntro": "Dann erzähl mal{echo}. Du bist gerade bei {firma}, und am meisten beschäftigt dich {thema}.",
+  "companyPlaceholder": "Firma oder Projekt",
+  "topicPlaceholder": "das, was nervt",
+  "helpQuestion": "Anpacken könnten wir zusammen:",
+  "helpOptions": [
+    "Branding",
+    "Website",
+    "Packaging",
+    "360° Kampagne",
+    "Erstmal Mittagessen"
+  ],
+  "whenQuestion": "Losgehen soll es:",
+  "whenOptions": [
+    "Am liebsten gestern",
+    "In den nächsten Wochen",
+    "Irgendwann dieses Jahr"
+  ],
+  "mailSentence": "Spätestens nach zwei Werktagen antworte ich dir an {email}.",
+  "mailPlaceholder": "deine@adresse.de",
+  "moreQuestion": "Und sonst so?",
+  "morePlaceholder": "Alles, was sonst nicht reinpasst",
+  "button": "Ja, ich bin bereit",
+  "privacyNote": "Deine Angaben nutze ich nur, um dir zu antworten. Mehr dazu in der Datenschutzerklärung."
+}

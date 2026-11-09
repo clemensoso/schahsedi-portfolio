@@ -1,21 +1,22 @@
 ---
-import home from '../data/home.json';
+import hero from '../data/hero.json';
 import Poster from './Poster.astro';
+
+// Parallaxe je Position, gehört zum Layout und nicht zum Inhalt
+const speeds = [0.55, 0.35, 0.2, 0.6, 0.4, 0.25];
 ---
 <section class="hero" aria-labelledby="hero-title">
       <div class="wrap hero-inner">
         <h1 class="display" id="hero-title">
-          <span class="line"><span>Shaping brands</span></span>
-          <span class="line"><span>from insights</span></span>
-          <span class="line"><span>to impact</span></span>
+          {hero.lines.map((line) => <span class="line"><span>{line}</span></span>)}
         </h1>
         <div class="hero-actions">
-          <a class="btn" href="#arbeiten"><span class="btn-label">Projekte ansehen</span><span class="btn-dot" aria-hidden="true"><svg><use href="#arrow"/></svg></span></a>
+          <a class="btn" href="#arbeiten"><span class="btn-label">{hero.button}</span><span class="btn-dot" aria-hidden="true"><svg><use href="#arrow"/></svg></span></a>
         </div>
       </div>
       <div class="floats" id="floats" aria-hidden="true">
-        {home.heroTiles.map((t, i) => (
-          <a class={`float f${i + 1}`} href="#arbeiten" style={`--glow:${t.glow}`} data-speed={t.speed} aria-label={t.label} tabindex="-1"><span class="float-card"><Poster image={t.image} pos={t.pos} /></span></a>
+        {hero.tiles.map((t, i) => (
+          <a class={`float f${i + 1}`} href="#arbeiten" style={`--glow:${t.glow}`} data-speed={speeds[i]} aria-label={t.label} tabindex="-1"><span class="float-card"><Poster image={t.image} pos={t.pos} /></span></a>
         ))}
       </div>
     </section>

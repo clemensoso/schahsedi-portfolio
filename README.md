@@ -1,6 +1,6 @@
 # Schah Sedi Portfolio
 
-Website von Schah Sedi, gebaut mit Astro. Der Pflegebereich mit Pages CMS kommt als Nächstes.
+Website von Schah Sedi, gebaut mit Astro. Texte und Bilder werden über [Pages CMS](https://app.pagescms.org) gepflegt, die Felder stehen in `.pages.yml`.
 
 ## Lokal starten
 
@@ -15,7 +15,7 @@ Die Seite läuft dann unter http://localhost:4321/.
 
 - `src/pages/index.astro`: Startseite, setzt die Bausteine zusammen
 - `src/components/`: Bausteine wie Hero, Karussell, Kontakt und Footer
-- `src/data/home.json`: Projekte in den Hero-Kacheln und im Karussell
+- `src/data/`: alle Texte, Bilder und Links der Startseite, das CMS schreibt in diese Dateien
 - `src/styles/`: Gestaltung, `tokens.css` enthält Farben, Schriften und Abstände
 - `src/scripts/site.js`: Animationen und Interaktionen
 - `public/assets/`: Bilder und Logos

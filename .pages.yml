@@ -1,0 +1,147 @@
+# Pflegebereich: https://app.pagescms.org
+media:
+  input: public/assets
+  output: /assets
+  categories: [image]
+
+content:
+  - name: startseite
+    label: Startseite
+    type: group
+    items:
+      - name: hero
+        label: Hero
+        type: file
+        path: src/data/hero.json
+        format: json
+        fields:
+          - { name: lines, label: Claim (eine Zeile pro Eintrag), type: string, list: true, required: true }
+          - { name: button, label: Button, type: string, required: true }
+          - name: tiles
+            label: Projektkacheln
+            description: Immer sechs. Auf dem Handy stehen die ersten drei über dem Claim, die letzten drei darunter.
+            type: object
+            list: { min: 6, max: 6, collapsible: { collapsed: true, summary: "{label}" } }
+            fields:
+              - { name: label, label: Name (erscheint am Mauszeiger), type: string, required: true }
+              - { name: image, label: Bild, description: "Quadratisch ab 1200 x 1200 px, das Motiv in den mittleren 75 % halten.", type: image, required: true }
+              - { name: glow, label: Glow-Farbe, description: "Hex-Wert wie #C6DB5C", type: string, required: true, pattern: { regex: "^#[0-9A-Fa-f]{6}$", message: "Bitte als Hex-Wert angeben, z. B. #C6DB5C" } }
+              - { name: pos, label: Bildausschnitt (optional), description: "Horizontal und vertikal in Prozent, z. B. 50% 35%", type: string }
+      - name: work
+        label: Ausgewählte Arbeiten
+        type: file
+        path: src/data/work.json
+        format: json
+        fields:
+          - { name: title, label: Überschrift, type: string, required: true }
+          - { name: moreText, label: Text unter dem Karussell, type: string }
+          - { name: moreButton, label: Button, type: string, required: true }
+          - name: slides
+            label: Projekte im Karussell
+            description: Das Karussell startet auf dem zweiten Eintrag.
+            type: object
+            list: { min: 2, collapsible: { collapsed: true, summary: "{title}" } }
+            fields:
+              - { name: title, label: Titel, type: string, required: true }
+              - { name: image, label: "Bild Desktop (16:9)", description: "2000 x 1125 px. Unten links liegt der Titel, dort nichts Wichtiges platzieren.", type: image, required: true }
+              - { name: imageMobile, label: "Bild Handy (4:5, optional)", description: "1200 x 1500 px. Ohne Bild wird das Desktop-Bild beschnitten.", type: image }
+              - { name: pos, label: Bildausschnitt (optional), description: "Horizontal und vertikal in Prozent, z. B. 50% 55%", type: string }
+      - name: process
+        label: Prozess
+        type: file
+        path: src/data/process.json
+        format: json
+        fields:
+          - { name: title, label: Überschrift, type: string, required: true }
+          - { name: intro, label: Einleitung, type: text }
+          - name: steps
+            label: Karten
+            description: Immer drei, die Pfeile führen von Karte zu Karte.
+            type: object
+            list: { min: 3, max: 3, collapsible: { collapsed: false, summary: "{title}" } }
+            fields:
+              - { name: title, label: Titel, type: string, required: true }
+              - { name: text, label: Text, type: text, required: true }
+              - { name: tags, label: Tags, type: string, list: true }
+      - name: about
+        label: Über mich
+        type: file
+        path: src/data/about.json
+        format: json
+        fields:
+          - { name: titleLines, label: Überschrift (eine Zeile pro Eintrag), type: string, list: true, required: true }
+          - { name: intro, label: Einleitung, type: text }
+          - name: portrait
+            label: Porträt
+            type: object
+            fields:
+              - { name: still, label: Standbild, type: image, required: true }
+              - { name: animation, label: Animation (GIF), type: image, required: true }
+              - { name: alt, label: Bildbeschreibung, type: string, required: true }
+          - { name: quote, label: Kernsatz, type: text, required: true }
+          - { name: text, label: Text, type: text, required: true }
+          - name: cv
+            label: Werdegang
+            type: object
+            list: { collapsible: { collapsed: true, summary: "{role}" } }
+            fields:
+              - { name: period, label: Zeitraum, type: string, required: true }
+              - { name: role, label: Rolle, type: string, required: true }
+              - { name: place, label: Ort oder Firma, type: string, required: true }
+              - { name: logo, label: Logo (ohne Logo erscheint das C), type: image }
+              - { name: logoAlt, label: Name des Logos, type: string }
+          - { name: cvMore, label: Hinweis auf weitere Stationen, type: string }
+          - { name: cvLink, label: Link zum CV, type: string }
+          - { name: statNumber, label: Große Zahl, type: string, required: true }
+          - { name: statText, label: Text zur Zahl, type: text, required: true }
+          - { name: skillsTitle, label: Überschrift Sticker-Kachel, type: string, required: true }
+          - { name: skillsText, label: Text Sticker-Kachel, type: text, required: true }
+          - { name: skillsButton, label: Button Sticker-Kachel, type: string, required: true }
+          - { name: clientsTitle, label: Überschrift Logo-Band, type: string, required: true }
+          - name: clients
+            label: Logos
+            description: Einfarbig schwarz mit transparentem Hintergrund.
+            type: object
+            list: { min: 2, collapsible: { collapsed: true, summary: "{name}" } }
+            fields:
+              - { name: name, label: Unternehmen, type: string, required: true }
+              - { name: logo, label: Logo, type: image, required: true }
+              - { name: height, label: Höhe in Pixeln, type: number, required: true }
+      - name: contact
+        label: Kontakt
+        type: file
+        path: src/data/contact.json
+        format: json
+        fields:
+          - { name: greeting, label: Begrüßung, description: "{name} wird zum Namensfeld.", type: string, required: true, pattern: { regex: "\\{name\\}", message: "{name} muss im Text vorkommen." } }
+          - { name: question, label: Frage in der Überschrift, type: string, required: true }
+          - { name: namePlaceholder, label: Platzhalter Name, type: string }
+          - { name: storyIntro, label: Erster Absatz, description: "{echo} zeigt den eingegebenen Namen, {firma} und {thema} werden zu Eingabefeldern.", type: text, required: true, pattern: { regex: "\\{firma\\}[\\s\\S]*\\{thema\\}", message: "{firma} und {thema} müssen in dieser Reihenfolge vorkommen." } }
+          - { name: companyPlaceholder, label: Platzhalter Firma, type: string }
+          - { name: topicPlaceholder, label: Platzhalter Thema, type: string }
+          - { name: helpQuestion, label: Frage nach der Leistung, type: string, required: true }
+          - { name: helpOptions, label: Auswahl Leistung, type: string, list: true }
+          - { name: whenQuestion, label: Frage nach dem Zeitpunkt, type: string, required: true }
+          - { name: whenOptions, label: Auswahl Zeitpunkt, type: string, list: true }
+          - { name: mailSentence, label: Satz mit E-Mail-Feld, description: "{email} wird zum Eingabefeld.", type: text, required: true, pattern: { regex: "\\{email\\}", message: "{email} muss im Text vorkommen." } }
+          - { name: mailPlaceholder, label: Platzhalter E-Mail, type: string }
+          - { name: moreQuestion, label: Frage Freitext, type: string }
+          - { name: morePlaceholder, label: Platzhalter Freitext, type: string }
+          - { name: button, label: Button, type: string, required: true }
+          - { name: privacyNote, label: Datenschutz-Hinweis, type: text, required: true }
+  - name: site
+    label: Links und Footer
+    type: file
+    path: src/data/site.json
+    format: json
+    fields:
+      - { name: instagram, label: Instagram-Link, type: string, required: true }
+      - { name: linkedin, label: LinkedIn-Link, type: string, required: true }
+      - { name: mailLabel, label: Tag am Mail-Icon, type: string, required: true }
+      - { name: mailAddress, label: Mail-Adresse, type: string, required: true }
+      - { name: mailSubject, label: Betreff der Mail, type: string, required: true }
+      - { name: mailBody, label: Vorlage der Mail, type: text }
+      - { name: footerBand, label: Text im Footer-Band, type: string, required: true }
+      - { name: copyright, label: Name im Copyright, type: string, required: true }
+      - { name: imprintLabel, label: Link Impressum, type: string, required: true }
+      - { name: privacyLabel, label: Link Datenschutz, type: string, required: true }

@@ -1,0 +1,78 @@
+{
+  "titleLines": [
+    "Wer hat das alles gemacht?",
+    "Gut, dass du fragst."
+  ],
+  "intro": "Ich, Clemens. Kommunikationsdesigner, Dozent und Gründer von Studio Schah Sedi.",
+  "portrait": {
+    "still": "/assets/portrait-still.jpg",
+    "animation": "/assets/portrait.gif",
+    "alt": "Clemens zieht sich die Kapuze vom Kopf"
+  },
+  "quote": "Ich glaube an Kommunikation, die hängen bleibt. Die einen kurz innehalten lässt, zum Nachdenken bringt oder zum Lächeln.",
+  "text": "Das Studio ist mein Spielplatz und deine Startrampe. Zusammen bauen wir Marken, die sich richtig anfühlen, gut aussehen und einen Eindruck hinterlassen, über den man redet.",
+  "cv": [
+    {
+      "period": "2018 – heute",
+      "role": "Gründer & Creative",
+      "place": "Studio Schah Sedi"
+    },
+    {
+      "period": "2024 – heute",
+      "role": "Dozent",
+      "place": "SRH University Berlin",
+      "logo": "/assets/srh-logo.png",
+      "logoAlt": "SRH"
+    }
+  ],
+  "cvMore": "+3",
+  "cvLink": "Vollständiger CV",
+  "statNumber": "40+",
+  "statText": "abgeschlossene Designprojekte in 12 Branchen und 3 Ländern",
+  "skillsTitle": "Was ich mitbringe",
+  "skillsText": "Alles, was deine Marke von langweilig zu unvergesslich bringt. Und wenn du etwas ganz Spezielles brauchst, kenne ich jemanden, der jemanden kennt.",
+  "skillsButton": "Lass uns reden",
+  "clientsTitle": "Ein paar der Unternehmen, mit denen ich zusammenarbeiten durfte:",
+  "clients": [
+    {
+      "name": "Kurpfalz Weinstuben",
+      "logo": "/assets/logos/kurpfalz.png",
+      "height": 39
+    },
+    {
+      "name": "SRH",
+      "logo": "/assets/logos/srh.png",
+      "height": 58
+    },
+    {
+      "name": "Karls Erlebnisdorf",
+      "logo": "/assets/logos/karls.png",
+      "height": 58
+    },
+    {
+      "name": "emmy scooter",
+      "logo": "/assets/logos/emmy.png",
+      "height": 38
+    },
+    {
+      "name": "Freie Universität Berlin",
+      "logo": "/assets/logos/fu-berlin.png",
+      "height": 33
+    },
+    {
+      "name": "AeroPress",
+      "logo": "/assets/logos/aeropress.png",
+      "height": 34
+    },
+    {
+      "name": "Supreme Surf Rostock",
+      "logo": "/assets/logos/supreme-surf.png",
+      "height": 46
+    },
+    {
+      "name": "allesfreunde",
+      "logo": "/assets/logos/allesfreunde.png",
+      "height": 24
+    }
+  ]
+}
