@@ -775,7 +775,12 @@
   function fitAll() { fills.forEach(fitFill); }
   var fNameEl = document.getElementById('f-name'), fMailEl = document.getElementById('f-mail'), echoName = document.getElementById('echo-name');
   fills.forEach(function (el) { el.addEventListener('input', function () { fitFill(el); el.classList.remove('is-missing'); }); });
-  fNameEl.addEventListener('input', function () { var v = fNameEl.value.trim(); echoName.textContent = v ? ', ' + v : ''; });
+  fNameEl.addEventListener('input', function () { // Name aus der Headline im Text wiederholen, nur der Name selbst gelb wie die Eingaben
+    var v = fNameEl.value.trim(), name = document.createElement('span');
+    name.className = 'echo-value'; name.textContent = v;
+    echoName.replaceChildren();
+    if (v) echoName.append(', ', name);
+  });
   fitAll();
   window.addEventListener('resize', fitAll);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);

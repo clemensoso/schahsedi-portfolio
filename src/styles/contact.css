@@ -42,6 +42,7 @@ main > .contact-stage { padding-top: var(--space-5); background: linear-gradient
 .fill::placeholder { color: var(--muted); opacity: 0.75; }
 .story .fill { caret-color: var(--brand-ink); }
 .story .fill:not(:placeholder-shown) { color: var(--brand-yellow); border-bottom-color: var(--brand-yellow); } /* eingegebener Text und Linie gelb */
+.story .echo-value { color: var(--brand-yellow); } /* wiederholter Name aus der Headline */
 .story .fill:not(:placeholder-shown):focus { box-shadow: 0 1.5px 0 var(--brand-yellow); }
 .story .fill:-webkit-autofill { -webkit-text-fill-color: var(--brand-yellow); -webkit-box-shadow: inset 0 0 0 100px #FFFFFF; }
 .fill:focus { outline: none; box-shadow: 0 1.5px 0 var(--brand-ink); }
