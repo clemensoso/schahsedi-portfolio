@@ -56,6 +56,7 @@
       clearTimeout(hideTimer);
       layer.hidden = false;
       sheet.scrollTop = 0; // erst nach hidden=false, sonst bleibt die alte Scrollposition stehen
+      document.dispatchEvent(new Event('sheet:content')); // Animationen im neuen Inhalt starten
       if (isOpen) return;
       opener = link || null;
       void sheet.offsetHeight; // Startposition festhalten, damit die Karte wirklich hochfährt

@@ -1,10 +1,15 @@
 ---
 // Projektinhalt (Vorlage „Standard“, erster Entwurf): Kopf mit Titel und Eckdaten, großes Titelbild, dann Text- und Bildblöcke.
 import Poster from './Poster.astro';
+import EmmySchriftzug from './animations/EmmySchriftzug.astro';
+
+// Animationen, die statt des Titelbilds laufen können (Feld „coverAnimation“ im Projekt)
+const animations = { 'emmy-schriftzug': EmmySchriftzug };
 import { asset } from '../lib/asset.js';
 import { getProject, projectUrl } from '../lib/projects.js';
 
 const { project: p } = Astro.props;
+const CoverAnimation = p.coverAnimation ? animations[p.coverAnimation] : null;
 const next = p.next ? getProject(p.next) : null;
 const meta = [['Kunde', p.client], ['Jahr', p.year], ['Leistungen', p.services]].filter(([, v]) => v);
 ---
@@ -19,7 +24,7 @@ const meta = [['Kunde', p.client], ['Jahr', p.year], ['Leistungen', p.services]]
     </div>
   </header>
 
-  <div class="project-cover"><Poster image={p.cover} imageMobile={p.coverMobile} /></div>
+  <div class="project-cover">{CoverAnimation ? <CoverAnimation /> : <Poster image={p.cover} imageMobile={p.coverMobile} />}</div>
 
   <div class="project-blocks">
     {p.blocks.map((b) => b.type === 'text' ? (
