@@ -125,9 +125,8 @@
 /* ---------- Schriftzug-Animation als Titelbild (z. B. Emmy) ---------- */
 .lettering { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; background: var(--lt-bg); }
 .lt-stage { width: min(68%, 1000px); aspect-ratio: 686 / 290; }
-@media (max-width: 719px) { .lt-stage { width: 84%; } }
-.lt-mx, .lt-my { width: 100%; height: 100%; will-change: transform, opacity; }
-.lt-my { transform-origin: 50% 50%; }
-.lettering svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.lettering path { fill: none; stroke: var(--lt-fg); opacity: 0; }
-@media (max-width: 719px) { .project-cover:has(.lettering) { aspect-ratio: 4 / 3; } } /* Schriftzug braucht auf dem Handy kein Hochformat */
+@media (max-width: 719px) { .lt-stage { width: 80%; } }
+.lettering svg { display: block; width: 100%; height: 100%; overflow: visible; opacity: 0; }
+.lettering path { fill: none; stroke: var(--lt-fg); visibility: hidden; }
+@media (prefers-reduced-motion: reduce) { .lettering svg { opacity: 1; } }
+@media (max-width: 719px) { .project-cover:has(.lettering) { aspect-ratio: 2 / 1; } } /* Schriftzug braucht auf dem Handy kein Hochformat */
