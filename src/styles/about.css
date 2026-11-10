@@ -64,14 +64,14 @@
 
 /* Namens-Sticker (SVG aus dem Framer-Entwurf).
    Beim Runterscrollen klebt er sich selbst auf: erst ist eine große Ecke umgeklappt, die sich glatt streicht.
-   Beim Hover löst sich die Ecke wieder ein Stück. --peel kommt per JS vom Scrollen, --hp vom Hover. */
+   --peel kommt per JS vom Scrollen. */
 .sticker {
   --peel: 0px; --hp: 0px; --pp: max(var(--peel), var(--hp));
   --sw: clamp(200px, 19vw, 280px);
   --sr: calc(var(--sw) * 14 / 229); /* Eckenradius der SVG-Grafik (14 von 229 Einheiten), in px */
   /* sitzt auf der unteren rechten Ecke des GIFs und ragt nur so weit über die Kachel, wie Abstand + Innenabstand der Nachbarkacheln erlauben */
   position: absolute; z-index: 4; right: -18px; bottom: -14px; width: var(--sw);
-  rotate: -6deg; cursor: grab; user-select: none;
+  rotate: -6deg; user-select: none;
   transition: rotate 450ms var(--ease-out), translate 450ms var(--ease-out);
 }
 /* Die Grafik ist im SVG um 3° gedreht: hier gerade gerückt und randlos zugeschnitten, damit die Ecke exakt sitzt */
@@ -89,7 +89,9 @@
   transition: width 380ms var(--ease-out), height 380ms var(--ease-out);
 }
 .sticker.scrolling .sticker-body, .sticker.scrolling .sticker-flap { transition-duration: 90ms; }
-.sticker.settled:hover { --hp: 38px; rotate: -3deg; translate: 0 -5px; }
+/* Schatten erst, wenn der Sticker fertig aufgeklebt ist; weich eingeblendet */
+.sticker { filter: drop-shadow(0 0 0 rgb(0 0 0 / 0)); }
+.sticker.settled { filter: drop-shadow(0 3px 5px rgb(0 0 0 / 0.22)); transition: rotate 450ms var(--ease-out), translate 450ms var(--ease-out), filter 700ms var(--ease-out); }
 @media (max-width: 759px) { .sticker { --sw: min(46vw, 190px); right: 10px; bottom: -14px; } } /* Handy: nur nach unten über die Kachel */
 
 /* Kleine runde Bedienknöpfe: Play/Pause am Porträt, Zurücklegen bei den Stickern */

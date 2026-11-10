@@ -560,15 +560,59 @@
   var MOBILE = [[0, 3], [36, 0], [72, 3], [0, 25], [38, 42], [66, 38], [0, 62], [58, 70]];
   var narrowSheet = window.matchMedia('(max-width: 759px)');
   var zTop = 1;
+  var resetBtn = document.getElementById('sheet-reset');
+  // Verteilung: ausgehend von den Startpositionen werden die Sticker so lange verschoben, bis der kleinste Abstand
+  // zwischen zwei Stickern (und zum Zurücklegen-Knopf) möglichst groß ist. Fester Zufallswert: jedes Mal dasselbe Bild.
+  function rng(seed) { return function () { seed = (seed + 0x6D2B79F5) | 0; var t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function gap(a, b) { // Abstand zweier Rechtecke (Mitte cx/cy, halbe Größe hw/hh), negativ bei Überlappung
+    var dx = Math.abs(a.cx - b.cx) - a.hw - b.hw, dy = Math.abs(a.cy - b.cy) - a.hh - b.hh;
+    if (dx < 0 && dy < 0) return Math.max(dx, dy);
+    return Math.hypot(Math.max(0, dx), Math.max(0, dy));
+  }
+  function spreadSkills(boxes, w, h, fixed) {
+    var M = 4, all = boxes.concat(fixed);
+    function clampBox(b) { b.cx = Math.max(b.hw + M, Math.min(w - b.hw - M, b.cx)); b.cy = Math.max(b.hh + M, Math.min(h - b.hh - M, b.cy)); }
+    function nearest(i) { var m = Infinity; for (var j = 0; j < all.length; j++) if (j !== i) m = Math.min(m, gap(all[i], all[j])); return m; }
+    function score() { // kleinster Abstand zählt am meisten, der Durchschnitt hilft beim gleichmäßigen Verteilen
+      var min = Infinity, sum = 0;
+      for (var i = 0; i < boxes.length; i++) { var n = nearest(i); min = Math.min(min, n); sum += n; }
+      return min + 0.05 * sum / boxes.length;
+    }
+    boxes.forEach(clampBox);
+    var rand = rng(7), best = score(), ITER = 2400;
+    for (var k = 0; k < ITER; k++) {
+      var b = boxes[k % boxes.length], ox = b.cx, oy = b.cy;
+      var step = Math.max(2, Math.min(w, h) * 0.3 * (1 - k / ITER));
+      b.cx += (rand() * 2 - 1) * step; b.cy += (rand() * 2 - 1) * step;
+      clampBox(b);
+      var sc = score();
+      if (sc >= best) best = sc; else { b.cx = ox; b.cy = oy; }
+    }
+  }
   function layoutSkills() {
     var w = sheet.clientWidth, h = sheet.clientHeight;
     sheet.style.setProperty('--k', Math.max(0.8, Math.min(1.25, w / 708)).toFixed(3)); // Sticker wachsen mit der Fläche
-    skills.forEach(function (el, i) {
-      if (el.dataset.moved) return;
+    var free = skills.filter(function (el) { return !el.dataset.moved; });
+    if (!free.length) return;
+    var sr = sheet.getBoundingClientRect();
+    function boxOf(el, px, py) { // gedrehter Umriss als Rechteck um die Mitte
+      var ew = el.offsetWidth, eh = el.offsetHeight, r = (parseFloat(el.style.getPropertyValue('--r')) || 0) * Math.PI / 180;
+      var c = Math.abs(Math.cos(r)), sn = Math.abs(Math.sin(r));
+      return { el: el, ew: ew, eh: eh, hw: (ew * c + eh * sn) / 2, hh: (ew * sn + eh * c) / 2, cx: px + ew / 2, cy: py + eh / 2 };
+    }
+    var boxes = free.map(function (el) {
+      var i = skills.indexOf(el);
       var px = narrowSheet.matches ? MOBILE[i][0] : parseFloat(el.dataset.x);
       var py = narrowSheet.matches ? MOBILE[i][1] : parseFloat(el.dataset.y);
-      el.style.left = Math.max(4, Math.min(w - el.offsetWidth - 4, px / 100 * w)) + 'px';
-      el.style.top = Math.max(4, Math.min(h - el.offsetHeight - 4, py / 100 * h)) + 'px';
+      return boxOf(el, px / 100 * w, py / 100 * h);
+    });
+    // Hindernisse: der Zurücklegen-Knopf und schon verschobene Sticker
+    var br = resetBtn.getBoundingClientRect(), fixed = [{ cx: br.left + br.width / 2 - sr.left, cy: br.top + br.height / 2 - sr.top, hw: br.width / 2, hh: br.height / 2 }];
+    skills.forEach(function (el) { if (el.dataset.moved) fixed.push(boxOf(el, el.offsetLeft, el.offsetTop)); });
+    spreadSkills(boxes, w, h, fixed);
+    boxes.forEach(function (b) {
+      b.el.style.left = (b.cx - b.ew / 2) + 'px';
+      b.el.style.top = (b.cy - b.eh / 2) + 'px';
     });
   }
   skills.forEach(function (el) {
@@ -595,7 +639,6 @@
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutSkills);
   layoutSkills();
   // Zurücklegen: alle Sticker gleiten an ihre Ausgangsposition
-  var resetBtn = document.getElementById('sheet-reset');
   resetBtn.hidden = true;
   sheet.addEventListener('pointerdown', function () { resetBtn.hidden = false; });
   resetBtn.addEventListener('click', function () {
