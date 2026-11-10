@@ -1,0 +1,17 @@
+{
+  "title": "Emmy Scooter Design",
+  "client": "emmy Sharing",
+  "year": "2023",
+  "services": "Produktdesign, Branding, Art Direction",
+  "intro": "Platzhalter: Ein Satz, der das Projekt auf den Punkt bringt. Worum ging es, für wen, und was ist am Ende entstanden?",
+  "cover": "/assets/projects/emmy.webp",
+  "coverMobile": "/assets/projects/emmy-mobile.webp",
+  "blocks": [
+    { "type": "text", "title": "Die Aufgabe", "text": "Platzhalter: Hier steht später, mit welcher Ausgangslage das Projekt gestartet ist. Zwei bis vier Sätze reichen, damit man versteht, warum die Arbeit so aussieht, wie sie aussieht." },
+    { "type": "image", "image": "/assets/projects/emmy-mobile.webp", "alt": "Emmy Scooter, Hochformat", "size": "half" },
+    { "type": "image", "image": "/assets/projects/emmy.webp", "alt": "Emmy Scooter, Detail", "size": "half", "pos": "70% 50%" },
+    { "type": "text", "title": "Der Ansatz", "text": "Platzhalter: Wie bin ich vorgegangen, welche Entscheidungen haben das Ergebnis geprägt? Hier ist Platz für den Gedanken hinter dem Design." },
+    { "type": "image", "image": "/assets/projects/emmy.webp", "alt": "Emmy Scooter im Stadtbild", "size": "full" },
+    { "type": "text", "title": "Das Ergebnis", "text": "Platzhalter: Was ist daraus geworden, wo ist es im Einsatz, und was hat es bewirkt?" }
+  ]
+}

@@ -1,0 +1,35 @@
+---
+// Die komplette Startseite. Liegt auch hinter jedem Projekt-Overlay, damit ein direkt geöffneter Projektlink
+// genauso aussieht wie nach einem Klick im Karussell.
+import Sprite from './Sprite.astro';
+import Nav from './Nav.astro';
+import Hero from './Hero.astro';
+import Work from './Work.astro';
+import Services from './Services.astro';
+import About from './About.astro';
+import Contact from './Contact.astro';
+import Footer from './Footer.astro';
+---
+<Sprite />
+<Nav />
+<div class="cursor-tag" id="cursor-tag" aria-hidden="true"></div>
+
+<main id="start">
+  <!-- Hero klebt, die weiße Projekte-Karte fährt von unten darüber (gleiche Logik wie die gelbe Kontakt-Karte) -->
+  <div class="top-stage">
+    <div data-tone="dark" id="hero-block"><Hero /></div>
+    <div data-tone="light" id="work-block"><Work /></div>
+  </div>
+
+  <div data-tone="light">
+    <Services />
+    <About />
+  </div>
+
+  <!-- Kontakt: gelbe Karte, Seitenton bleibt hell -->
+  <div class="contact-stage" data-tone="light"><Contact /></div>
+</main>
+
+<Footer />
+
+<script src="../scripts/site.js"></script>

@@ -61,6 +61,7 @@
   --accent-text: #222222; --hl-bg: #FEC31E;
   --sec-bg: #FFFFFF; --chip-border: #222222;
 }
+:root[data-scheme="light"] { color-scheme: light; } /* native Scrollbar: hell über hellen Abschnitten, sonst dunkel */
 :root[data-tone="yellow"] {
   --bg: #FEC31E; --fg: #222222; --muted: #4D3F12; --line: #D9A619;
   --accent-text: #222222; --hl-bg: #FFFFFF;

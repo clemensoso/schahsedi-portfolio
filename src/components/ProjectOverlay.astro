@@ -1,0 +1,20 @@
+---
+// Overlay-Hülle: fährt von unten herein, oben bleibt ein abgedunkelter Streifen der Seite sichtbar.
+// Schließen: X, nach unten wischen (am Griff oder ganz oben im Inhalt), Klick auf den dunklen Bereich, Esc, Zurück.
+const { open = false } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<div class:list={['sheet-layer', { 'is-open': open, 'no-anim': open }]} id="sheet-layer" data-home={base} hidden={!open}>
+  <div class="sheet-backdrop" id="sheet-backdrop" aria-hidden="true"></div>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="project-title">
+    <span class="sheet-grip" aria-hidden="true"></span>
+    <div class="sheet-bar" id="sheet-bar">
+      <button class="sheet-close" type="button" id="sheet-close" aria-label="Projekt schließen">
+        <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2 L12 12 M12 2 L2 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="sheet-content" id="sheet-content"><slot /></div>
+  </div>
+</div>
+
+<script src="../scripts/overlay.js"></script>

@@ -3,7 +3,7 @@ import '@fontsource/boldonse/400.css';
 import '@fontsource-variable/geist/wght.css';
 import '../styles/global.css';
 
-const { title = 'Schah Sedi' } = Astro.props;
+const { title = 'Schah Sedi', description } = Astro.props;
 ---
 <!doctype html>
 <html lang="de">
@@ -12,6 +12,7 @@ const { title = 'Schah Sedi' } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="robots" content="noindex, nofollow" />
     <title>{title}</title>
+    {description && <meta name="description" content={description} />}
   </head>
   <body>
     <slot />

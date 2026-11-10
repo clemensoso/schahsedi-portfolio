@@ -1,0 +1,19 @@
+---
+// Jedes Projekt hat eine eigene Adresse. Direkt aufgerufen liegt die Startseite dahinter und das Overlay ist schon offen.
+import Base from '../../layouts/Base.astro';
+import Home from '../../components/Home.astro';
+import ProjectOverlay from '../../components/ProjectOverlay.astro';
+import ProjectArticle from '../../components/ProjectArticle.astro';
+import { projects } from '../../lib/projects.js';
+
+export function getStaticPaths() {
+  return projects.map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+}
+const { project } = Astro.props;
+---
+<Base title={`${project.title} · Schah Sedi`} description={project.intro}>
+  <ProjectOverlay open>
+    <ProjectArticle project={project} />
+  </ProjectOverlay>
+  <Home />
+</Base>

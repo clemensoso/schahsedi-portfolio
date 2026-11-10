@@ -5,11 +5,13 @@
   "slides": [
     {
       "title": "Better. Brand Design",
+      "project": "better",
       "image": "/assets/projects/better-poster.webp",
       "imageMobile": "/assets/projects/better-ubahn.webp"
     },
     {
       "title": "Emmy Scooter Design",
+      "project": "emmy",
       "image": "/assets/projects/emmy.webp",
       "imageMobile": "/assets/projects/emmy-mobile.webp"
     },

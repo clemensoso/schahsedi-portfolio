@@ -1,6 +1,7 @@
 ---
 import work from '../data/work.json';
 import Poster from './Poster.astro';
+import { projectUrl } from '../lib/projects.js';
 ---
 <section class="work" id="arbeiten" data-nav="Projects" aria-labelledby="arbeiten-title">
       <div class="wrap section-head reveal">
@@ -14,7 +15,7 @@ import Poster from './Poster.astro';
       <div class="slider reveal" id="slider" aria-roledescription="Karussell" aria-label="Ausgewählte Projekte">
         <div class="track" id="track">
           {work.slides.map((s) => (
-            <a class="slide" href="#arbeiten" draggable="false" aria-label={s.title}>
+            <a class="slide" href={s.project ? projectUrl(s.project) : '#arbeiten'} data-project={s.project} draggable="false" aria-label={s.title}>
               <Poster image={s.image} imageMobile={s.imageMobile} pos={s.pos} />
               <div class="cap"><span class="cap-text"><b>{s.title}</b></span><span class="btn-dot" aria-hidden="true"><svg><use href="#arrow"/></svg></span></div>
             </a>

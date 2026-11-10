@@ -1,0 +1,16 @@
+{
+  "title": "Better. Brand Design",
+  "client": "Better.",
+  "year": "2024",
+  "services": "Branding, Kampagne, Verpackung",
+  "intro": "Platzhalter: Ein Satz, der das Projekt auf den Punkt bringt. Worum ging es, für wen, und was ist am Ende entstanden?",
+  "cover": "/assets/projects/better-poster.webp",
+  "coverMobile": "/assets/projects/better-ubahn.webp",
+  "blocks": [
+    { "type": "text", "title": "Die Aufgabe", "text": "Platzhalter: Hier steht später, mit welcher Ausgangslage das Projekt gestartet ist." },
+    { "type": "image", "image": "/assets/projects/better-mayo.webp", "alt": "Better. Verpackung", "size": "full" },
+    { "type": "image", "image": "/assets/projects/better-ubahn.webp", "alt": "Better. Plakat in der U-Bahn", "size": "half" },
+    { "type": "image", "image": "/assets/projects/better-poster.webp", "alt": "Better. Plakat", "size": "half" },
+    { "type": "text", "title": "Das Ergebnis", "text": "Platzhalter: Was ist daraus geworden, wo ist es im Einsatz, und was hat es bewirkt?" }
+  ]
+}

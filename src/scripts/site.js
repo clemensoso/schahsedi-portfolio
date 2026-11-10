@@ -15,7 +15,17 @@
   // Ton-Wechsel: der Block, der die Bildmitte kreuzt, bestimmt die Farbe der ganzen Seite
   var toned = Array.prototype.slice.call(document.querySelectorAll('[data-tone]'));
   root.dataset.work = 'card';
+  // Farbschema für die native Scrollbar: dunkel, solange Hero oder Footer in der Bildmitte liegen, sonst hell
+  function pickScheme() {
+    var hit = document.elementsFromPoint(window.innerWidth / 2, window.innerHeight / 2);
+    for (var i = 0; i < hit.length; i++) {
+      if (hit[i].closest('#sheet-layer')) continue; // Projekt-Overlay zählt nicht, die Scrollbar gehört zur Seite
+      var z = hit[i].closest('[data-tone]');
+      if (z) { root.dataset.scheme = z.dataset.tone === 'dark' ? 'dark' : 'light'; return; }
+    }
+  }
   function pickTone() {
+    pickScheme();
     if (root.dataset.work === 'card') { root.setAttribute('data-tone', 'light'); return; } // Hero und Karte haben eigene Farben
     var mid = window.innerHeight * 0.5;
     for (var i = 0; i < toned.length; i++) {

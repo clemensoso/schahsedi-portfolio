@@ -3,7 +3,7 @@ import site from '../data/site.json';
 
 const units = Array.from({ length: 6 });
 ---
-<footer data-nav="Contact">
+<footer data-nav="Contact" data-tone="dark">
   <div class="foot-band" role="img" aria-label={site.footerBand}>
     <div class="foot-track" aria-hidden="true">
       {[0, 1].map(() => <div class="foot-group">{units.map(() => <div class="foot-unit display"><svg aria-hidden="true"><use href="#logo"/></svg><span>{site.footerBand}</span></div>)}</div>)}

@@ -1,0 +1,44 @@
+---
+// Projektinhalt (Vorlage „Standard“, erster Entwurf): Kopf mit Titel und Eckdaten, großes Titelbild, dann Text- und Bildblöcke.
+import Poster from './Poster.astro';
+import { asset } from '../lib/asset.js';
+import { getProject, projectUrl } from '../lib/projects.js';
+
+const { project: p } = Astro.props;
+const next = p.next ? getProject(p.next) : null;
+const meta = [['Kunde', p.client], ['Jahr', p.year], ['Leistungen', p.services]].filter(([, v]) => v);
+---
+<article class="project" data-title={`${p.title} · Schah Sedi`}>
+  <header class="project-head">
+    <h1 class="display project-title" id="project-title">{p.title}</h1>
+    <div class="project-intro">
+      <p>{p.intro}</p>
+      <dl class="project-meta">
+        {meta.map(([k, v]) => (<div><dt>{k}</dt><dd>{v}</dd></div>))}
+      </dl>
+    </div>
+  </header>
+
+  <div class="project-cover"><Poster image={p.cover} imageMobile={p.coverMobile} /></div>
+
+  <div class="project-blocks">
+    {p.blocks.map((b) => b.type === 'text' ? (
+      <section class="pb-text">
+        {b.title && <h2>{b.title}</h2>}
+        <p>{b.text}</p>
+      </section>
+    ) : (
+      <figure class:list={['pb-image', b.size === 'half' ? 'is-half' : 'is-full']}>
+        <img src={asset(b.image)} alt={b.alt || ''} loading="lazy" style={b.pos ? `object-position:${b.pos}` : undefined} />
+      </figure>
+    ))}
+  </div>
+
+  {next && (
+    <a class="project-next" href={projectUrl(next.slug)} data-project={next.slug}>
+      <span class="project-next-label">Nächstes Projekt</span>
+      <span class="project-next-title display">{next.title}</span>
+      <span class="btn-dot" aria-hidden="true"><svg><use href="#arrow"/></svg></span>
+    </a>
+  )}
+</article>
