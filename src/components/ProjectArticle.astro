@@ -9,6 +9,7 @@ import { asset } from '../lib/asset.js';
 import { getProject, projectUrl } from '../lib/projects.js';
 
 const { project: p } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/'); // für eingebettete Seiten aus public/
 const CoverAnimation = p.coverAnimation ? animations[p.coverAnimation] : null;
 const next = p.next ? getProject(p.next) : null;
 const meta = [['Kunde', p.client], ['Jahr', p.year], ['Leistungen', p.services]].filter(([, v]) => v);
@@ -32,6 +33,10 @@ const meta = [['Kunde', p.client], ['Jahr', p.year], ['Leistungen', p.services]]
         {b.title && <h2>{b.title}</h2>}
         <p>{b.text}</p>
       </section>
+    ) : b.type === 'embed' ? (
+      <figure class="pb-embed">
+        <iframe src={base + b.src.replace(/^\//, '')} title={b.title || ''} loading="lazy"></iframe>
+      </figure>
     ) : (
       <figure class:list={['pb-image', b.size === 'half' ? 'is-half' : 'is-full']}>
         <img src={asset(b.image)} alt={b.alt || ''} loading="lazy" style={b.pos ? `object-position:${b.pos}` : undefined} />

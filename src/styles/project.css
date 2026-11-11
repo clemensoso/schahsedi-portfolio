@@ -109,6 +109,10 @@
 .pb-image.is-half { aspect-ratio: 4 / 5; }
 @media (max-width: 719px) { .pb-image.is-full { aspect-ratio: 4 / 3; } }
 
+/* Eingebettete Seite, z. B. interaktive Buchvorschau */
+.pb-embed { grid-column: 1 / -1; margin: 0; border-radius: 20px; overflow: hidden; }
+.pb-embed iframe { display: block; width: 100%; height: clamp(320px, 65vh, 720px); border: 0; }
+
 /* Nächstes Projekt: blättert im Overlay weiter */
 .project-next {
   display: grid; grid-template-columns: 1fr auto; align-items: end; gap: var(--space-2) var(--space-5);

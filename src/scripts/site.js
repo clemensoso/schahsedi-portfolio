@@ -763,7 +763,7 @@
     fillRuler.style.letterSpacing = cs.letterSpacing;
     fillRuler.style.textTransform = cs.textTransform;
     fillRuler.textContent = el.value || el.placeholder;
-    var w = Math.ceil(fillRuler.getBoundingClientRect().width + 12);
+    var w = Math.ceil(fillRuler.getBoundingClientRect().width + 7); // Text + Innenabstand (2+2) + Platz für den Cursor, sonst keine Lücke vor dem Komma
     if (el === fNameEl) {
       // Name bleibt immer komplett sichtbar: wird er zu lang, schrumpft die Schrift, statt im Feld zu scrollen
       fillRuler.textContent = 'Hey ,';
