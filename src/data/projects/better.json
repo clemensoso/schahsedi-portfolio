@@ -8,7 +8,6 @@
   "coverMobile": "/assets/projects/better-ubahn.webp",
   "blocks": [
     { "type": "text", "title": "Die Aufgabe", "text": "Platzhalter: Hier steht später, mit welcher Ausgangslage das Projekt gestartet ist." },
-    { "type": "embed", "src": "/buecher/buch-2ac6cdec.html", "title": "Interaktive Buchvorschau" },
     { "type": "image", "image": "/assets/projects/better-mayo.webp", "alt": "Better. Verpackung", "size": "full" },
     { "type": "image", "image": "/assets/projects/better-ubahn.webp", "alt": "Better. Plakat in der U-Bahn", "size": "half" },
     { "type": "image", "image": "/assets/projects/better-poster.webp", "alt": "Better. Plakat", "size": "half" },

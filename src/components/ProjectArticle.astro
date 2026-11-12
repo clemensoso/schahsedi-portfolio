@@ -11,38 +11,67 @@ import { getProject, projectUrl } from '../lib/projects.js';
 const { project: p } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/'); // für eingebettete Seiten aus public/
 const CoverAnimation = p.coverAnimation ? animations[p.coverAnimation] : null;
+const coverAtEnd = p.coverAt === 'end'; // Titelbild unter den Inhalt statt direkt unter den Kopf
+const coverOnTop = !p.coverAt || p.coverAt === 'top'; // „none“: Titelbild nur im Karussell
+// Spalte rechts neben einem eingebetteten Buch: Texte und Bilder im Wechsel („side“), alt: nur heading + text
+const sideOf = (b) => b.side || (b.text ? [{ type: 'text', heading: b.heading, text: b.text }] : []);
 const next = p.next ? getProject(p.next) : null;
 const meta = [['Kunde', p.client], ['Jahr', p.year], ['Leistungen', p.services]].filter(([, v]) => v);
 ---
 <article class="project" data-title={`${p.title} · Schah Sedi`}>
   <header class="project-head">
     <h1 class="display project-title" id="project-title">{p.title}</h1>
-    <div class="project-intro">
-      <p>{p.intro}</p>
-      <dl class="project-meta">
-        {meta.map(([k, v]) => (<div><dt>{k}</dt><dd>{v}</dd></div>))}
-      </dl>
-    </div>
+    {(p.intro || meta.length > 0) && (
+      <div class="project-intro">
+        {p.intro ? <p>{p.intro}</p> : <span></span>}
+        <dl class="project-meta">
+          {meta.map(([k, v]) => (<div><dt>{k}</dt><dd>{v}</dd></div>))}
+        </dl>
+      </div>
+    )}
   </header>
 
-  <div class="project-cover">{CoverAnimation ? <CoverAnimation /> : <Poster image={p.cover} imageMobile={p.coverMobile} />}</div>
+  {coverOnTop && <div class="project-cover">{CoverAnimation ? <CoverAnimation /> : <Poster image={p.cover} imageMobile={p.coverMobile} pos={p.coverPos} />}</div>}
 
-  <div class="project-blocks">
+  <div class:list={['project-blocks', !coverOnTop && 'is-first']}>
     {p.blocks.map((b) => b.type === 'text' ? (
       <section class="pb-text">
         {b.title && <h2>{b.title}</h2>}
         <p>{b.text}</p>
       </section>
     ) : b.type === 'embed' ? (
-      <figure class="pb-embed">
-        <iframe src={base + b.src.replace(/^\//, '')} title={b.title || ''} loading="lazy"></iframe>
-      </figure>
+      sideOf(b).length ? (
+        <section class="pb-split">
+          <figure class="pb-embed">
+            <iframe src={base + b.src.replace(/^\//, '')} title={b.title || ''} loading="lazy"></iframe>
+          </figure>
+          <div class="pb-side">
+            {sideOf(b).map((x) => x.type === 'image' ? (
+              <figure class:list={['pb-side-image', x.placeholder && 'is-placeholder']}>
+                <img src={asset(x.image)} alt={x.alt || ''} loading="lazy" style={x.pos ? `object-position:${x.pos}` : undefined} />
+                {x.placeholder && <figcaption class="placeholder-note">Platzhalterbild</figcaption>}
+              </figure>
+            ) : (
+              <div class="pb-split-text">
+                {x.heading && <h2>{x.heading}</h2>}
+                {x.text.split(/\n\s*\n/).map((t) => <p>{t}</p>)}
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : (
+        <figure class="pb-embed">
+          <iframe src={base + b.src.replace(/^\//, '')} title={b.title || ''} loading="lazy"></iframe>
+        </figure>
+      )
     ) : (
       <figure class:list={['pb-image', b.size === 'half' ? 'is-half' : 'is-full']}>
         <img src={asset(b.image)} alt={b.alt || ''} loading="lazy" style={b.pos ? `object-position:${b.pos}` : undefined} />
       </figure>
     ))}
   </div>
+
+  {coverAtEnd && <div class="project-cover">{CoverAnimation ? <CoverAnimation /> : <Poster image={p.cover} imageMobile={p.coverMobile} pos={p.coverPos} />}</div>}
 
   {next && (
     <a class="project-next" href={projectUrl(next.slug)} data-project={next.slug}>

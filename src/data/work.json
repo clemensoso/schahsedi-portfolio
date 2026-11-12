@@ -16,6 +16,12 @@
       "imageMobile": "/assets/projects/emmy-mobile.webp"
     },
     {
+      "title": "CSR+FMCG Bachelorthesis",
+      "project": "csr-fmcg",
+      "image": "/assets/projects/csr-fmcg.webp",
+      "imageMobile": "/assets/projects/csr-fmcg-mobile.webp"
+    },
+    {
       "title": "Aeropress Packaging Design",
       "image": "/assets/projects/packaging-flug.webp",
       "imageMobile": "/assets/projects/packaging-stand.webp"

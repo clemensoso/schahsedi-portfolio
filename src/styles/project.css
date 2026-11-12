@@ -110,8 +110,35 @@
 @media (max-width: 719px) { .pb-image.is-full { aspect-ratio: 4 / 3; } }
 
 /* Eingebettete Seite, z. B. interaktive Buchvorschau */
-.pb-embed { grid-column: 1 / -1; margin: 0; border-radius: 20px; overflow: hidden; }
-.pb-embed iframe { display: block; width: 100%; height: clamp(320px, 65vh, 720px); border: 0; }
+.pb-embed { position: relative; grid-column: 1 / -1; margin: 0; border-radius: 20px; overflow: hidden; }
+/* Buch links, rechts Texte und Bilder im Wechsel; auf dem Handy alles untereinander */
+.pb-split { grid-column: 1 / -1; display: grid; gap: var(--space-6); align-items: start; }
+.pb-split .pb-embed { grid-column: auto; }
+.pb-side { display: grid; gap: clamp(40px, 5vw, 72px); }
+.pb-split-text { display: grid; gap: var(--space-3); }
+.pb-split-text h2 { font-size: var(--fs-h1); font-weight: 600; line-height: var(--lh-tight); }
+.pb-split-text p { font-size: var(--fs-body-l); line-height: 1.55; max-width: 30em; text-wrap: pretty; }
+.pb-side-image { margin: 0; aspect-ratio: 4 / 5; border-radius: 20px; overflow: hidden; background: #F1EFEA; }
+.pb-side-image img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.pb-side-image { position: relative; }
+/* Platzhalter: Bild halb transparent, kleines Label oben links */
+.pb-side-image.is-placeholder img { opacity: 0.5; }
+.placeholder-note {
+  position: absolute; top: 16px; left: 16px; padding: 6px 12px; border-radius: var(--radius-pill);
+  background: #FFFFFF; color: var(--brand-ink); font-size: var(--fs-small); font-weight: 500; line-height: 1.5;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.06), 0 8px 24px rgb(0 0 0 / 0.12);
+}
+@media (min-width: 900px) {
+  .pb-split { grid-template-columns: 1fr 1fr; gap: var(--space-8); }
+  .pb-side { padding-top: 24px; }
+  /* Buch bleibt beim Scrollen links stehen, rechts laufen Text und Bilder bis zum Ende durch.
+     Höhe passt in den sichtbaren Teil der Karte (Fenster minus abgedunkelter Streifen oben). */
+  .pb-split .pb-embed { position: sticky; top: 24px; }
+  .pb-split .pb-embed iframe { height: calc(100vh - max(10vh, 48px) - 48px); min-height: 420px; }
+}
+.project-blocks.is-first { margin-top: clamp(40px, 5vw, 72px); }
+.pb-embed iframe { display: block; width: 100%; height: calc(clamp(320px, 65vh, 720px) + 40px); border: 0; } /* +40px: Platz für den Schatten der Leiste */
+
 
 /* Nächstes Projekt: blättert im Overlay weiter */
 .project-next {

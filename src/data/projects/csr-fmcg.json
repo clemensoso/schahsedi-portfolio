@@ -1,0 +1,42 @@
+{
+  "title": "CSR+FMCG Bachelorthesis",
+  "cover": "/assets/projects/csr-fmcg.webp",
+  "coverMobile": "/assets/projects/csr-fmcg-mobile.webp",
+  "coverAt": "none",
+  "blocks": [
+    {
+      "type": "embed",
+      "src": "/buecher/buch-c6a35f4f.html",
+      "title": "Interaktive Buchvorschau",
+      "side": [
+        {
+          "type": "text",
+          "heading": "Das Buch",
+          "text": "Platzhalter: Hier steht später, worum es in der Thesis geht. Welche Frage stand am Anfang, warum ist sie gerade für Marken aus dem Bereich Fast Moving Consumer Goods spannend, und welche Rolle spielt Corporate Social Responsibility dabei heute wirklich?\n\nPlatzhalter: Ein Absatz zur Recherche. Mit wem wurde gesprochen, welche Marken und Kampagnen wurden untersucht, und welche Muster sind dabei aufgefallen? Zwei, drei konkrete Beispiele machen das greifbar.\n\nPlatzhalter: Ein Absatz zum Buch selbst. Wie ist es aufgebaut, warum Kraftpapier und offene Fadenheftung, und wie unterstützen Typografie und Raster den Inhalt? Hier darf auch stehen, was beim Gestalten schwierig war.\n\nPlatzhalter: Zum Schluss das Ergebnis. Was nimmt man nach dem Lesen mit, wie wurde die Arbeit bewertet, und was ist daraus entstanden?"
+        },
+        {
+          "type": "image",
+          "image": "/assets/projects/csr-fmcg-mobile.webp",
+          "alt": "CSR+FMCG Buch, Mockup",
+          "placeholder": true
+        },
+        {
+          "type": "text",
+          "heading": "Druck und Bindung",
+          "text": "Platzhalter: Ein Absatz zur Produktion. Welches Papier, welche Druckerei, wie viele Exemplare, und warum die offene Fadenheftung? Was hat beim Drucken gut funktioniert, und was würde man beim nächsten Mal anders machen?\n\nPlatzhalter: Ein zweiter kurzer Absatz, zum Beispiel zur Präsentation der Arbeit oder zu Reaktionen darauf."
+        },
+        {
+          "type": "image",
+          "image": "/assets/projects/csr-fmcg-foto.webp",
+          "alt": "Gedruckte Bücher CSR+FMCG auf dem Tisch",
+          "placeholder": true
+        },
+        {
+          "type": "text",
+          "heading": "Fazit",
+          "text": "Platzhalter: Ein kurzer Abschluss in zwei, drei Sätzen. Was bleibt von der Arbeit, und was kommt als Nächstes?"
+        }
+      ]
+    }
+  ]
+}
