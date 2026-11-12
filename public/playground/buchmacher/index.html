@@ -290,6 +290,10 @@ dialog{background:var(--paper);border-radius:var(--r-l);width:min(540px,calc(100
 .steps li::before{top:17px;width:26px;height:26px;font-size:12.5px;font-weight:600;background:var(--cream);color:var(--ink)}
 .steps b{font-size:14.5px;margin-bottom:10px}
 code.path{background:var(--cream)}
+.steps .export-btn{margin-left:0}
+.codebox .export-btn{position:absolute;right:8px;bottom:8px}
+.step-note{margin:0 0 12px;color:var(--muted);font-size:14px;line-height:1.5}
+dialog:focus{outline:none} /* Dialog selbst bekommt den Fokus, damit kein Button beim Öffnen markiert ist */
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="logo" viewBox="0 0 880 880"><circle cx="440" cy="440" r="350" class="logo"/><path d="M597.6 349 A182 182 0 1 0 606.3 514" class="logo"/></symbol></svg>
@@ -414,13 +418,13 @@ code.path{background:var(--cream)}
 </div>
 <p class="toast" role="status" id="status" aria-live="polite"></p>
 
-<dialog id="exportDlg" aria-labelledby="dlgTitle">
+<dialog id="exportDlg" aria-labelledby="dlgTitle" tabindex="-1">
  <div class="dlg-head"><div><h2 id="dlgTitle">Buch exportieren</h2><p>Eine eigenständige HTML-Datei mit Modell, Skript und allen Bildern.</p></div>
   <button class="close" type="button" id="closeExport" aria-label="Schließen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
  <ol class="steps">
-  <li><b>Datei herunterladen</b><button class="btn" id="save" type="button">HTML herunterladen<span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v13m-6-6 6 6 6-6"/></svg></span></button><span class="file" id="fileName"></span></li>
-  <li><b>In dein Astro-Projekt legen</b>Unter <code class="path">public/buecher/</code> ablegen.</li>
-  <li><b>In die Portfolio-Section einfügen</b><div class="codebox"><textarea readonly id="code" rows="4" aria-label="Einbettungscode"></textarea><button class="btn small" id="copy" type="button"><span class="lbl">Kopieren</span><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></span></button></div></li>
+  <li><b>Datei herunterladen</b><button class="export-btn" id="save" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>HTML herunterladen</button><span class="file" id="fileName"></span></li>
+  <li><b>Datei auf deine Website legen</b>Lade die HTML-Datei in einen Ordner deiner Website, zum Beispiel <code class="path">buecher/</code>.</li>
+  <li><b>iFrame einbinden</b><p class="step-note">Füge diesen Code dort ein, wo das Buch erscheinen soll. Liegt die Datei in einem anderen Ordner, passe den Pfad an.</p><div class="codebox"><textarea readonly id="code" rows="4" aria-label="Einbettungscode"></textarea><button class="export-btn" id="copy" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><span class="lbl">Kopieren</span></button></div></li>
  </ol>
 </dialog>
 
@@ -583,7 +587,7 @@ $('#remove-video').onclick=()=>{opts.video='';form.elements.video.value='';updat
 
 /* Export */
 const dlg=$('#exportDlg');
-$('#openExport').onclick=()=>{if(!form.checkValidity()){selectTab($('#t-format'));form.reportValidity();say('Bitte die Maße prüfen');return;}dlg.showModal();$('#save').focus();};
+$('#openExport').onclick=()=>{if(!form.checkValidity()){selectTab($('#t-format'));form.reportValidity();say('Bitte die Maße prüfen');return;}dlg.showModal();dlg.focus();};
 $('#closeExport').onclick=()=>dlg.close();
 dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close();});
 $('#save').onclick=()=>{if(pending){say('Bild wird noch geladen');return}if(!form.checkValidity()||!update(false)){dlg.close();selectTab($('#t-format'));form.reportValidity();return;}const url=URL.createObjectURL(new Blob([html],{type:'text/html'})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),60000);say('Exportiert: '+name);};
