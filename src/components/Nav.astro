@@ -1,3 +1,7 @@
+---
+// Playground ist eine eigene statische Seite (public/playground/…), Base-Pfad für die GitHub-Preview beachten
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
 <header class="nav-bar">
   <nav class="nav" id="nav" data-state="full" aria-label="Hauptnavigation">
     <a class="nav-logo" href="#start" aria-label="Schah Sedi, zum Seitenanfang"><svg aria-hidden="true" id="nav-logo-mark"><use href="#logo"/></svg></a>
@@ -5,7 +9,7 @@
     <div class="nav-links" id="nav-links">
       <a href="#arbeiten">Projects</a>
       <a href="#ueber-mich">Personal</a>
-      <a href="#playground" title="Eigene Seite, folgt">Playground</a>
+      <a href={`${base}playground/buchmacher/`}>Playground</a>
       <a href="#kontakt">Contact</a>
     </div>
     <button class="nav-toggle" type="button" id="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Menü öffnen"><i></i><i></i></button>
