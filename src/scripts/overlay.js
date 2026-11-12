@@ -12,6 +12,13 @@
   var homeTitle = 'Schah Sedi Startseite';
   var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Fokus nur dann von Skript aus setzen, wenn jemand mit Tab unterwegs ist.
+  // Sonst zeigt der Browser nach einem Mausklick oder Esc einen Fokusrahmen samt Hover-Zustand,
+  // als wäre das Element per Tastatur ausgewählt worden.
+  var tabbing = false;
+  document.addEventListener('keydown', function (e) { if (e.key === 'Tab') tabbing = true; }, true);
+  document.addEventListener('pointerdown', function () { tabbing = false; }, true);
+
   var isOpen = layer.classList.contains('is-open');
   var pushed = false;   // haben wir selbst einen Verlaufseintrag angelegt? Dann schließt history.back()
   var opener = null;    // Link, der geöffnet hat: bekommt beim Schließen den Fokus zurück
@@ -63,7 +70,8 @@
       layer.classList.add('is-open');
       lockPage(true);
       isOpen = true;
-      closeBtn.focus({ preventScroll: true });
+      if (tabbing) closeBtn.focus({ preventScroll: true });
+      else if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
     }).catch(function () { location.href = url; }); // im Zweifel ganz normal zur Projektseite
   }
 
@@ -83,7 +91,7 @@
       else history.replaceState(null, '', home);
     }
     pushed = false;
-    if (opener) opener.focus({ preventScroll: true });
+    if (opener && tabbing) opener.focus({ preventScroll: true });
     opener = null;
   }
 

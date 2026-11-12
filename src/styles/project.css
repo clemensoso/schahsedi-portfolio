@@ -32,7 +32,7 @@
   .sheet { transition-duration: 1ms; }
 }
 
-/* X klebt oben in der Karte, nimmt aber keinen Platz weg; der Griff sitzt an der Oberkante und scrollt mit weg */
+/* Griff und X kleben oben in der Karte (beide in der sticky Leiste), nehmen aber keinen Platz weg */
 .sheet-bar { position: sticky; top: 0; z-index: 5; height: 0; }
 .sheet-grip {
   position: absolute; z-index: 4; top: 0; left: 50%; translate: -50% 0;
