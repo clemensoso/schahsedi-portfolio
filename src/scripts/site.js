@@ -4,6 +4,20 @@
 
   document.getElementById('foot-year').textContent = new Date().getFullYear();
 
+  // Footer klebt nur in der Nähe des Seitenendes (Aufdeck-Effekt). Weiter oben wäre er unsichtbar am unteren Rand
+  // festgeklebt, und Safari 26 färbt dann die untere Browserleiste schwarz.
+  (function () {
+    var foot = document.querySelector('body > footer');
+    if (!foot || !('IntersectionObserver' in window)) return;
+    var mark = document.createElement('div');
+    mark.setAttribute('aria-hidden', 'true');
+    foot.parentNode.insertBefore(mark, foot);
+    foot.classList.add('is-far');
+    new IntersectionObserver(function (en) {
+      foot.classList.toggle('is-far', !en[0].isIntersecting && en[0].boundingClientRect.top > 0);
+    }, { rootMargin: '0px 0px 150% 0px' }).observe(mark);
+  })();
+
   // Kritzel-Füllung einsetzen
   var SCRIBBLE = '<svg class="scribble" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">' +
     '<path pathLength="1" d="M-6 30 C2 4 12 -2 16 14 C20 32 10 46 24 34 C36 24 30 -6 44 6 C56 16 40 46 56 38 C70 30 64 -4 78 6 C90 14 76 42 92 34 C100 30 104 18 108 12"/></svg>';

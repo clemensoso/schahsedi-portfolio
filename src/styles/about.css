@@ -90,7 +90,9 @@
 }
 .sticker.scrolling .sticker-body, .sticker.scrolling .sticker-flap { transition-duration: 90ms; }
 /* Schatten erst, wenn der Sticker fertig aufgeklebt ist; weich eingeblendet */
-.sticker { filter: drop-shadow(0 0 0 rgb(0 0 0 / 0)); }
+.sticker { filter: drop-shadow(0 0 0 rgb(0 0 0 / 0)); will-change: transform; backface-visibility: hidden; }
+/* will-change/backface: eigene Ebene für jeden Sticker. Sonst lässt Safari auf dem iPhone beim Bewegen
+   graue Schatten-Reste (Kästen) auf der Fläche stehen, weil es den drop-shadow nicht sauber neu zeichnet. */
 .sticker.settled { filter: drop-shadow(0 3px 5px rgb(0 0 0 / 0.22)); transition: rotate 450ms var(--ease-out), translate 450ms var(--ease-out), filter 700ms var(--ease-out); }
 @media (max-width: 759px) { .sticker { --sw: min(46vw, 190px); right: 10px; bottom: -14px; } } /* Handy: nur nach unten über die Kachel */
 
@@ -130,6 +132,7 @@
   100% { transform: none; }
 }
 .skill { position: absolute; left: 0; top: 0; rotate: var(--r, 0deg); cursor: grab; user-select: none; touch-action: none;
+  will-change: transform; backface-visibility: hidden; -webkit-backface-visibility: hidden; /* eigene Ebene, siehe .sticker */
   transition: scale 200ms var(--ease-out); }
 /* --pad: Platz im SVG für den weißen Rand, damit nichts über die Box hinausragt und der Schatten überall sauber ist */
 .skill svg { --pad: 6; display: block; width: calc((var(--w) + 2 * var(--pad)) * var(--k) * 1px); height: auto; margin: calc(var(--pad) * var(--k) * -1px); filter: drop-shadow(0 3px 4px rgb(0 0 0 / 0.24)); }

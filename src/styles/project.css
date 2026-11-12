@@ -5,11 +5,16 @@
 .sheet-layer[hidden] { display: none; }
 .sheet-layer.no-anim, .sheet-layer.no-anim * { transition: none !important; }
 
+/* Abdunklung nur über der Karte (plus Platz für die runden Ecken), nicht bis zum unteren Rand:
+   Safari 26 färbt sonst die untere Browserleiste schwarz. Beim Wegziehen reicht sie wieder ganz nach unten. */
 .sheet-backdrop {
-  position: absolute; inset: 0; background: rgb(0 0 0 / 0.72); cursor: pointer;
+  position: absolute; inset: 0 0 auto; height: 100%;
+  background: rgb(0 0 0 / 0.72); cursor: pointer;
   opacity: 0; transition: opacity 520ms var(--ease-out);
 }
-.sheet-layer.is-open .sheet-backdrop { opacity: var(--shade, 1); }
+/* erst wenn die Karte oben angekommen ist, auf den Streifen über der Karte kürzen */
+.sheet-layer.is-open .sheet-backdrop { opacity: var(--shade, 1); height: calc(max(10vh, 48px) + clamp(28px, 4vw, 56px) + 8px); transition: opacity 520ms var(--ease-out), height 0s 660ms; }
+.sheet-layer:has(.sheet.dragging) .sheet-backdrop { height: 100%; transition: none; }
 
 .sheet {
   /* immer helle Farben, egal welcher Ton gerade auf der Seite liegt */

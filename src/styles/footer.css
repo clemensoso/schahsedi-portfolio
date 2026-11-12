@@ -2,6 +2,8 @@
 footer {
   /* klebt am unteren Rand hinter <main>: die gelbe Karte fährt nach oben weg und gibt ihn frei */
   position: sticky; bottom: 0; z-index: 0;
+  /* Safari 26 färbt die untere Browserleiste in der Farbe festgeklebter Elemente am unteren Rand.
+     Der Footer klebt deshalb nur, solange er gleich aufgedeckt wird (Klasse per JS), sonst schwarze Leiste überall. */
   --bg: #111111; --fg: #FFFFFF; --muted: #A5A198; --line: #2E2D2A;
   background: var(--bg); color: var(--fg);
   /* reicht 64px unter die Karte, damit in deren unteren Ecken immer Schwarz zu sehen ist */
@@ -9,6 +11,7 @@ footer {
   padding: calc(var(--space-8) + 64px) 0 var(--space-6);
   overflow: hidden;
 }
+footer.is-far { position: relative; }
 .foot { display: flex; justify-content: space-between; gap: var(--space-3) var(--space-5); flex-wrap: wrap; align-items: center; max-width: var(--content-max); margin: var(--space-7) auto 0; padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); font-size: var(--fs-small); }
 @media (min-width: 720px) { .foot { padding-inline: 40px; } }
 .foot-links { display: flex; gap: var(--space-5); flex-wrap: wrap; align-items: center; font-size: var(--fs-small); }
