@@ -128,6 +128,11 @@
   background: #FFFFFF; color: var(--brand-ink); font-size: var(--fs-small); font-weight: 500; line-height: 1.5;
   box-shadow: 0 0 0 1px rgb(0 0 0 / 0.06), 0 8px 24px rgb(0 0 0 / 0.12);
 }
+/* Handy und schmale Fenster: Buch fast randlos (12px zum Kartenrand), Höhe passend zur Breite */
+@media (max-width: 899px) {
+  .pb-split .pb-embed { margin-inline: calc(12px - var(--pad)); }
+  .pb-split .pb-embed iframe { height: calc(min(132vw, 900px) + 110px); }
+}
 @media (min-width: 900px) {
   .pb-split { grid-template-columns: 1fr 1fr; gap: var(--space-8); }
   .pb-side { padding-top: 24px; }
