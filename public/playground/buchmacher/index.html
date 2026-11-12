@@ -270,6 +270,26 @@ code.path{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5
 }
 @media(max-width:420px){.nav{gap:2px;padding:5px}.nav-logo{width:36px;height:36px}.nav-logo svg{width:25px;height:25px}.seg button{padding:8px 9px}.nav-btn{padding:8px 9px}.nav .btn{padding-left:12px;gap:8px;margin-left:2px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* Exportieren: gleiche Form wie die Tabs der linken Leiste (Höhe, Schrift, Icon, Pill), aber schwarz, weil keine aktive Auswahl */
+.export-btn{display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 14px 0 12px;margin-left:2px;border:0;border-radius:var(--pill);background:var(--ink);color:var(--paper);font:inherit;font-size:13.5px;font-weight:500;line-height:1;white-space:nowrap;cursor:pointer;transition:background-color var(--fast) var(--ease),color var(--fast) var(--ease),scale var(--fast) var(--ease)}
+.export-btn svg{width:16px;height:16px;flex:none}
+.export-btn:hover,.export-btn:focus-visible{background:var(--yellow);color:var(--ink)}
+.export-btn:active{scale:.97}
+
+/* Export-Dialog ruhiger: weiße Karte, normale Überschrift statt Display-Schrift, kein gelber Rahmen */
+dialog{background:var(--paper);border-radius:var(--r-l);width:min(540px,calc(100vw - 24px));box-shadow:0 0 0 1px rgb(0 0 0/.06),0 30px 80px rgb(0 0 0/.3)}
+.dlg-head{align-items:center;padding:24px 24px 4px 28px}
+.dlg-head h2{font:600 20px/1.3 var(--font-sans);text-transform:none;letter-spacing:0}
+.dlg-head p{margin:4px 0 0;color:var(--muted);font-size:14px;line-height:1.5}
+.close{border:0;background:var(--cream)}
+.close:hover,.close:focus-visible{background:var(--yellow);color:var(--ink)}
+.steps{margin:0;padding:4px 28px 24px;background:transparent;border-radius:0}
+.steps li{padding:18px 0 18px 40px}
+.steps li:last-child{padding-bottom:0}
+.steps li::before{top:17px;width:26px;height:26px;font-size:12.5px;font-weight:600;background:var(--cream);color:var(--ink)}
+.steps b{font-size:14.5px;margin-bottom:10px}
+code.path{background:var(--cream)}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="logo" viewBox="0 0 880 880"><circle cx="440" cy="440" r="350" class="logo"/><path d="M597.6 349 A182 182 0 1 0 606.3 514" class="logo"/></symbol></svg>
@@ -381,7 +401,7 @@ code.path{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5
    <div class="seg" role="group" aria-label="Ansicht"><button type="button" id="view3d" aria-pressed="true">3D</button><button type="button" id="viewOrig" aria-pressed="false" title="Hochgeladenes Cover ohne Material und Licht">Original</button></div>
    <button type="button" class="nav-btn" id="importBook" title="Eine exportierte Buch-HTML öffnen und weiterbearbeiten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="lbl">Öffnen</span></button>
    <input type="file" id="configFile" accept=".html,.htm,text/html" hidden>
-   <button type="button" class="btn small" id="openExport">Exportieren<span class="dot"><svg class="rot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></span></button>
+   <button type="button" class="export-btn" id="openExport"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Exportieren</button>
   </nav></div>
   <div class="badge backdrop" role="group" aria-label="Vorschau-Hintergrund"><span>Hintergrund</span>
    <button type="button" data-bg="paper" style="background:#fff" aria-label="Weiß" title="Weiß"></button>
