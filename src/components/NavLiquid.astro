@@ -38,7 +38,9 @@ const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}
   /* Die flüssige Nav ersetzt die bisherige; diese läuft unsichtbar weiter und liefert Bereichsnamen und Zustand */
   .nav-bar { display: none; }
   .lq { position: fixed; inset: 0 0 auto; height: 100svh; z-index: 31; pointer-events: none; }
-  .lq-shape { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  /* Zeichenfläche nur so hoch wie die Nav gerade braucht (per Skript): Der Schatten wird sonst bei jedem Bild
+     über den ganzen Bildschirm neu berechnet, und die Form hinkt hinter der Bewegung her */
+  .lq-shape { position: absolute; left: 0; top: 0; width: 100%; height: var(--lq-h, 120px); overflow: visible; }
   .lq-btn {
     position: absolute; left: 0; top: 0; width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%; border: 0; padding: 0;
     display: grid; place-items: center; background: var(--brand-ink); color: #FFFFFF; cursor: pointer; pointer-events: auto;
@@ -57,10 +59,10 @@ const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}
   .lq-btn:focus-visible { outline: 2px solid var(--brand-yellow); outline-offset: 3px; }
   /* Desktop: Beim Zusammenziehen erscheint der Menü-Knopf erst, wenn die Pille fast klein ist (verzögert und langsam),
      beim Aufziehen zur vollen Leiste verschwindet er gleich */
-  .lq-toggle { transition: background-color 160ms, color 160ms, opacity 480ms var(--ease-out) 420ms, scale 560ms var(--ease-out) 380ms; }
-  .lq.is-full .lq-toggle { opacity: 0; scale: 0.6; pointer-events: none; transition: background-color 160ms, color 160ms, opacity 140ms linear, scale 200ms var(--ease-out); }
-  .lq-inline { position: absolute; left: 0; top: 0; display: flex; gap: 2px; translate: 0 -50%; opacity: 0; pointer-events: none; transition: opacity 200ms var(--ease-out); }
-  .lq.is-full .lq-inline { opacity: 1; pointer-events: auto; transition: opacity 320ms var(--ease-out) 160ms; }
+  /* Desktop: Menü-Knopf und Links blenden passend zur Bewegung der Form ein und aus (per Skript) */
+  .lq.is-full .lq-toggle { pointer-events: none; }
+  .lq-inline { position: absolute; left: 0; top: 0; display: flex; gap: 2px; translate: 0 -50%; opacity: 0; pointer-events: none; }
+  .lq.is-full .lq-inline { pointer-events: auto; }
   .lq-inline a { padding: 9px 14px; border-radius: var(--radius-pill); font-size: var(--fs-small); font-weight: 500; color: var(--brand-ink); text-decoration: none; white-space: nowrap; }
   .lq-inline a[aria-current="true"] { background: #F1EFEA; }
   .lq-inline a:hover, .lq-inline a:focus-visible { background: var(--brand-yellow); outline: none; }
@@ -81,7 +83,7 @@ const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}
 <script>
   const root = document.getElementById('lq');
   if (root) {
-    const path = root.querySelector('#lq-path');
+    const path = root.querySelector('#lq-path'), svgEl = root.querySelector('.lq-shape');
     const logo = root.querySelector('#lq-logo'), logoMark = logo.querySelector('svg');
     const toggle = root.querySelector('#lq-toggle');
     const label = root.querySelector('#lq-label');
@@ -147,6 +149,13 @@ const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}
       let d = blob(x1, cy, R, s1) + blob(x2, cy, R, s2) + neck(x1, x2, cy, t);
       if (o > 0.005) d += card(x1, x2, cy, o * MENU_H);
       path.setAttribute('d', d);
+      svgEl.style.setProperty('--lq-h', Math.ceil(cy + R + o * MENU_H + 60) + 'px');
+      if (!narrow.matches) {
+        const span = x2 - x1, fullSpan = PWF - 2 * R, miniSpan = PW - 2 * R;
+        // Links nur, solange die Pille (fast) volle Breite hat; Menü-Knopf erst, wenn sie (fast) klein ist
+        inline.style.opacity = !open ? String(Math.max(0, Math.min(1, (span - fullSpan + 30) / 30))) : '0';
+        toggle.style.opacity = full && !open ? '0' : String(Math.max(0, Math.min(1, 1 - (span - miniSpan) / 40)));
+      } else { inline.style.opacity = '0'; toggle.style.opacity = ''; }
       logo.style.transform = `translate3d(${x1.toFixed(2)}px,${cy}px,0)`;
       toggle.style.transform = `translate3d(${x2.toFixed(2)}px,${cy}px,0)`;
       label.style.transform = `translate3d(${((x1 + x2) / 2).toFixed(2)}px,${cy}px,0)`;
@@ -171,8 +180,15 @@ const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}
       if (!raf) raf = requestAnimationFrame(frame);
     }
     function setSplit(on) { if (on === split) return; split = on; root.classList.toggle('is-split', on); kick(); }
+    // Offenes Menü: Das C dreht sich in die Grundstellung (nächste volle Umdrehung), beim Schließen wieder mit dem Scrollen
+    function setLogoTurn(deg, animate) {
+      logoMark.style.transition = animate && !calm ? 'transform 650ms cubic-bezier(0.22, 1, 0.36, 1)' : '';
+      logoMark.style.transform = `rotate(${deg.toFixed(1)}deg)`;
+    }
     function setOpen(on) {
       open = on; root.classList.toggle('is-open', on);
+      const turn = scrollY * 0.3;
+      setLogoTurn(on ? Math.round(turn / 360) * 360 : turn, true);
       toggle.setAttribute('aria-expanded', String(on)); toggle.setAttribute('aria-label', on ? 'Menü schließen' : 'Menü öffnen');
       linkEls.forEach((a) => (a.tabIndex = on ? 0 : -1));
       if (on) { split = false; root.classList.remove('is-split'); }
@@ -205,8 +221,9 @@ const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}
     let lastY = scrollY, run = 0;
     addEventListener('scroll', () => {
       const y = scrollY, d = y - lastY; lastY = y;
-      if (!calm) logoMark.style.transform = `rotate(${(y * 0.3).toFixed(1)}deg)`;
-      if (open || !narrow.matches) return; // Desktop teilt sich nie
+      if (open) return; // im offenen Menü steht das C aufrecht
+      if (!calm) setLogoTurn(y * 0.3, false);
+      if (!narrow.matches) return; // Desktop teilt sich nie
       if (y < 80) { run = 0; setSplit(false); return; }
       run = (d > 0) === (run > 0) ? run + d : d;
       if (run > 24) setSplit(true); else if (run < -24) setSplit(false);
