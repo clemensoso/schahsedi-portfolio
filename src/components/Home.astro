@@ -10,12 +10,11 @@ import Services from './Services.astro';
 import About from './About.astro';
 import Contact from './Contact.astro';
 import Footer from './Footer.astro';
-// liquidNav: Entwurf der neuen Nav (Seite /nav-entwurf/); die alte Nav bleibt im Code, wird dort nur ausgeblendet
-const { liquidNav = false } = Astro.props;
 ---
 <Sprite />
+<!-- Bisherige Nav bleibt unsichtbar im Code: Sie berechnet Bereichsnamen und Zustand, die flüssige Nav zeigt sie an -->
 <Nav />
-{liquidNav && <NavLiquid />}
+<NavLiquid />
 <div class="cursor-tag" id="cursor-tag" aria-hidden="true"></div>
 
 <main id="start">

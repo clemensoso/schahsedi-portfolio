@@ -1,5 +1,5 @@
 ---
-// Entwurf: Nav mit flüssiger Form.
+// Nav mit flüssiger Form.
 // Ganz: Pille oben mittig, links das C (dreht sich beim Scrollen), in der Mitte der aktuelle Bereich, rechts das Menü.
 // Runterscrollen: Die Pille dehnt sich, schnürt sich in der Mitte ein und reißt; Logo und Menü bleiben als Kreise in den Ecken.
 // Hochscrollen oder Tipp aufs Menü: beide fließen wieder zur Pille zusammen.
@@ -35,6 +35,8 @@ const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}
 </div>
 
 <style is:global>
+  /* Die flüssige Nav ersetzt die bisherige; diese läuft unsichtbar weiter und liefert Bereichsnamen und Zustand */
+  .nav-bar { display: none; }
   .lq { position: fixed; inset: 0 0 auto; height: 100svh; z-index: 31; pointer-events: none; }
   .lq-shape { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
   .lq-btn {
@@ -219,7 +221,15 @@ const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) { setOpen(false); toggle.focus(); } });
     document.addEventListener('pointerdown', (e) => { if (open && !root.contains(e.target) && !e.target.closest('.lq-btn')) setOpen(false); });
     // Klicks außerhalb der sichtbaren Form gehen durch (die Fläche ist sonst unsichtbar groß)
-    addEventListener('resize', () => { measure(); targets(); for (const s of [A, B, T, O]) s.x = s.to; render(); });
+    // Größenänderung: Auf dem Handy blendet sich beim schnellen Scrollen die Adressleiste ein und aus, das meldet der
+    // Browser als Größenänderung. Dabei laufen die Federn weiter (sonst springen die Kreise sofort ans Ziel).
+    // Nur wenn sich die Breite wirklich ändert (Drehen, Fenster), wird sofort neu gesetzt.
+    let lastW = root.clientWidth;
+    addEventListener('resize', () => {
+      measure(); const w = root.clientWidth;
+      if (Math.abs(w - lastW) > 40) { lastW = w; targets(); for (const s of [A, B, T, O]) { s.x = s.to; s.v = 0; } render(); }
+      else { lastW = w; kick(); }
+    });
 
     const init = () => { measure(); syncLabel(); syncFull(); targets(); for (const s of [A, B, T, O]) s.x = s.to; render(); };
     init();
