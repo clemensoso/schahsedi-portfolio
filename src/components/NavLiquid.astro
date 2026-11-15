@@ -240,7 +240,7 @@ const links = [['#arbeiten', 'Projects'], ['#leistungen', 'Services'], ['#ueber-
       if (f2 === full) return;
       full = f2; root.classList.toggle('is-full', full);
       inlineEls.forEach((a) => (a.tabIndex = full ? 0 : -1));
-      if (full && open) setOpen(false);
+      if (full && open && narrow.matches) setOpen(false); // Desktop: ein per Klick geöffnetes Menü bleibt offen
       kick();
     }
     if (oldNav) new MutationObserver(syncFull).observe(oldNav, { attributes: true, attributeFilter: ['data-state'] });
@@ -254,8 +254,9 @@ const links = [['#arbeiten', 'Projects'], ['#leistungen', 'Services'], ['#ueber-
         // Desktop teilt sich nie: Runterscrollen zieht zusammen (und schließt ein offenes Menü), Hochscrollen zieht breit auf
         if (d) {
           run = (d > 0) === (run > 0) ? run + d : d;
-          if (run > 24) { if (open) setOpen(false); if (deskUp) { deskUp = false; syncFull(); } }
-          else if (run < -24 && !deskUp && !open) { deskUp = true; syncFull(); } // offenes Menü bleibt beim Hochscrollen offen (mit X), bis ganz oben
+          // Per Klick geöffnet: bleibt offen (mit X), egal wohin gescrollt wird, bis es wieder geschlossen wird
+          if (run > 24 && deskUp) { deskUp = false; syncFull(); }
+          else if (run < -24 && !deskUp) { deskUp = true; syncFull(); }
         }
         if (!open && !calm) setLogoTurn(y * 0.3, false);
         return;
