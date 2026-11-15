@@ -7,9 +7,11 @@
 // Breite (ganz und aufgeklappt) richtet sich nach dem längsten Wort aus Menü und Bereichsnamen.
 // Die Form ist ein Vektorpfad, die Bewegung kommt aus Federn.
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
-const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}playground/buchmacher/`, 'Playground'], ['#kontakt', 'Contact']];
+const links = [['#arbeiten', 'Projects'], ['#leistungen', 'Services'], ['#ueber-mich', 'Personal'], [`${base}playground/buchmacher/`, 'Playground'], ['#kontakt', 'Contact']];
 ---
 <div class="lq" id="lq">
+  <!-- Desktop: schlichte weiße Pille mit CSS-Schatten (teilt sich nie, braucht keine flüssige Form) -->
+  <span class="lq-pill" aria-hidden="true"></span>
   <svg class="lq-shape" aria-hidden="true" focusable="false">
     <defs>
       <!-- Filterbereich über die ganze Fläche (nicht nur um die Form), sonst wird der weiche Schatten abgeschnitten -->
@@ -23,9 +25,11 @@ const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}
   <span class="lq-label" id="lq-label" aria-hidden="true">Schah Sedi</span>
   <!-- Desktop oben: alle Links in der Pille (wie die alte Nav) -->
   <div class="lq-inline" id="lq-inline">
+    <span class="lq-ind" aria-hidden="true"></span>
     {links.map(([href, label]) => <a href={href}>{label}</a>)}
   </div>
   <nav class="lq-links" id="lq-links" aria-label="Hauptnavigation">
+    <span class="lq-ind" aria-hidden="true"></span>
     {links.map(([href, label]) => <a href={href} tabindex="-1">{label}</a>)}
   </nav>
   <a class="lq-btn lq-logo" id="lq-logo" href="#start" aria-label="Schah Sedi, zum Seitenanfang"><svg aria-hidden="true"><use href="#logo" /></svg></a>
@@ -41,6 +45,8 @@ const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}
   /* Zeichenfläche nur so hoch wie die Nav gerade braucht (per Skript): Der Schatten wird sonst bei jedem Bild
      über den ganzen Bildschirm neu berechnet, und die Form hinkt hinter der Bewegung her */
   .lq-shape { position: absolute; left: 0; top: 0; width: 100%; height: var(--lq-h, 120px); overflow: visible; }
+  .lq-pill { display: none; position: absolute; left: 0; top: 0; height: 52px; border-radius: 26px; background: #FFFFFF; box-shadow: 0 0 0 1px rgb(0 0 0 / 0.06), 0 10px 40px rgb(0 0 0 / 0.18); will-change: transform, width; }
+  @media (min-width: 761px) { .lq-shape { display: none; } .lq-pill { display: block; } }
   .lq-btn {
     position: absolute; left: 0; top: 0; width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%; border: 0; padding: 0;
     display: grid; place-items: center; background: var(--brand-ink); color: #FFFFFF; cursor: pointer; pointer-events: auto;
@@ -62,9 +68,15 @@ const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}
   /* Desktop: Menü-Knopf und Links blenden passend zur Bewegung der Form ein und aus (per Skript) */
   .lq.is-full .lq-toggle { pointer-events: none; }
   .lq-inline { position: absolute; left: 0; top: 0; display: flex; gap: 2px; translate: 0 -50%; opacity: 0; pointer-events: none; }
-  .lq.is-full .lq-inline { pointer-events: auto; }
+  .lq.is-full .lq-inline, .lq.is-open .lq-inline { pointer-events: auto; }
+  /* Markierung des aktuellen Bereichs: eine Pille, die zum passenden Link gleitet */
+  .lq-inline, .lq-links { isolation: isolate; }
+  .lq-ind { position: absolute; left: 0; top: 0; z-index: -1; background: #F1EFEA; opacity: 0; pointer-events: none; }
+  .lq-inline .lq-ind { border-radius: var(--radius-pill); }
+  .lq-links .lq-ind { border-radius: 18px; }
+  .lq-ind.is-ready { transition: transform 460ms cubic-bezier(0.22, 1, 0.36, 1), width 460ms cubic-bezier(0.22, 1, 0.36, 1), opacity 240ms ease; }
+  @media (prefers-reduced-motion: reduce) { .lq-ind.is-ready { transition: opacity 200ms linear; } }
   .lq-inline a { padding: 9px 14px; border-radius: var(--radius-pill); font-size: var(--fs-small); font-weight: 500; color: var(--brand-ink); text-decoration: none; white-space: nowrap; }
-  .lq-inline a[aria-current="true"] { background: #F1EFEA; }
   .lq-inline a:hover, .lq-inline a:focus-visible { background: var(--brand-yellow); outline: none; }
   .lq-label, .lq-measure {
     position: absolute; left: 0; top: 0; white-space: nowrap; font-size: var(--fs-small); font-weight: 500; color: var(--brand-ink);
@@ -74,16 +86,15 @@ const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}
   .lq.is-split .lq-label, .lq.is-open .lq-label, .lq.is-joining .lq-label, .lq.is-full .lq-label { opacity: 0; transition: opacity 90ms linear; }
   .lq-measure { visibility: hidden; }
   .lq-links { position: absolute; left: 0; top: 0; display: grid; gap: 2px; padding: 4px 8px 8px; opacity: 0; pointer-events: none; }
-  .lq.is-open .lq-links { pointer-events: auto; }
+  @media (max-width: 760px) { .lq.is-open .lq-links { pointer-events: auto; } } /* Desktop klappt nicht nach unten auf */
   .lq-links a { padding: 13px 14px; border-radius: 18px; text-align: center; font-size: var(--fs-body); font-weight: 500; color: var(--brand-ink); text-decoration: none; white-space: nowrap; }
-  .lq-links a[aria-current="true"] { background: #F1EFEA; }
   .lq-links a:hover, .lq-links a:focus-visible { background: var(--brand-yellow); outline: none; }
 </style>
 
 <script>
   const root = document.getElementById('lq');
   if (root) {
-    const path = root.querySelector('#lq-path'), svgEl = root.querySelector('.lq-shape');
+    const path = root.querySelector('#lq-path'), svgEl = root.querySelector('.lq-shape'), pill = root.querySelector('.lq-pill');
     const logo = root.querySelector('#lq-logo'), logoMark = logo.querySelector('svg');
     const toggle = root.querySelector('#lq-toggle');
     const label = root.querySelector('#lq-label');
@@ -134,11 +145,12 @@ const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}
     let W = 0, cy = TOP + R, split = false, open = false, full = false;
     function targets() {
       W = root.clientWidth; const mid = W / 2;
-      const w = full && !open ? PWF : PW;
+      // Desktop: offen = wieder breit wie oben, mit allen Links und dem X rechts; Handy: offen klappt nach unten auf
+      const desk = !narrow.matches, w = desk && open ? PWF + 46 : full && !open ? PWF : PW;
       A.to = split ? PAD + R : mid - w / 2 + R;
       B.to = split ? W - PAD - R : mid + w / 2 - R;
       T.to = split ? 0 : R;
-      O.to = open ? 1 : 0;
+      O.to = open && !desk ? 1 : 0;
     }
     function render() {
       const x1 = A.x, x2 = B.x, o = Math.max(0, O.x);
@@ -153,8 +165,10 @@ const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}
       if (!narrow.matches) {
         const span = x2 - x1, fullSpan = PWF - 2 * R, miniSpan = PW - 2 * R;
         // Links nur, solange die Pille (fast) volle Breite hat; Menü-Knopf erst, wenn sie (fast) klein ist
-        inline.style.opacity = !open ? String(Math.max(0, Math.min(1, (span - fullSpan + 30) / 30))) : '0';
-        toggle.style.opacity = full && !open ? '0' : String(Math.max(0, Math.min(1, 1 - (span - miniSpan) / 40)));
+        inline.style.opacity = String(Math.max(0, Math.min(1, (span - fullSpan + 30) / 30)));
+        toggle.style.opacity = open ? '1' : full ? '0' : String(Math.max(0, Math.min(1, 1 - (span - miniSpan) / 40)));
+        pill.style.transform = `translate3d(${(x1 - R).toFixed(2)}px,${(cy - R).toFixed(2)}px,0)`;
+        pill.style.width = (x2 - x1 + 2 * R).toFixed(2) + 'px';
       } else { inline.style.opacity = '0'; toggle.style.opacity = ''; }
       logo.style.transform = `translate3d(${x1.toFixed(2)}px,${cy}px,0)`;
       toggle.style.transform = `translate3d(${x2.toFixed(2)}px,${cy}px,0)`;
@@ -190,9 +204,22 @@ const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}
       const turn = scrollY * 0.3;
       setLogoTurn(on ? Math.round(turn / 360) * 360 : turn, true);
       toggle.setAttribute('aria-expanded', String(on)); toggle.setAttribute('aria-label', on ? 'Menü schließen' : 'Menü öffnen');
-      linkEls.forEach((a) => (a.tabIndex = on ? 0 : -1));
+      linkEls.forEach((a) => (a.tabIndex = on && narrow.matches ? 0 : -1));
+      inlineEls.forEach((a) => (a.tabIndex = (full || on) && !narrow.matches ? 0 : -1));
       if (on) { split = false; root.classList.remove('is-split'); }
       kick();
+    }
+
+    // ---------- Gleitende Markierung: Pille unter dem Link des aktuellen Bereichs ----------
+    function placeInd(box, els) {
+      const ind = box.querySelector('.lq-ind'), a = els.find((x) => x.getAttribute('aria-current') === 'true');
+      if (!a) { ind.style.opacity = '0'; return; }
+      const fresh = ind.style.opacity !== '1'; // war ausgeblendet: an Ort und Stelle einblenden statt quer heranzugleiten
+      if (fresh) ind.classList.remove('is-ready');
+      ind.style.width = a.offsetWidth + 'px'; ind.style.height = a.offsetHeight + 'px';
+      ind.style.transform = `translate(${a.offsetLeft}px, ${a.offsetTop}px)`;
+      if (fresh) { void ind.offsetWidth; ind.classList.add('is-ready'); }
+      ind.style.opacity = '1';
     }
 
     // ---------- Aktueller Bereich: übernimmt den Namen, den die bestehende Nav berechnet ----------
@@ -202,12 +229,14 @@ const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}
       if (label.textContent !== t) label.textContent = t;
       // Im offenen Menü ist der aktuelle Bereich als Link hervorgehoben (nicht oben zwischen Logo und Menü)
       [...linkEls, ...inlineEls].forEach((a) => a.setAttribute('aria-current', String(a.textContent.trim() === t)));
+      placeInd(inline, inlineEls); placeInd(linksBox, linkEls);
     };
     if (current) new MutationObserver(syncLabel).observe(current, { childList: true, characterData: true, subtree: true });
     // Desktop: oben alle Links in der Pille, später Logo + Bereich + Menü (gleiche Regel wie die alte Nav, die im Hintergrund mitläuft)
     const oldNav = document.getElementById('nav');
     function syncFull() {
-      const f2 = !narrow.matches && (!oldNav || oldNav.dataset.state === 'full');
+      // Desktop breit: oben auf der Seite (Regel der bisherigen Nav) oder beim Hochscrollen
+      const f2 = !narrow.matches && (!oldNav || oldNav.dataset.state === 'full' || deskUp);
       if (f2 === full) return;
       full = f2; root.classList.toggle('is-full', full);
       inlineEls.forEach((a) => (a.tabIndex = full ? 0 : -1));
@@ -218,12 +247,21 @@ const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}
     narrow.addEventListener('change', () => { if (!narrow.matches) setSplit(false); syncFull(); kick(); });
 
     // ---------- Scrollen: C dreht sich, Richtung entscheidet über ganz oder geteilt ----------
-    let lastY = scrollY, run = 0;
+    let lastY = scrollY, run = 0, deskUp = false;
     addEventListener('scroll', () => {
       const y = scrollY, d = y - lastY; lastY = y;
+      if (!narrow.matches) {
+        // Desktop teilt sich nie: Runterscrollen zieht zusammen (und schließt ein offenes Menü), Hochscrollen zieht breit auf
+        if (d) {
+          run = (d > 0) === (run > 0) ? run + d : d;
+          if (run > 24) { if (open) setOpen(false); if (deskUp) { deskUp = false; syncFull(); } }
+          else if (run < -24 && !deskUp && !open) { deskUp = true; syncFull(); } // offenes Menü bleibt beim Hochscrollen offen (mit X), bis ganz oben
+        }
+        if (!open && !calm) setLogoTurn(y * 0.3, false);
+        return;
+      }
       if (open) return; // im offenen Menü steht das C aufrecht
       if (!calm) setLogoTurn(y * 0.3, false);
-      if (!narrow.matches) return; // Desktop teilt sich nie
       if (y < 80) { run = 0; setSplit(false); return; }
       run = (d > 0) === (run > 0) ? run + d : d;
       if (run > 24) setSplit(true); else if (run < -24) setSplit(false);
@@ -235,6 +273,7 @@ const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}
       setOpen(!open);
     });
     linksBox.addEventListener('click', (e) => { if (e.target.closest('a')) setOpen(false); });
+    inline.addEventListener('click', (e) => { if (e.target.closest('a') && open) setOpen(false); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) { setOpen(false); toggle.focus(); } });
     document.addEventListener('pointerdown', (e) => { if (open && !root.contains(e.target) && !e.target.closest('.lq-btn')) setOpen(false); });
     // Klicks außerhalb der sichtbaren Form gehen durch (die Fläche ist sonst unsichtbar groß)
@@ -243,7 +282,7 @@ const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}
     // Nur wenn sich die Breite wirklich ändert (Drehen, Fenster), wird sofort neu gesetzt.
     let lastW = root.clientWidth;
     addEventListener('resize', () => {
-      measure(); const w = root.clientWidth;
+      measure(); placeInd(inline, inlineEls); placeInd(linksBox, linkEls); const w = root.clientWidth;
       if (Math.abs(w - lastW) > 40) { lastW = w; targets(); for (const s of [A, B, T, O]) { s.x = s.to; s.v = 0; } render(); }
       else { lastW = w; kick(); }
     });
