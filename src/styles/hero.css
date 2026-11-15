@@ -81,6 +81,52 @@
   .float-card { --d: 0.6; }
   .f1 { rotate: -8deg; } .f2 { rotate: 4deg; } .f3 { rotate: 9deg; } .f4 { rotate: 7deg; } .f5 { rotate: -4deg; } .f6 { rotate: -9deg; }
 }
+/* ---------- Handy: zwei endlose Bänder statt fester Kacheln ---------- */
+.bands { display: none; }
+@media (max-width: 900px) {
+  /* Hero genau eine Bildschirmhöhe: Band, Claim, Band. Darunter kommt gleich die weiße Projekte-Karte */
+  .hero {
+    display: flex; flex-direction: column; justify-content: center; gap: clamp(20px, 4svh, 40px);
+    min-height: 100svh; padding-top: calc(env(safe-area-inset-top, 0px) + 84px); padding-bottom: clamp(24px, 5svh, 48px);
+    grid-template-columns: none;
+  }
+  .floats { display: none; }
+  .bands { display: contents; }
+  .band-1 { order: 0; } .hero-inner { order: 1; margin-block: 0; } .band-2 { order: 2; }
+  /* Leicht schräg und breiter als der Bildschirm, damit die Ecken nie leer sind */
+  /* Kein overflow: hidden, sonst werden gedrehte Ecken und Schatten gerade abgeschnitten; seitlich schneidet der Hero */
+  .band { position: relative; z-index: 1; width: 120vw; margin-inline: -10vw; padding-block: 22px; }
+  .band-1 { rotate: -3deg; } .band-2 { rotate: 2deg; }
+  .band-track { display: flex; align-items: center; width: max-content; will-change: transform; padding-inline: 10px; }
+  /* Mit Abstand, abwechselnd links und rechts herum gedreht, leicht versetzt; jede schwebt in eigenem Takt */
+  .band-tile {
+    position: relative; flex: none; display: block; width: min(34vw, 146px); aspect-ratio: 3 / 4; margin-inline: 9px;
+    -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
+    animation: float-in 1100ms var(--ease-out) both;
+  }
+  .band-2 .band-tile { animation-delay: 160ms; }
+  .band-tile:nth-child(6n + 1) { rotate: -7deg; translate: 0 4px; }
+  .band-tile:nth-child(6n + 2) { rotate: 5deg; translate: 0 -10px; aspect-ratio: 4 / 5; }
+  .band-tile:nth-child(6n + 3) { rotate: -9deg; translate: 0 8px; }
+  .band-tile:nth-child(6n + 4) { rotate: 6deg; translate: 0 -6px; }
+  .band-tile:nth-child(6n + 5) { rotate: -5deg; translate: 0 10px; aspect-ratio: 4 / 5; }
+  .band-tile:nth-child(6n) { rotate: 8deg; translate: 0 -4px; }
+  .band-card {
+    position: absolute; inset: 0; border-radius: var(--radius-m); overflow: hidden;
+    box-shadow: 0 22px 44px rgb(0 0 0 / 0.5), 0 8px 60px -10px color-mix(in srgb, var(--glow) 32%, transparent);
+    --d: 0.6; will-change: transform;
+    animation: var(--drift, drift-a) var(--drift-t, 8s) cubic-bezier(0.37, 0, 0.63, 1) var(--drift-at, 0s) infinite;
+  }
+  .band-tile:nth-child(6n + 1) .band-card { --drift: drift-a; --drift-t: 8.6s; --drift-at: -1.2s; }
+  .band-tile:nth-child(6n + 2) .band-card { --drift: drift-b; --drift-t: 10.4s; --drift-at: -6.3s; }
+  .band-tile:nth-child(6n + 3) .band-card { --drift: drift-a; --drift-t: 9.3s; --drift-at: -4.1s; }
+  .band-tile:nth-child(6n + 4) .band-card { --drift: drift-b; --drift-t: 7.9s; --drift-at: -2.7s; }
+  .band-tile:nth-child(6n + 5) .band-card { --drift: drift-a; --drift-t: 11.2s; --drift-at: -8s; }
+  .band-tile:nth-child(6n) .band-card { --drift: drift-b; --drift-t: 9.8s; --drift-at: -5.2s; }
+  .band-tile:active { z-index: 3; }
+  .band-tile:active .band-card { animation-play-state: paused; }
+}
+@media (max-width: 900px) and (prefers-reduced-motion: reduce) { .band-card { animation: none; } }
 @keyframes rise { from { transform: translateY(105%); } to { transform: none; } }
 @keyframes fade-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
 @keyframes float-in { from { opacity: 0; transform: translateY(60px) scale(0.9); } to { opacity: 1; transform: none; } }

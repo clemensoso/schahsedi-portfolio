@@ -3,15 +3,19 @@
 // genauso aussieht wie nach einem Klick im Karussell.
 import Sprite from './Sprite.astro';
 import Nav from './Nav.astro';
+import NavLiquid from './NavLiquid.astro';
 import Hero from './Hero.astro';
 import Work from './Work.astro';
 import Services from './Services.astro';
 import About from './About.astro';
 import Contact from './Contact.astro';
 import Footer from './Footer.astro';
+// liquidNav: Entwurf der neuen Nav (Seite /nav-entwurf/); die alte Nav bleibt im Code, wird dort nur ausgeblendet
+const { liquidNav = false } = Astro.props;
 ---
 <Sprite />
 <Nav />
+{liquidNav && <NavLiquid />}
 <div class="cursor-tag" id="cursor-tag" aria-hidden="true"></div>
 
 <main id="start">

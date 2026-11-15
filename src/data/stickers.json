@@ -1,0 +1,240 @@
+{
+  "375": {
+    "Branding": [
+      18.52,
+      6.05
+    ],
+    "Packaging Design": [
+      49.83,
+      22.11
+    ],
+    "UX / UI": [
+      81.14,
+      16.58
+    ],
+    "Strategie": [
+      18.18,
+      39.47
+    ],
+    "Design Systems": [
+      31.48,
+      60.26
+    ],
+    "Art Direction": [
+      80.81,
+      48.16
+    ],
+    "Editorial Design": [
+      23.57,
+      84.87
+    ],
+    "User Research": [
+      62.96,
+      77.11
+    ]
+  },
+  "430": {
+    "Branding": [
+      15.63,
+      11.05
+    ],
+    "Packaging Design": [
+      51.42,
+      23.42
+    ],
+    "UX / UI": [
+      80.68,
+      19.74
+    ],
+    "Strategie": [
+      22.44,
+      36.58
+    ],
+    "Design Systems": [
+      38.21,
+      60
+    ],
+    "Art Direction": [
+      82.95,
+      56.84
+    ],
+    "Editorial Design": [
+      24.72,
+      80.13
+    ],
+    "User Research": [
+      68.75,
+      82.63
+    ]
+  },
+  "768": {
+    "Branding": [
+      13.41,
+      17.93
+    ],
+    "Packaging Design": [
+      41.46,
+      26.21
+    ],
+    "UX / UI": [
+      63.66,
+      44.48
+    ],
+    "Strategie": [
+      16.83,
+      49.66
+    ],
+    "Design Systems": [
+      61.34,
+      85.52
+    ],
+    "Art Direction": [
+      84.15,
+      65.52
+    ],
+    "Editorial Design": [
+      22.68,
+      82.93
+    ],
+    "User Research": [
+      86.83,
+      18.62
+    ]
+  },
+  "1024": {
+    "Branding": [
+      8.38,
+      7.93
+    ],
+    "Packaging Design": [
+      39.02,
+      25.17
+    ],
+    "UX / UI": [
+      66.31,
+      28.28
+    ],
+    "Strategie": [
+      15.85,
+      42.07
+    ],
+    "Design Systems": [
+      56.33,
+      72.76
+    ],
+    "Art Direction": [
+      82.47,
+      72.07
+    ],
+    "Editorial Design": [
+      27.44,
+      84.31
+    ],
+    "User Research": [
+      91.77,
+      28.28
+    ]
+  },
+  "1280": {
+    "Branding": [
+      20.36,
+      8.62
+    ],
+    "Packaging Design": [
+      37.25,
+      29.66
+    ],
+    "UX / UI": [
+      60.24,
+      26.55
+    ],
+    "Strategie": [
+      17.25,
+      57.93
+    ],
+    "Design Systems": [
+      67.84,
+      76.55
+    ],
+    "Art Direction": [
+      88.02,
+      68.28
+    ],
+    "Editorial Design": [
+      45.51,
+      78.79
+    ],
+    "User Research": [
+      83.95,
+      18.62
+    ]
+  },
+  "1440": {
+    "Branding": [
+      20.09,
+      17.24
+    ],
+    "Packaging Design": [
+      45.34,
+      32.07
+    ],
+    "UX / UI": [
+      67.12,
+      31.03
+    ],
+    "Strategie": [
+      18.18,
+      60
+    ],
+    "Design Systems": [
+      62.35,
+      92.07
+    ],
+    "Art Direction": [
+      81.82,
+      73.1
+    ],
+    "Editorial Design": [
+      34.23,
+      87.07
+    ],
+    "User Research": [
+      90.91,
+      27.93
+    ]
+  },
+  "1920": {
+    "Branding": [
+      23.91,
+      14.48
+    ],
+    "Packaging Design": [
+      42.09,
+      33.45
+    ],
+    "UX / UI": [
+      62.74,
+      28.62
+    ],
+    "Strategie": [
+      15.26,
+      54.14
+    ],
+    "Design Systems": [
+      56.06,
+      87.93
+    ],
+    "Art Direction": [
+      79.69,
+      78.62
+    ],
+    "Editorial Design": [
+      31.09,
+      87.07
+    ],
+    "User Research": [
+      87.88,
+      26.21
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+---
+// Werkzeug (nur im Dev-Server): Sticker-Lage je Breakpoint festlegen.
+// Breakpoint wählen, Sticker in der Vorschau verschieben, „Position speichern“ schreibt in src/data/stickers.json.
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const bps = [375, 430, 768, 1024, 1280, 1440, 1920];
+const dev = import.meta.env.DEV;
+---
+<html lang="de"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="robots" content="noindex"/><title>Sticker-Layout</title>
+<style>
+  html,body{margin:0;background:#E9E6E0;font:500 14px/1.3 system-ui,sans-serif;color:#222}
+  header{position:sticky;top:0;z-index:2;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 16px;background:#E9E6E0}
+  button{border:0;border-radius:999px;background:#fff;padding:8px 14px;font:inherit;cursor:pointer}
+  button:hover{background:#FEC31E}
+  button[aria-pressed="true"]{background:#222;color:#fff}
+  .save{background:#222;color:#fff;margin-left:auto}
+  .save:hover{background:#FEC31E;color:#222}
+  .status{min-width:16ch;color:#5e5b55}
+  .stage{padding:0 16px 24px;overflow:hidden}
+  .frame{width:calc(var(--bp) * var(--s) * 1px);height:calc(860px * var(--s));overflow:hidden;border-radius:16px;background:#fff;box-shadow:0 10px 40px rgb(0 0 0/.15)}
+  iframe{width:calc(var(--bp) * 1px);height:860px;border:0;display:block;transform:scale(var(--s));transform-origin:0 0}
+  .hint{padding:0 16px 10px;color:#5e5b55}
+</style></head><body>
+{dev ? (
+  <>
+    <header>
+      {bps.map((bp, i) => <button type="button" data-bp={bp} aria-pressed={i === 0 ? 'true' : 'false'}>{bp}px</button>)}
+      <span class="status" id="status"></span>
+      <button type="button" id="reload">Neu laden</button>
+      <button type="button" class="save" id="save">Position speichern</button>
+    </header>
+    <p class="hint">Sticker in der Vorschau verschieben, dann „Position speichern“. Gespeichert wird für den gewählten Breakpoint; auf der Seite gilt jeweils der größte Breakpoint, der noch in die Fensterbreite passt.</p>
+    <div class="stage"><div class="frame" id="frame"><iframe id="view" title="Vorschau" src={base}></iframe></div></div>
+  </>
+) : <p style="padding:24px">Dieses Werkzeug läuft nur im Dev-Server (npm run dev).</p>}
+<script is:inline>(function(){
+  var view=document.getElementById('view');if(!view)return;
+  var frame=document.getElementById('frame'),status=document.getElementById('status');
+  // gewählter Breakpoint steht in der Adresse (#430), damit er nach dem Speichern (Seite lädt neu) erhalten bleibt
+  var bp=Number((location.hash.match(/\d{3,4}/)||[375])[0]);
+  document.querySelectorAll('[data-bp]').forEach(function(x){x.setAttribute('aria-pressed',String(Number(x.dataset.bp)===bp));});
+  function fit(){var s=Math.min(1,(innerWidth-32)/bp);document.documentElement.style.setProperty('--bp',bp);document.documentElement.style.setProperty('--s',s.toFixed(3));}
+  function show(){var d=view.contentDocument;if(!d)return;var sh=d.getElementById('sticker-sheet');if(!sh){setTimeout(show,200);return;}
+    // Seite bis zur Sticker-Kachel scrollen, Nav ausblenden
+    var st=d.createElement('style');st.textContent='.nav-bar,.lq{display:none!important}';d.head.appendChild(st);
+    sh.scrollIntoView({block:'center'});status.textContent=bp+'px';}
+  function load(){fit();view.src=view.getAttribute('src').split('?')[0]+'?t='+Date.now();status.textContent='lädt …';}
+  view.addEventListener('load',function(){setTimeout(show,300);});
+  document.querySelectorAll('[data-bp]').forEach(function(b){b.onclick=function(){bp=Number(b.dataset.bp);history.replaceState(null,'','#'+bp);document.querySelectorAll('[data-bp]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});load();};});
+  document.getElementById('reload').onclick=load;
+  document.getElementById('save').onclick=function(){
+    var d=view.contentDocument,sh=d&&d.getElementById('sticker-sheet');if(!sh)return;
+    var w=sh.clientWidth,h=sh.clientHeight,pos={};
+    sh.querySelectorAll('.skill').forEach(function(el){pos[el.getAttribute('aria-label')]=[+((el.offsetLeft+el.offsetWidth/2)/w*100).toFixed(2),+((el.offsetTop+el.offsetHeight/2)/h*100).toFixed(2)];});
+    status.textContent='speichert …';
+    fetch('/__stickers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bp:bp,positions:pos})})
+      .then(function(r){status.textContent=r.ok?'Gespeichert für '+bp+'px':'Fehler beim Speichern';})
+      .catch(function(){status.textContent='Fehler beim Speichern';});
+  };
+  addEventListener('resize',fit);fit();load();
+})();</script>
+</body></html>

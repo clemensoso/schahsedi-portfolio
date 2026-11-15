@@ -1,0 +1,11 @@
+---
+// Testseite: Entwurf der neuen Nav (nur Logo und Menü, flüssige Form). Die Startseite bleibt unverändert.
+import Base from '../layouts/Base.astro';
+import Home from '../components/Home.astro';
+import ProjectOverlay from '../components/ProjectOverlay.astro';
+---
+<Base title="Nav Entwurf (Test)">
+  <ProjectOverlay />
+  <Home liquidNav />
+  <style is:global>.nav-bar { display: none; }</style>
+</Base>

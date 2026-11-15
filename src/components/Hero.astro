@@ -4,6 +4,10 @@ import Poster from './Poster.astro';
 
 // Parallaxe je Position, gehört zum Layout und nicht zum Inhalt
 const speeds = [0.55, 0.35, 0.2, 0.6, 0.4, 0.25];
+// Handy: zwei endlose Bänder, das obere läuft nach rechts, das untere nach links.
+// Jedes Band enthält seine Reihe zweimal hintereinander, damit die Schleife nahtlos ist.
+// Oben die Hero-Motive, unten weitere Projektbilder (hero.json → band), damit nie dasselbe Bild übereinander steht
+const rows = [hero.tiles, hero.band ?? [...hero.tiles].reverse()];
 ---
 <section class="hero" aria-labelledby="hero-title">
       <div class="wrap hero-inner">
@@ -17,6 +21,17 @@ const speeds = [0.55, 0.35, 0.2, 0.6, 0.4, 0.25];
       <div class="floats" id="floats" aria-hidden="true">
         {hero.tiles.map((t, i) => (
           <a class={`float f${i + 1}`} href="#arbeiten" style={`--glow:${t.glow}`} data-speed={speeds[i]} aria-label={t.label} tabindex="-1"><span class="float-card"><Poster image={t.image} pos={t.pos} /></span></a>
+        ))}
+      </div>
+      <div class="bands" id="bands" aria-hidden="true">
+        {rows.map((row, r) => (
+          <div class={`band band-${r + 1}`}>
+            <div class="band-track">
+              {[0, 1].map(() => row.map((t) => (
+                <a class="band-tile" href="#arbeiten" tabindex="-1" aria-label={t.label} style={`--glow:${t.glow}`}><span class="band-card"><Poster image={t.image} pos={t.pos} /></span></a>
+              )))}
+            </div>
+          </div>
         ))}
       </div>
     </section>

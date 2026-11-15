@@ -1,0 +1,226 @@
+---
+// Entwurf: Nav mit flüssiger Form.
+// Ganz: Pille oben mittig, links das C (dreht sich beim Scrollen), in der Mitte der aktuelle Bereich, rechts das Menü.
+// Runterscrollen: Die Pille dehnt sich, schnürt sich in der Mitte ein und reißt; Logo und Menü bleiben als Kreise in den Ecken.
+// Hochscrollen oder Tipp aufs Menü: beide fließen wieder zur Pille zusammen.
+// Aufklappen: Dieselbe Form wächst nach unten, die Links stehen darin.
+// Breite (ganz und aufgeklappt) richtet sich nach dem längsten Wort aus Menü und Bereichsnamen.
+// Die Form ist ein Vektorpfad, die Bewegung kommt aus Federn.
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const links = [['#arbeiten', 'Projects'], ['#ueber-mich', 'Personal'], [`${base}playground/buchmacher/`, 'Playground'], ['#kontakt', 'Contact']];
+---
+<div class="lq" id="lq">
+  <svg class="lq-shape" aria-hidden="true" focusable="false">
+    <defs>
+      <!-- Filterbereich über die ganze Fläche (nicht nur um die Form), sonst wird der weiche Schatten abgeschnitten -->
+      <filter id="lq-shadow" filterUnits="userSpaceOnUse" x="-10%" y="-10%" width="120%" height="120%">
+        <feDropShadow dx="0" dy="0" stdDeviation="0.6" flood-color="#000" flood-opacity="0.12" />
+        <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000" flood-opacity="0.2" />
+      </filter>
+    </defs>
+    <path id="lq-path" fill="#FFFFFF" filter="url(#lq-shadow)" />
+  </svg>
+  <span class="lq-label" id="lq-label" aria-hidden="true">Schah Sedi</span>
+  <!-- Desktop oben: alle Links in der Pille (wie die alte Nav) -->
+  <div class="lq-inline" id="lq-inline">
+    {links.map(([href, label]) => <a href={href}>{label}</a>)}
+  </div>
+  <nav class="lq-links" id="lq-links" aria-label="Hauptnavigation">
+    {links.map(([href, label]) => <a href={href} tabindex="-1">{label}</a>)}
+  </nav>
+  <a class="lq-btn lq-logo" id="lq-logo" href="#start" aria-label="Schah Sedi, zum Seitenanfang"><svg aria-hidden="true"><use href="#logo" /></svg></a>
+  <button class="lq-btn lq-toggle" id="lq-toggle" type="button" aria-expanded="false" aria-controls="lq-links" aria-label="Menü öffnen"><i></i><i></i><i></i></button>
+  <!-- Messhilfe für die Breite -->
+  <span class="lq-measure" id="lq-measure" aria-hidden="true"></span>
+</div>
+
+<style is:global>
+  .lq { position: fixed; inset: 0 0 auto; height: 100svh; z-index: 31; pointer-events: none; }
+  .lq-shape { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .lq-btn {
+    position: absolute; left: 0; top: 0; width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%; border: 0; padding: 0;
+    display: grid; place-items: center; background: var(--brand-ink); color: #FFFFFF; cursor: pointer; pointer-events: auto;
+    will-change: transform; -webkit-tap-highlight-color: transparent; transition: background-color 160ms, color 160ms;
+  }
+  .lq-logo svg { width: 28px; height: 28px; will-change: transform; }
+  .lq-toggle i { position: absolute; width: 16px; height: 1.8px; border-radius: 2px; background: currentColor; transition: transform 300ms var(--ease-out), opacity 200ms; }
+  .lq-toggle i:nth-child(1) { transform: translateY(-5px); }
+  .lq-toggle i:nth-child(3) { transform: translateY(5px); }
+  .lq-toggle[aria-expanded="true"] i:nth-child(1) { transform: rotate(45deg); }
+  .lq-toggle[aria-expanded="true"] i:nth-child(2) { opacity: 0; }
+  .lq-toggle[aria-expanded="true"] i:nth-child(3) { transform: rotate(-45deg); }
+  .lq-btn:hover { background: var(--brand-yellow); color: var(--brand-ink); }
+  /* Fokusrahmen nur bei Tastaturbedienung, nicht nach einem Klick */
+  .lq-btn:focus:not(:focus-visible) { outline: none; }
+  .lq-btn:focus-visible { outline: 2px solid var(--brand-yellow); outline-offset: 3px; }
+  .lq-toggle { transition: background-color 160ms, color 160ms, opacity 240ms var(--ease-out), scale 320ms var(--ease-out); }
+  .lq.is-full .lq-toggle { opacity: 0; scale: 0.6; pointer-events: none; }
+  .lq-inline { position: absolute; left: 0; top: 0; display: flex; gap: 2px; translate: 0 -50%; opacity: 0; pointer-events: none; transition: opacity 200ms var(--ease-out); }
+  .lq.is-full .lq-inline { opacity: 1; pointer-events: auto; transition: opacity 320ms var(--ease-out) 160ms; }
+  .lq-inline a { padding: 9px 14px; border-radius: var(--radius-pill); font-size: var(--fs-small); font-weight: 500; color: var(--brand-ink); text-decoration: none; white-space: nowrap; }
+  .lq-inline a[aria-current="true"] { background: #F1EFEA; }
+  .lq-inline a:hover, .lq-inline a:focus-visible { background: var(--brand-yellow); outline: none; }
+  .lq-label, .lq-measure {
+    position: absolute; left: 0; top: 0; white-space: nowrap; font-size: var(--fs-small); font-weight: 500; color: var(--brand-ink);
+  }
+  .lq-label { translate: -50% -50%; transition: opacity 260ms var(--ease-out) 120ms; will-change: transform; }
+  /* Beim Teilen und im offenen Menü sofort weg: dann zieht sich die Form nicht mit dem Text in die Länge */
+  .lq.is-split .lq-label, .lq.is-open .lq-label, .lq.is-joining .lq-label, .lq.is-full .lq-label { opacity: 0; transition: opacity 90ms linear; }
+  .lq-measure { visibility: hidden; }
+  .lq-links { position: absolute; left: 0; top: 0; display: grid; gap: 2px; padding: 4px 8px 8px; opacity: 0; pointer-events: none; }
+  .lq.is-open .lq-links { pointer-events: auto; }
+  .lq-links a { padding: 13px 14px; border-radius: 18px; text-align: center; font-size: var(--fs-body); font-weight: 500; color: var(--brand-ink); text-decoration: none; white-space: nowrap; }
+  .lq-links a[aria-current="true"] { background: #F1EFEA; }
+  .lq-links a:hover, .lq-links a:focus-visible { background: var(--brand-yellow); outline: none; }
+</style>
+
+<script>
+  const root = document.getElementById('lq');
+  if (root) {
+    const path = root.querySelector('#lq-path');
+    const logo = root.querySelector('#lq-logo'), logoMark = logo.querySelector('svg');
+    const toggle = root.querySelector('#lq-toggle');
+    const label = root.querySelector('#lq-label');
+    const linksBox = root.querySelector('#lq-links'), linkEls = Array.from(linksBox.querySelectorAll('a'));
+    const probe = root.querySelector('#lq-measure');
+    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const R = 26, PAD = 16, TOP = 16;
+    const narrow = matchMedia('(max-width: 760px)'); // Handy: teilt sich beim Scrollen. Desktop: bleibt immer ganz
+    const inline = root.querySelector('#lq-inline'), inlineEls = Array.from(inline.querySelectorAll('a'));
+
+    // ---------- Breite aus dem längsten Wort (Menü-Links und Bereichsnamen) ----------
+    let PW = 220, PWF = 420, MENU_H = 200;
+    function measure() {
+      const names = new Set(['Schah Sedi']);
+      document.querySelectorAll('[data-nav]').forEach((el) => el.dataset.nav && names.add(el.dataset.nav));
+      let labelW = 0;
+      for (const n of names) { probe.textContent = n; labelW = Math.max(labelW, probe.offsetWidth); }
+      const linkW = Math.max(...linkEls.map((a) => a.offsetWidth));
+      PW = Math.round(Math.max(labelW + 2 * 52 + 20, linkW + 12)); // Kreise links/rechts + Luft | Link samt Innenabstand
+      linksBox.style.width = PW + 'px';
+      MENU_H = linksBox.offsetHeight;
+      // Desktop oben: Logo + alle Links in einer Zeile
+      PWF = Math.round(inline.offsetWidth + 2 * R + 10);
+    }
+
+    // ---------- Form ----------
+    const f = (x, y) => x.toFixed(2) + ' ' + y.toFixed(2);
+    // Kreis, in schneller Bewegung leicht in die Länge gezogen
+    const blob = (x, y, r, s) => { const rx = r * (1 + s), ry = r * (1 - s * 0.6); return `M${f(x - rx, y)}a${rx.toFixed(2)} ${ry.toFixed(2)} 0 1 1 ${(2 * rx).toFixed(2)} 0a${rx.toFixed(2)} ${ry.toFixed(2)} 0 1 1 ${(-2 * rx).toFixed(2)} 0Z`; }; // im Uhrzeigersinn wie alle Teile, sonst entstehen Löcher, wo sie sich überlappen
+    // Verbindung zwischen den Kreisen: t = halbe Dicke in der Mitte (R = gerade Pille, klein = eingeschnürt, 0 = gerissen)
+    function neck(x1, x2, y, t) {
+      if (t < 1.2 || x2 - x1 < 4) return '';
+      const m = (x1 + x2) / 2, k = Math.min(R * 1.6, (x2 - x1) / 4);
+      return `M${f(x1, y - R)}C${f(x1 + k, y - R)} ${f(m - k, y - t)} ${f(m, y - t)}C${f(m + k, y - t)} ${f(x2 - k, y - R)} ${f(x2, y - R)}`
+        + `L${f(x2, y + R)}C${f(x2 - k, y + R)} ${f(m + k, y + t)} ${f(m, y + t)}C${f(m - k, y + t)} ${f(x1 + k, y + R)} ${f(x1, y + R)}Z`;
+    }
+    // Aufgeklappt: abgerundetes Rechteck, das nach unten wächst
+    function card(x1, x2, y, h) {
+      const l = x1 - R, r = x2 + R, t = y - R, b = t + 2 * R + h, c = R;
+      return `M${f(l + c, t)}H${(r - c).toFixed(2)}A${c} ${c} 0 0 1 ${f(r, t + c)}V${(b - c).toFixed(2)}A${c} ${c} 0 0 1 ${f(r - c, b)}H${(l + c).toFixed(2)}A${c} ${c} 0 0 1 ${f(l, b - c)}V${(t + c).toFixed(2)}A${c} ${c} 0 0 1 ${f(l + c, t)}Z`;
+    }
+
+    // ---------- Federn ----------
+    const S = (x, k, c) => ({ x, v: 0, to: x, k, c });
+    const A = S(0, 170, 17), B = S(0, 170, 17); // Mittelpunkte der Kreise (x)
+    const T = S(R, 240, 24);                   // Dicke der Verbindung
+    const O = S(0, 150, 19);                   // Aufklappen 0 … 1
+    let W = 0, cy = TOP + R, split = false, open = false, full = false;
+    function targets() {
+      W = root.clientWidth; const mid = W / 2;
+      const w = full && !open ? PWF : PW;
+      A.to = split ? PAD + R : mid - w / 2 + R;
+      B.to = split ? W - PAD - R : mid + w / 2 - R;
+      T.to = split ? 0 : R;
+      O.to = open ? 1 : 0;
+    }
+    function render() {
+      const x1 = A.x, x2 = B.x, o = Math.max(0, O.x);
+      const s1 = Math.min(0.2, Math.abs(A.v) / 2800), s2 = Math.min(0.2, Math.abs(B.v) / 2800);
+      // Die Verbindung schnürt sich mit wachsendem Abstand ein und reißt nach kurzer Dehnung (gut 2 Kreisradien)
+      const extra = Math.max(0, (x2 - x1) - (PW - 2 * R));
+      const t = narrow.matches ? Math.max(0, Math.min(R, T.x, R * (1 - extra / (R * 2.2)))) : R; // Desktop reißt nie
+      let d = blob(x1, cy, R, s1) + blob(x2, cy, R, s2) + neck(x1, x2, cy, t);
+      if (o > 0.005) d += card(x1, x2, cy, o * MENU_H);
+      path.setAttribute('d', d);
+      logo.style.transform = `translate3d(${x1.toFixed(2)}px,${cy}px,0)`;
+      toggle.style.transform = `translate3d(${x2.toFixed(2)}px,${cy}px,0)`;
+      label.style.transform = `translate3d(${((x1 + x2) / 2).toFixed(2)}px,${cy}px,0)`;
+      inline.style.transform = `translate3d(${(x1 + R + 2).toFixed(2)}px,${cy}px,0)`;
+      linksBox.style.transform = `translate3d(${(x1 - R).toFixed(2)}px,${(cy + R).toFixed(2)}px,0)`;
+      linksBox.style.opacity = String(Math.max(0, (o - 0.45) / 0.55));
+    }
+    let raf = 0, last = 0;
+    function frame(now) {
+      const dt = Math.min(1 / 30, last ? (now - last) / 1000 : 1 / 60); last = now;
+      let moving = false;
+      for (const s of [A, B, T, O]) {
+        s.v += ((s.to - s.x) * s.k - s.v * s.c) * dt; s.x += s.v * dt;
+        if (Math.abs(s.to - s.x) > 0.05 || Math.abs(s.v) > 0.3) moving = true; else { s.x = s.to; s.v = 0; }
+      }
+      render();
+      raf = moving ? requestAnimationFrame(frame) : 0; if (!moving) last = 0;
+    }
+    function kick() {
+      targets();
+      if (calm) { for (const s of [A, B, T, O]) { s.x = s.to; s.v = 0; } render(); return; }
+      if (!raf) raf = requestAnimationFrame(frame);
+    }
+    function setSplit(on) { if (on === split) return; split = on; root.classList.toggle('is-split', on); kick(); }
+    function setOpen(on) {
+      open = on; root.classList.toggle('is-open', on);
+      toggle.setAttribute('aria-expanded', String(on)); toggle.setAttribute('aria-label', on ? 'Menü schließen' : 'Menü öffnen');
+      linkEls.forEach((a) => (a.tabIndex = on ? 0 : -1));
+      if (on) { split = false; root.classList.remove('is-split'); }
+      kick();
+    }
+
+    // ---------- Aktueller Bereich: übernimmt den Namen, den die bestehende Nav berechnet ----------
+    const current = document.getElementById('nav-current');
+    const syncLabel = () => {
+      const t = (current && current.textContent.trim()) || 'Schah Sedi';
+      if (label.textContent !== t) label.textContent = t;
+      // Im offenen Menü ist der aktuelle Bereich als Link hervorgehoben (nicht oben zwischen Logo und Menü)
+      [...linkEls, ...inlineEls].forEach((a) => a.setAttribute('aria-current', String(a.textContent.trim() === t)));
+    };
+    if (current) new MutationObserver(syncLabel).observe(current, { childList: true, characterData: true, subtree: true });
+    // Desktop: oben alle Links in der Pille, später Logo + Bereich + Menü (gleiche Regel wie die alte Nav, die im Hintergrund mitläuft)
+    const oldNav = document.getElementById('nav');
+    function syncFull() {
+      const f2 = !narrow.matches && (!oldNav || oldNav.dataset.state === 'full');
+      if (f2 === full) return;
+      full = f2; root.classList.toggle('is-full', full);
+      inlineEls.forEach((a) => (a.tabIndex = full ? 0 : -1));
+      if (full && open) setOpen(false);
+      kick();
+    }
+    if (oldNav) new MutationObserver(syncFull).observe(oldNav, { attributes: true, attributeFilter: ['data-state'] });
+    narrow.addEventListener('change', () => { if (!narrow.matches) setSplit(false); syncFull(); kick(); });
+
+    // ---------- Scrollen: C dreht sich, Richtung entscheidet über ganz oder geteilt ----------
+    let lastY = scrollY, run = 0;
+    addEventListener('scroll', () => {
+      const y = scrollY, d = y - lastY; lastY = y;
+      if (!calm) logoMark.style.transform = `rotate(${(y * 0.3).toFixed(1)}deg)`;
+      if (open || !narrow.matches) return; // Desktop teilt sich nie
+      if (y < 80) { run = 0; setSplit(false); return; }
+      run = (d > 0) === (run > 0) ? run + d : d;
+      if (run > 24) setSplit(true); else if (run < -24) setSplit(false);
+    }, { passive: true });
+
+    toggle.addEventListener('click', () => {
+      // erst zusammenfließen, dann aufklappen; der Bereichsname bleibt dabei ausgeblendet
+      if (split) { root.classList.add('is-joining'); setSplit(false); setTimeout(() => { setOpen(true); root.classList.remove('is-joining'); }, calm ? 0 : 320); return; }
+      setOpen(!open);
+    });
+    linksBox.addEventListener('click', (e) => { if (e.target.closest('a')) setOpen(false); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) { setOpen(false); toggle.focus(); } });
+    document.addEventListener('pointerdown', (e) => { if (open && !root.contains(e.target) && !e.target.closest('.lq-btn')) setOpen(false); });
+    // Klicks außerhalb der sichtbaren Form gehen durch (die Fläche ist sonst unsichtbar groß)
+    addEventListener('resize', () => { measure(); targets(); for (const s of [A, B, T, O]) s.x = s.to; render(); });
+
+    const init = () => { measure(); syncLabel(); syncFull(); targets(); for (const s of [A, B, T, O]) s.x = s.to; render(); };
+    init();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(init);
+  }
+</script>

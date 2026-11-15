@@ -270,11 +270,29 @@
   var floatEls = Array.prototype.slice.call(floatsWrap.querySelectorAll('.float'));
   var wideHero = window.matchMedia('(min-width: 901px)');
   var heroInner = document.querySelector('.hero-inner');
+  var bandEls = Array.prototype.slice.call(document.querySelectorAll('.band'));
   function clearLift(el) { el.style.translate = ''; el.style.opacity = ''; el.style.visibility = ''; }
   function floatsUpdate() {
     var card = root.dataset.work === 'card';
-    if (calm) { clearLift(heroInner); clearLift(floatsWrap); floatEls.forEach(clearLift); return; }
+    if (calm) { clearLift(heroInner); clearLift(floatsWrap); floatEls.forEach(clearLift); bandEls.forEach(clearLift); return; }
     var y = window.scrollY;
+    if (!wideHero.matches && card) {
+      // Handy: Claim und Bänder bleiben stehen, bis die weiße Karte sie überdeckt. Sie rücken nur wenig nach oben,
+      // so entsteht keine leere schwarze Fläche vor Projects.
+      var q = Math.min(1, y / hero.offsetHeight), keep = String(Math.max(0, 1 - Math.pow(q, 4)));
+      // Claim und Bänder rücken gemeinsam (gleiches Tempo), damit sie sich nie überlagern
+      var shift = '0 ' + (-y * 0.18).toFixed(1) + 'px';
+      heroInner.style.translate = shift;
+      heroInner.style.opacity = keep;
+      heroInner.style.visibility = q >= 1 ? 'hidden' : '';
+      bandEls.forEach(function (b, i) {
+        b.style.translate = shift;
+        b.style.opacity = keep;
+        b.style.visibility = q >= 1 ? 'hidden' : '';
+      });
+      floatEls.forEach(clearLift); clearLift(floatsWrap);
+      return;
+    }
     var p = Math.min(1, y / (hero.offsetHeight * 0.6)); // 0 = oben, 1 = Projects ist da
     var fade = String(Math.max(0, 1 - Math.pow(p, 1.6)));
     var lift = '0 ' + (-y * 0.45 - p * p * 120).toFixed(1) + 'px';
@@ -285,16 +303,17 @@
       heroInner.style.visibility = p >= 1 ? 'hidden' : '';
     } else clearLift(heroInner);
     if (!wideHero.matches) {
-      // schmal hat der Wrapper keine eigene Box: gleiche Parallaxe wie am Desktop, Ausblenden je Kachel
-      floatEls.forEach(function (f) {
-        var speed = parseFloat(f.dataset.speed) + (card ? 0.7 : 0);
-        f.style.translate = '0 ' + (-y * speed - p * p * 260).toFixed(1) + 'px';
-        f.style.opacity = fade;
-        f.style.visibility = p >= 1 ? 'hidden' : '';
+      // Handy: Die Bänder laufen seitlich (siehe unten) und rücken nur leicht nach oben, damit man schnell bei Projects ist
+      bandEls.forEach(function (b, i) {
+        b.style.translate = '0 ' + (-y * (card ? 0.35 + i * 0.15 : 0.1)).toFixed(1) + 'px';
+        b.style.opacity = fade;
+        b.style.visibility = p >= 1 ? 'hidden' : '';
       });
+      floatEls.forEach(clearLift);
       clearLift(floatsWrap);
       return;
     }
+    bandEls.forEach(clearLift);
     floatsWrap.style.translate = '';
     floatEls.forEach(function (f) { f.style.opacity = ''; f.style.visibility = ''; });
     floatEls.forEach(function (f) {
@@ -341,12 +360,12 @@
     mx = e.clientX; my = e.clientY;
     if (e.pointerType !== 'mouse') return;
     tagTouch = false;
-    setTag(e.target.closest ? e.target.closest('.float, .social-mail') : null);
+    setTag(e.target.closest ? e.target.closest('.float, .band-tile, .social-mail') : null);
   }, { passive: true });
   // Touch: kurz gedrückt halten zeigt das Tag; beim Scrollen bricht der Browser den Druck ab, dann erscheint nichts
   window.addEventListener('pointerdown', function (e) {
     if (e.pointerType === 'mouse' || !e.target.closest) return;
-    var el = e.target.closest('.float');
+    var el = e.target.closest('.float, .band-tile');
     if (!el) return;
     mx = e.clientX; my = e.clientY;
     clearTimeout(tagTimer);
@@ -360,7 +379,7 @@
   window.addEventListener('scroll', function () {
     if (!tagOn) return;
     var under = document.elementFromPoint(mx, my);
-    setTag(under && under.closest('.float, .social-mail'));
+    setTag(under && under.closest('.float, .band-tile, .social-mail'));
   }, { passive: true });
 
   // ---------- Hero-Kacheln: leicht zum Mauszeiger hin, auf dem Handy mit der Neigung des Geräts ----------
@@ -431,6 +450,45 @@
   }, { passive: true });
   window.addEventListener('resize', floatsUpdate);
   floatsUpdate();
+
+  // ---------- Handy-Hero: zwei Bänder laufen endlos gegeneinander, Scrollen schiebt sie mit ----------
+  // Grundtempo in px/s; beim Scrollen kommt die Scrollstrecke dazu (runter: in Laufrichtung, hoch: zurück),
+  // Läuft nur, solange der Hero auf dem Handy sichtbar ist.
+  (function () {
+    if (!bandEls.length) return;
+    var BASE = 22, PUSH = 0.55;
+    var bands = bandEls.map(function (b, i) { return { el: b, track: b.querySelector('.band-track'), dir: i === 0 ? 1 : -1, x: 0, half: 0 }; });
+    var raf = 0, last = 0, lastY = window.scrollY, shown = true, push = 0;
+    function measure() { bands.forEach(function (b) { b.half = b.track.scrollWidth / 2; }); }
+    function place(b) {
+      if (!b.half) return;
+      var m = ((b.x % b.half) + b.half) % b.half; // 0 … eine Reihe
+      b.track.style.transform = 'translate3d(' + (b.dir > 0 ? m - b.half : -m).toFixed(2) + 'px,0,0)';
+    }
+    function frame(t) {
+      var dt = last ? Math.min(64, t - last) / 1000 : 0; last = t;
+      // Scrollstrecke sammeln und weich abgeben: Scrollsprünge (Schwung, Adressleiste) laufen so ohne Ruckeln ein
+      var y = window.scrollY, dy = y - lastY; lastY = y;
+      if (Math.abs(dy) < 400) push += dy * PUSH;
+      var step = push * Math.min(1, dt * 7); push -= step;
+      bands.forEach(function (b) {
+        b.x += BASE * dt + step;
+        place(b);
+      });
+      raf = requestAnimationFrame(frame);
+    }
+    function run() {
+      var on = !calm && !wideHero.matches && shown && !document.hidden;
+      if (on && !raf) { last = 0; lastY = window.scrollY; raf = requestAnimationFrame(frame); }
+      else if (!on && raf) { cancelAnimationFrame(raf); raf = 0; }
+    }
+    measure(); bands.forEach(function (b, i) { b.x = b.half * (i ? 0.62 : 0.2); place(b); }); // versetzt, damit oben und unten nicht dasselbe Bild steht
+    new IntersectionObserver(function (es) { shown = es[0].isIntersecting; run(); }).observe(hero);
+    window.addEventListener('resize', function () { measure(); bands.forEach(place); run(); });
+    document.addEventListener('visibilitychange', run);
+    window.addEventListener('load', measure);
+    run();
+  })();
 
   // ---------- Kontakt-Karte: fährt beim Reinscrollen von unten hoch ----------
   var card = document.getElementById('kontakt');
@@ -571,59 +629,31 @@
     svg.insertBefore(cut, svg.firstChild);
     svg.setAttribute('viewBox', (vb[0] - P) + ' ' + (vb[1] - P) + ' ' + (vb[2] + 2 * P) + ' ' + (vb[3] + 2 * P));
   });
-  var MOBILE = [[0, 3], [36, 0], [72, 3], [0, 25], [38, 42], [66, 38], [0, 62], [58, 70]];
-  var narrowSheet = window.matchMedia('(max-width: 759px)');
   var zTop = 1;
   var resetBtn = document.getElementById('sheet-reset');
-  // Verteilung: ausgehend von den Startpositionen werden die Sticker so lange verschoben, bis der kleinste Abstand
-  // zwischen zwei Stickern (und zum Zurücklegen-Knopf) möglichst groß ist. Fester Zufallswert: jedes Mal dasselbe Bild.
-  function rng(seed) { return function () { seed = (seed + 0x6D2B79F5) | 0; var t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
-  function gap(a, b) { // Abstand zweier Rechtecke (Mitte cx/cy, halbe Größe hw/hh), negativ bei Überlappung
-    var dx = Math.abs(a.cx - b.cx) - a.hw - b.hw, dy = Math.abs(a.cy - b.cy) - a.hh - b.hh;
-    if (dx < 0 && dy < 0) return Math.max(dx, dy);
-    return Math.hypot(Math.max(0, dx), Math.max(0, dy));
+  // Breakpoints mit festem Layout: es gilt der größte, der noch in die Fensterbreite passt
+  var layouts = {}; try { layouts = JSON.parse(sheet.dataset.layouts || '{}'); } catch (e) {}
+  function pickBp(list) { var vw = window.innerWidth, pick = list[0]; list.forEach(function (b) { if (b <= vw) pick = b; }); return pick; }
+  function stickerLayout() {
+    var bps = Object.keys(layouts).map(Number).sort(function (a, b) { return a - b; });
+    if (!bps.length) return null;
+    return layouts[String(pickBp(bps))];
   }
-  function spreadSkills(boxes, w, h, fixed) {
-    var M = 4, all = boxes.concat(fixed);
-    function clampBox(b) { b.cx = Math.max(b.hw + M, Math.min(w - b.hw - M, b.cx)); b.cy = Math.max(b.hh + M, Math.min(h - b.hh - M, b.cy)); }
-    function nearest(i) { var m = Infinity; for (var j = 0; j < all.length; j++) if (j !== i) m = Math.min(m, gap(all[i], all[j])); return m; }
-    function score() { // kleinster Abstand zählt am meisten, der Durchschnitt hilft beim gleichmäßigen Verteilen
-      var min = Infinity, sum = 0;
-      for (var i = 0; i < boxes.length; i++) { var n = nearest(i); min = Math.min(min, n); sum += n; }
-      return min + 0.05 * sum / boxes.length;
-    }
-    boxes.forEach(clampBox);
-    var rand = rng(7), best = score(), ITER = 2400;
-    for (var k = 0; k < ITER; k++) {
-      var b = boxes[k % boxes.length], ox = b.cx, oy = b.cy;
-      var step = Math.max(2, Math.min(w, h) * 0.3 * (1 - k / ITER));
-      b.cx += (rand() * 2 - 1) * step; b.cy += (rand() * 2 - 1) * step;
-      clampBox(b);
-      var sc = score();
-      if (sc >= best) best = sc; else { b.cx = ox; b.cy = oy; }
-    }
-  }
+  // Feste Stickergröße je Breakpoint: auf dem Handy etwas kleiner, ab 1280 px etwas größer
+  var STICKER_SCALE = { 375: 0.86, 430: 0.9, 768: 0.92, 1024: 1, 1280: 1.12, 1440: 1.15, 1920: 1.15 };
   function layoutSkills() {
     var w = sheet.clientWidth, h = sheet.clientHeight;
-    sheet.style.setProperty('--k', Math.max(0.8, Math.min(1.25, w / 708)).toFixed(3)); // Sticker wachsen mit der Fläche
+    sheet.style.setProperty('--k', String(STICKER_SCALE[pickBp([375, 430, 768, 1024, 1280, 1440, 1920])]));
     var free = skills.filter(function (el) { return !el.dataset.moved; });
     if (!free.length) return;
-    var sr = sheet.getBoundingClientRect();
-    function boxOf(el, px, py) { // gedrehter Umriss als Rechteck um die Mitte
-      var ew = el.offsetWidth, eh = el.offsetHeight, r = (parseFloat(el.style.getPropertyValue('--r')) || 0) * Math.PI / 180;
-      var c = Math.abs(Math.cos(r)), sn = Math.abs(Math.sin(r));
-      return { el: el, ew: ew, eh: eh, hw: (ew * c + eh * sn) / 2, hh: (ew * sn + eh * c) / 2, cx: px + ew / 2, cy: py + eh / 2 };
-    }
+    function boxOf(el, px, py) { return { el: el, ew: el.offsetWidth, eh: el.offsetHeight, cx: px + el.offsetWidth / 2, cy: py + el.offsetHeight / 2 }; }
+    // Feste Lage je Breakpoint aus src/data/stickers.json (Mittelpunkt in % der Fläche); Werkzeug: /sticker-layout/
+    var layout = stickerLayout() || {};
     var boxes = free.map(function (el) {
-      var i = skills.indexOf(el);
-      var px = narrowSheet.matches ? MOBILE[i][0] : parseFloat(el.dataset.x);
-      var py = narrowSheet.matches ? MOBILE[i][1] : parseFloat(el.dataset.y);
-      return boxOf(el, px / 100 * w, py / 100 * h);
+      var b = boxOf(el, parseFloat(el.dataset.x) / 100 * w, parseFloat(el.dataset.y) / 100 * h), p = layout[el.getAttribute('aria-label')];
+      if (p) { b.cx = p[0] / 100 * w; b.cy = p[1] / 100 * h; }
+      return b;
     });
-    // Hindernisse: der Zurücklegen-Knopf und schon verschobene Sticker
-    var br = resetBtn.getBoundingClientRect(), fixed = [{ cx: br.left + br.width / 2 - sr.left, cy: br.top + br.height / 2 - sr.top, hw: br.width / 2, hh: br.height / 2 }];
-    skills.forEach(function (el) { if (el.dataset.moved) fixed.push(boxOf(el, el.offsetLeft, el.offsetTop)); });
-    spreadSkills(boxes, w, h, fixed);
     boxes.forEach(function (b) {
       b.el.style.left = (b.cx - b.ew / 2) + 'px';
       b.el.style.top = (b.cy - b.eh / 2) + 'px';

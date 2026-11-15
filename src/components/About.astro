@@ -1,6 +1,7 @@
 ---
 import { asset } from '../lib/asset.js';
 import about from '../data/about.json';
+import stickerLayouts from '../data/stickers.json'; // feste Sticker-Lagen je Breakpoint (Werkzeug: /sticker-layout/)
 ---
 <section class="about wrap" id="ueber-mich" data-nav="Personal" aria-labelledby="about-title">
       <div class="about-head center reveal">
@@ -48,7 +49,7 @@ import about from '../data/about.json';
             <a class="btn" href="#kontakt"><span class="btn-label">{about.skillsButton}</span><span class="btn-dot" aria-hidden="true"><svg><use href="#arrow"/></svg></span></a>
           </div>
           <button class="media-btn sheet-reset" type="button" id="sheet-reset" aria-label="Sticker zurücklegen" title="Sticker zurücklegen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
-          <ul class="sticker-sheet" id="sticker-sheet" aria-label="Schwerpunkte">
+          <ul class="sticker-sheet" id="sticker-sheet" aria-label="Schwerpunkte" data-layouts={JSON.stringify(stickerLayouts)}>
             <li class="skill" style="--w:110;--r:-7deg" data-x="58" data-y="66" aria-label="Branding"><svg aria-hidden="true" viewBox="0 0 110 46"><path d="M20 3H101a6 6 0 0 1 6 6V37a6 6 0 0 1-6 6H20L6 26Q3 23 6 20Z" fill="#FEC31E"/><circle cx="14" cy="23" r="3.5" fill="#fff"/><text x="63.5" y="27.2">Branding</text></svg></li>
             <li class="skill" style="--w:92;--r:-4deg" data-x="23" data-y="2" aria-label="Packaging Design"><svg aria-hidden="true" viewBox="0 0 92 146"><path d="M20 6L72 10V22L20 18Z" fill="#fff"/><path d="M4 48L20 18L72 22L56 54Z" fill="#FEC31E"/><path d="M56 54L72 22L88 46Z" fill="#fff"/><path d="M56 54L88 46V128L56 142Z" fill="#fff"/><path d="M4 48L56 54V142L4 132Z" fill="#fff"/><text x="30" y="95" transform="rotate(-90 30 95)" dy="4.2">Packaging</text></svg></li>
             <li class="skill" style="--w:74;--r:8deg" data-x="43" data-y="20" aria-label="UX / UI"><svg aria-hidden="true" viewBox="0 0 74 126"><rect x="3" y="3" width="68" height="120" rx="14" fill="#fff"/><line x1="30" y1="13" x2="44" y2="13"/><text x="37" y="67.2">UX / UI</text></svg></li>

@@ -38,5 +38,38 @@
       "image": "/assets/projects/better-poster.webp",
       "glow": "#C6DB5C"
     }
+  ],
+  "band": [
+    {
+      "label": "Emmy Scooter Design",
+      "image": "/assets/projects/emmy-mobile.webp",
+      "glow": "#7FB0A0"
+    },
+    {
+      "label": "CSR+FMCG Bachelorthesis",
+      "image": "/assets/projects/csr-fmcg-mobile.webp",
+      "glow": "#B99B79"
+    },
+    {
+      "label": "Aeropress Packaging Design",
+      "image": "/assets/projects/packaging-stand.webp",
+      "glow": "#8A5A2E"
+    },
+    {
+      "label": "Better. Brand Design",
+      "image": "/assets/projects/better-ubahn.webp",
+      "glow": "#C6DB5C"
+    },
+    {
+      "label": "allesacid Kollektion",
+      "image": "/assets/projects/tshirt-flat.webp",
+      "glow": "#B9A58A",
+      "pos": "50% 52%"
+    },
+    {
+      "label": "CSR+FMCG Bachelorthesis",
+      "image": "/assets/projects/csr-fmcg-foto.webp",
+      "glow": "#B99B79"
+    }
   ]
 }
