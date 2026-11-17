@@ -1,0 +1,17 @@
+{
+  "title": "Und nebenbei wird gebastelt.",
+  "intro": "Im Playground liegen Werkzeuge und Experimente aus dem Studio. Alles läuft direkt im Browser, zum Ausprobieren.",
+  "tool": {
+    "tag": "Buchmacher",
+    "title": "Bücher und Kalender als 3D-Mockup gestalten",
+    "text": "Motive hochladen, Format, Papier, Bindung und Licht einstellen und das Ergebnis als eigenständige Seite exportieren, die sich auf jeder Website einbinden lässt.",
+    "pills": ["3D im Browser", "Bücher", "Kalender", "HTML-Export"],
+    "button": "Ausprobieren",
+    "href": "playground/buchmacher/",
+    "images": [
+      { "src": "playground/kalender.webp", "alt": "Riso-Kalender, an zwei Klammern aufgehängt", "class": "pg-cal" },
+      { "src": "playground/buch-qr.webp", "alt": "Schwarzes Buch mit großem QR-Code auf dem Cover", "class": "pg-qr" },
+      { "src": "playground/buch-csr.webp", "alt": "Buch mit Kraftpapier-Umschlag, Titel CSR+FMCG", "class": "pg-csr" }
+    ]
+  }
+}

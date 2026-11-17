@@ -10,6 +10,7 @@ main > .contact-stage { padding-top: var(--space-5); background: linear-gradient
   background: var(--bg); color: var(--fg);
   border-radius: clamp(28px, 4vw, 56px);
   --pad: 16px;
+  --story-pad: clamp(24px, 2.6vw, 36px); /* Innenabstand der weißen Kachel */
   --inset: clamp(var(--pad), calc((100vw - var(--content-max)) / 2 + var(--pad)), 120px); /* oben und unten so viel wie seitlich */
   padding-block: var(--space-8) var(--inset);
   transform-origin: 50% 0;
@@ -23,6 +24,11 @@ main > .contact-stage { padding-top: var(--space-5); background: linear-gradient
 .contact h2 { font-size: clamp(min(1.9rem, 8vw), 4.2vw, 3.6rem); line-height: 1.62; }
 @media (min-width: 960px) { .contact h2 { margin-top: -0.17em; } } /* Versalkante auf Höhe der weißen Kachel */
 .contact h2 { grid-area: head; }
+/* Handy: Headline steht so weit vom Kartenrand (oben und links) wie der Text der weißen Kachel vom Geräterand */
+@media (max-width: 719px) {
+  .contact { padding-top: calc(var(--pad) + var(--story-pad) + 1px); }
+  .contact h2 { padding-inline: calc(var(--story-pad) + 1px); margin-top: -0.187em; } /* Versalkante statt Zeilenoberkante */
+}
 .story { grid-area: story; }
 .social { grid-area: social; align-self: end; display: flex; gap: var(--space-2); }
 .social a {
@@ -60,7 +66,7 @@ main > .contact-stage { padding-top: var(--space-5); background: linear-gradient
 .story {
   /* weiße Kachel wie im Bento, eigene Farben auf der gelben Karte */
   --bg: #FFFFFF; --fg: #222222; --muted: #5E5B55; --sec-bg: #FFFFFF; --chip-border: #222222;
-  display: grid; gap: var(--space-5); padding: clamp(24px, 2.6vw, 36px);
+  display: grid; gap: var(--space-5); padding: var(--story-pad);
   background: #FFFFFF; color: var(--fg); border: 1px solid #E9E6E0; border-radius: 20px;
   box-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 14px 34px -14px rgb(0 0 0 / 0.14);
   font-size: clamp(1.05rem, 1.35vw, 1.2rem); font-weight: 500; letter-spacing: -0.01em; line-height: 1.75;

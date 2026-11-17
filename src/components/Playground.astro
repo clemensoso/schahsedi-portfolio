@@ -1,0 +1,28 @@
+---
+// Vorschau auf den Playground (eigene statische Seite unter public/playground/…): sitzt vor dem Kontakt
+import { asset } from '../lib/asset.js';
+import pg from '../data/playground.json';
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const { tool } = pg;
+const href = `${base}${tool.href}`;
+---
+<section class="playground wrap" id="playground" data-nav="Playground" aria-labelledby="playground-title">
+  <div class="about-head center reveal">
+    <h2 class="display" id="playground-title">{pg.title}</h2>
+    <p>{pg.intro}</p>
+  </div>
+  <article class="pg-card reveal">
+    <!-- Bühne ist zusätzlich klickbar, für Screenreader zählt nur der Button -->
+    <a class="pg-stage" href={href} tabindex="-1" aria-hidden="true">
+      {tool.images.map((im) => <img class={im.class} src={asset(im.src)} alt="" loading="lazy" decoding="async" draggable="false" />)}
+    </a>
+    <div class="pg-text">
+      <span class="pg-tag">{tool.tag}</span>
+      <h3>{tool.title}</h3>
+      <p>{tool.text}</p>
+      <ul class="pills">{tool.pills.map((p) => <li>{p}</li>)}</ul>
+      <a class="btn" href={href}><span class="btn-label">{tool.button}</span><span class="btn-dot" aria-hidden="true"><svg><use href="#arrow"/></svg></span></a>
+    </div>
+  </article>
+</section>
