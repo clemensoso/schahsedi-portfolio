@@ -12,7 +12,7 @@ const mailto = `mailto:${site.mailAddress}?subject=${encodeURIComponent(site.mai
         ? <input class="fill" id="f-name" name="name" type="text" placeholder={contact.namePlaceholder} autocomplete="given-name" aria-label="Dein Name" maxlength="40" required>
         : p)}</span> {contact.question}</h2>
       <div class="story">
-        <p>{parts(contact.storyIntro).map((p) => p === '{echo}' ? <span id="echo-name"></span>
+        <p>{parts(contact.storyIntro).map((p) => p === '{name}' ? <input class="fill" id="f-name-2" type="text" placeholder={contact.namePlaceholder} autocomplete="off" aria-label="Dein Name" maxlength="40">
           : p === '{firma}' ? <input class="fill" name="company" type="text" placeholder={contact.companyPlaceholder} autocomplete="organization" aria-label={contact.companyPlaceholder}>
           : p === '{thema}' ? <input class="fill" name="topic" type="text" placeholder={contact.topicPlaceholder} aria-label="Was dich gerade beschäftigt">
           : p)}</p>

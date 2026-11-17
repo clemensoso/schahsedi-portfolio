@@ -10,6 +10,13 @@
 @property --sec-bg { syntax: "<color>"; inherits: true; initial-value: transparent; }
 @property --chip-border { syntax: "<color>"; inherits: true; initial-value: #4A4842; }
 
+/* Fallbacks, solange die Webfonts laden: Systemschriften, auf Laufweite der Webfonts skaliert (gleiche Zeilenumbrüche),
+   mit deren Ober- und Unterlänge (Text sitzt gleich in der Zeile). Gemessen gegen Boldonse/Geist im Browser. */
+@font-face { font-family: "Boldonse Fallback DIN"; src: local("DINCondensed-Bold"), local("DIN Condensed Bold"); font-weight: 400; size-adjust: 172.0%; ascent-override: 88.4%; descent-override: 23.3%; line-gap-override: 0%; } /* Mac, iPhone, iPad */
+@font-face { font-family: "Boldonse Fallback Impact"; src: local("Impact"); font-weight: 400; size-adjust: 143.0%; ascent-override: 106.3%; descent-override: 28.0%; line-gap-override: 0%; } /* Windows */
+@font-face { font-family: "Boldonse Fallback Roboto"; src: local("RobotoCondensed-Bold"), local("Roboto Condensed Bold"), local("Roboto Condensed"); font-weight: 400; size-adjust: 130.0%; ascent-override: 116.9%; descent-override: 30.8%; line-gap-override: 0%; } /* Android */
+@font-face { font-family: "Geist Fallback"; src: local("Arial"), local("ArialMT"), local("Helvetica"), local("Roboto"); font-weight: 400; size-adjust: 103.1%; ascent-override: 98.0%; descent-override: 28.1%; line-gap-override: 0%; }
+
 :root {
   --brand-yellow: #FEC31E;
   --brand-ink: #222222;
@@ -22,8 +29,8 @@
   --sec-bg: transparent; --chip-border: #4A4842;
   color-scheme: dark;
 
-  --font-display: "Boldonse", "Arial Black", "Helvetica Neue", system-ui, sans-serif;
-  --font-sans: "Geist Variable", "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Boldonse", "Boldonse Fallback DIN", "Boldonse Fallback Impact", "Boldonse Fallback Roboto", "Arial Narrow", sans-serif;
+  --font-sans: "Geist Variable", "Geist", "Geist Fallback", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 
   --fs-display: clamp(2.1rem, 6.6vw, 6.4rem);
   --fs-h1: clamp(1.35rem, 2.6vw, 2.1rem); /* Zwischenüberschriften, bewusst zurückhaltend */

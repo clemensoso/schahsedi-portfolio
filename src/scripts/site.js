@@ -817,13 +817,11 @@
     el.style.width = w + 'px';
   }
   function fitAll() { fills.forEach(fitFill); }
-  var fNameEl = document.getElementById('f-name'), fMailEl = document.getElementById('f-mail'), echoName = document.getElementById('echo-name');
+  var fNameEl = document.getElementById('f-name'), fMailEl = document.getElementById('f-mail'), fName2El = document.getElementById('f-name-2');
   fills.forEach(function (el) { el.addEventListener('input', function () { fitFill(el); el.classList.remove('is-missing'); }); });
-  fNameEl.addEventListener('input', function () { // Name aus der Headline im Text wiederholen, nur der Name selbst gelb wie die Eingaben
-    var v = fNameEl.value.trim(), name = document.createElement('span');
-    name.className = 'echo-value'; name.textContent = v;
-    echoName.replaceChildren();
-    if (v) echoName.append(', ', name);
+  // Name lässt sich in der Headline und im Text eingeben, beide Felder zeigen denselben Inhalt
+  [[fNameEl, fName2El], [fName2El, fNameEl]].forEach(function (pair) {
+    pair[0].addEventListener('input', function () { pair[1].value = pair[0].value; fitFill(pair[1]); pair[1].classList.remove('is-missing'); });
   });
   fitAll();
   window.addEventListener('resize', fitAll);
@@ -837,8 +835,9 @@
     var missing = !fNameEl.value.trim() ? fNameEl : (!fMailEl.value.trim() || !fMailEl.checkValidity()) ? fMailEl : null;
     note.classList.add('form-note');
     if (missing) {
-      note.textContent = missing === fNameEl ? 'Wie darf ich dich nennen? Oben fehlt noch dein Name.' : 'An welche Adresse soll die Antwort gehen?';
+      note.textContent = missing === fNameEl ? 'Wie darf ich dich nennen? Dein Name fehlt noch.' : 'An welche Adresse soll die Antwort gehen?';
       missing.classList.add('is-missing');
+      if (missing === fNameEl) fName2El.classList.add('is-missing');
       missing.focus();
       return;
     }

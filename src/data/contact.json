@@ -2,7 +2,7 @@
   "greeting": "Hey {name},",
   "question": "bist du bereit für was Neues?",
   "namePlaceholder": "dein Name",
-  "storyIntro": "Dann erzähl mal{echo}. Du bist gerade bei {firma}, und am meisten beschäftigt dich {thema}.",
+  "storyIntro": "Dann erzähl mal, {name}. Du bist gerade bei {firma}, und am meisten beschäftigt dich {thema}.",
   "companyPlaceholder": "Firma oder Projekt",
   "topicPlaceholder": "das, was nervt",
   "helpQuestion": "Anpacken könnten wir zusammen:",

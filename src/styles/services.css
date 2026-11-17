@@ -23,7 +23,7 @@
 .step-body { padding-top: var(--space-4); display: grid; gap: var(--space-4); }
 .step p { color: var(--muted); }
 .step .pills li { border-color: #DCD9D2; }
-.step-arrow { position: absolute; z-index: 1; left: 50%; bottom: -47px; width: 56px; height: auto; margin-left: -28px; rotate: 90deg; overflow: visible; fill: none; stroke: var(--fg); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+.step-arrow { position: absolute; z-index: 1; left: 50%; bottom: -47px; width: 56px; height: auto; margin-left: -28px; rotate: 90deg; overflow: visible; fill: none; stroke: var(--brand-yellow); stroke-width: 11; /* Handy: 56 px breit = 0,4-fach, ergibt gut 4 px */ stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
 .step-arrow path { stroke-dasharray: 1; stroke-dashoffset: 0; }
 .step.pre:not(.in) .step-arrow path { stroke-dashoffset: 1; }
 .step.pre.in .step-arrow path { transition: stroke-dashoffset 700ms var(--ease-draw) 500ms; }
@@ -33,7 +33,7 @@
   .step:nth-child(1) { --tilt: -3deg; --drop: 18px; }
   .step:nth-child(2) { --tilt: 0deg; }
   .step:nth-child(3) { --tilt: 2.6deg; --drop: 10px; }
-  .step-arrow { width: clamp(96px, 9.5vw, 136px); left: auto; margin-left: 0; rotate: 0deg; }
+  .step-arrow { width: clamp(96px, 9.5vw, 136px); left: auto; margin-left: 0; rotate: 0deg; stroke-width: 5.5; } /* 0,7- bis 1-fach: 4 bis 5 px */
   .step:nth-child(1) .step-arrow { top: -48px; bottom: auto; right: -7%; }
   .step:nth-child(2) .step-arrow { bottom: -72px; right: -10%; }
 }
