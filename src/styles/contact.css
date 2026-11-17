@@ -24,10 +24,10 @@ main > .contact-stage { padding-top: var(--space-5); background: linear-gradient
 .contact h2 { font-size: clamp(min(1.9rem, 8vw), 4.2vw, 3.6rem); line-height: 1.62; }
 @media (min-width: 960px) { .contact h2 { margin-top: -0.17em; } } /* Versalkante auf Höhe der weißen Kachel */
 .contact h2 { grid-area: head; }
-/* Handy: Headline steht so weit vom Kartenrand (oben und links) wie der Text der weißen Kachel vom Geräterand */
+/* Handy: Headline links bündig mit der weißen Kachel; oben und bis zur Kachel je doppelter Seitenabstand (Versalkante bzw. Grundlinie) */
 @media (max-width: 719px) {
-  .contact { padding-top: calc(var(--pad) + var(--story-pad) + 1px); }
-  .contact h2 { padding-inline: calc(var(--story-pad) + 1px); margin-top: -0.187em; } /* Versalkante statt Zeilenoberkante */
+  .contact { padding-top: calc(var(--pad) * 2); }
+  .contact h2 { margin-top: -0.187em; margin-bottom: calc(var(--pad) * 2 - var(--space-7) - 0.209em); } /* Grundlinie bis Kachel = 2 × Seitenabstand */
 }
 .story { grid-area: story; }
 .social { grid-area: social; align-self: end; display: flex; gap: var(--space-2); }
