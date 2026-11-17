@@ -41,7 +41,9 @@ const links = [['#arbeiten', 'Projects'], ['#leistungen', 'Services'], ['#ueber-
 <style is:global>
   /* Die flüssige Nav ersetzt die bisherige; diese läuft unsichtbar weiter und liefert Bereichsnamen und Zustand */
   .nav-bar { display: none; }
-  .lq { position: fixed; inset: 0 0 auto; height: 100svh; z-index: 31; pointer-events: none; }
+  /* Höhe 0, Inhalte ragen absolut heraus: Eine bildschirmhohe fixe Ebene erkennt Safari 26 am unteren Rand
+     und hinterlegt die untere Browserleiste dann deckend (schwarz) statt transparent */
+  .lq { position: fixed; inset: 0 0 auto; height: 0; overflow: visible; z-index: 31; pointer-events: none; }
   /* Zeichenfläche nur so hoch wie die Nav gerade braucht (per Skript): Der Schatten wird sonst bei jedem Bild
      über den ganzen Bildschirm neu berechnet, und die Form hinkt hinter der Bewegung her */
   .lq-shape { position: absolute; left: 0; top: 0; width: 100%; height: var(--lq-h, 120px); overflow: visible; }
