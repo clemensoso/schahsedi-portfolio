@@ -59,7 +59,7 @@ const links = [['#arbeiten', 'Projects'], ['#leistungen', 'Services'], ['#ueber-
   .lq-toggle[aria-expanded="true"] i:nth-child(1) { transform: rotate(45deg); }
   .lq-toggle[aria-expanded="true"] i:nth-child(2) { opacity: 0; }
   .lq-toggle[aria-expanded="true"] i:nth-child(3) { transform: rotate(-45deg); }
-  .lq-btn:hover { background: var(--brand-yellow); color: var(--brand-ink); }
+  @media (hover:hover){.lq-btn:hover{ background: var(--brand-yellow); color: var(--brand-ink); }}
   /* Fokusrahmen nur bei Tastaturbedienung, nicht nach einem Klick */
   .lq-btn:focus:not(:focus-visible) { outline: none; }
   .lq-btn:focus-visible { outline: 2px solid var(--brand-yellow); outline-offset: 3px; }
@@ -77,7 +77,7 @@ const links = [['#arbeiten', 'Projects'], ['#leistungen', 'Services'], ['#ueber-
   .lq-ind.is-ready { transition: transform 460ms cubic-bezier(0.22, 1, 0.36, 1), width 460ms cubic-bezier(0.22, 1, 0.36, 1), opacity 240ms ease; }
   @media (prefers-reduced-motion: reduce) { .lq-ind.is-ready { transition: opacity 200ms linear; } }
   .lq-inline a { padding: 9px 14px; border-radius: var(--radius-pill); font-size: var(--fs-small); font-weight: 500; color: var(--brand-ink); text-decoration: none; white-space: nowrap; }
-  .lq-inline a:hover, .lq-inline a:focus-visible { background: var(--brand-yellow); outline: none; }
+  .lq-inline a:focus-visible{ background: var(--brand-yellow); outline: none; }@media (hover:hover){.lq-inline a:hover{ background: var(--brand-yellow); outline: none; }}
   .lq-label, .lq-measure {
     position: absolute; left: 0; top: 0; white-space: nowrap; font-size: var(--fs-small); font-weight: 500; color: var(--brand-ink);
   }
@@ -88,7 +88,7 @@ const links = [['#arbeiten', 'Projects'], ['#leistungen', 'Services'], ['#ueber-
   .lq-links { position: absolute; left: 0; top: 0; display: grid; gap: 2px; padding: 4px 8px 8px; opacity: 0; pointer-events: none; }
   @media (max-width: 760px) { .lq.is-open .lq-links { pointer-events: auto; } } /* Desktop klappt nicht nach unten auf */
   .lq-links a { padding: 13px 14px; border-radius: 18px; text-align: center; font-size: var(--fs-body); font-weight: 500; color: var(--brand-ink); text-decoration: none; white-space: nowrap; }
-  .lq-links a:hover, .lq-links a:focus-visible { background: var(--brand-yellow); outline: none; }
+  .lq-links a:focus-visible{ background: var(--brand-yellow); outline: none; }@media (hover:hover){.lq-links a:hover{ background: var(--brand-yellow); outline: none; }}
 </style>
 
 <script>

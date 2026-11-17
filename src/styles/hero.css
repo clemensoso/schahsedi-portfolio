@@ -31,7 +31,7 @@
   animation: var(--drift, drift-a) var(--drift-t, 8s) cubic-bezier(0.37, 0, 0.63, 1) var(--drift-at, 0s) infinite;
 }
 /* Ruhezustand: jede Kachel schwebt in eigenem Takt; beim Hover hält sie an */
-.float:is(:hover, :focus-visible, :active) .float-card { animation-play-state: paused; }
+.float:focus-visible .float-card,.float:active .float-card{ animation-play-state: paused; }@media (hover:hover){.float:hover .float-card{ animation-play-state: paused; }}
 .f1 { --drift: drift-a; --drift-t: 8.6s; --drift-at: -1.2s; }
 .f2 { --drift: drift-b; --drift-t: 10.4s; --drift-at: -6.3s; }
 .f3 { --drift: drift-a; --drift-t: 9.3s; --drift-at: -4.1s; }
@@ -58,9 +58,9 @@
 }
 .cursor-tag.is-on { opacity: 1; scale: 1; }
 /* Hover wie im Framer-Entwurf: Kachel richtet sich auf und wird etwas größer */
-.float:is(:hover, :focus-visible, :active) { z-index: 3; rotate: 0deg; scale: 1.06; }
-.float:is(:hover, :focus-visible, :active) .float-card { box-shadow: 0 40px 80px rgb(0 0 0 / 0.55), 0 10px 110px -10px color-mix(in srgb, var(--glow) 45%, transparent); }
-.float:is(:hover, :focus-visible, :active) .pa { transform: scale(1.04); }
+.float:focus-visible,.float:active{ z-index: 3; rotate: 0deg; scale: 1.06; }@media (hover:hover){.float:hover{ z-index: 3; rotate: 0deg; scale: 1.06; }}
+.float:focus-visible .float-card,.float:active .float-card{ box-shadow: 0 40px 80px rgb(0 0 0 / 0.55), 0 10px 110px -10px color-mix(in srgb, var(--glow) 45%, transparent); }@media (hover:hover){.float:hover .float-card{ box-shadow: 0 40px 80px rgb(0 0 0 / 0.55), 0 10px 110px -10px color-mix(in srgb, var(--glow) 45%, transparent); }}
+.float:focus-visible .pa,.float:active .pa{ transform: scale(1.04); }@media (hover:hover){.float:hover .pa{ transform: scale(1.04); }}
 .f1 { width: calc(var(--fu) * 22); aspect-ratio: 4 / 3; left: -3%; top: -7%; rotate: 12deg; animation-delay: 250ms; }
 .f2 { width: calc(var(--fu) * 19); aspect-ratio: 3 / 4; left: 0.5%; top: 41%; rotate: -9deg; animation-delay: 400ms; }
 .f3 { width: calc(var(--fu) * 21); aspect-ratio: 4 / 3; left: 20%; bottom: -5%; rotate: -4deg; animation-delay: 520ms; }

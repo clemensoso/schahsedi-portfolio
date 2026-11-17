@@ -26,8 +26,8 @@
 }
 .nav-links a > span { position: relative; z-index: 1; transition: color 200ms var(--ease-draw); }
 .nav-links a .scribble { color: var(--brand-yellow); }
-.nav-links a:is(:hover, :focus-visible) > span { color: var(--brand-ink); transition-delay: 300ms; }
-.nav-links a:is(:hover, :focus-visible) { background-color: var(--brand-yellow); transition: background-color 0s linear var(--dur-draw-in); }
+.nav-links a:focus-visible > span{ color: var(--brand-ink); transition-delay: 300ms; }@media (hover:hover){.nav-links a:hover > span{ color: var(--brand-ink); transition-delay: 300ms; }}
+.nav-links a:focus-visible{ background-color: var(--brand-yellow); transition: background-color 0s linear var(--dur-draw-in); }@media (hover:hover){.nav-links a:hover{ background-color: var(--brand-yellow); transition: background-color 0s linear var(--dur-draw-in); }}
 .nav-links a[aria-current="true"] { background: #F1EFEA; }
 .nav-current { padding-inline: 12px 16px; }
 .nav-toggle {
@@ -39,7 +39,7 @@
 .nav-toggle i:last-child { transform: translateY(3.5px); }
 .nav-toggle[aria-expanded="true"] i:first-child { transform: rotate(45deg); }
 .nav-toggle[aria-expanded="true"] i:last-child { transform: rotate(-45deg); }
-.nav-toggle:hover { background: var(--brand-yellow); color: var(--brand-ink); }
+@media (hover:hover){.nav-toggle:hover{ background: var(--brand-yellow); color: var(--brand-ink); }}
 .nav-toggle { position: relative; }
 
 .nav[data-state="full"] .nav-current, .nav[data-state="full"] .nav-toggle { display: none; }

@@ -105,7 +105,7 @@
 }
 .media-btn svg { width: 16px; height: 16px; }
 .media-btn svg path { fill: currentColor; }
-.media-btn:hover { background: var(--brand-yellow); }
+@media (hover:hover){.media-btn:hover{ background: var(--brand-yellow); }}
 .media-btn:active { scale: 0.92; }
 /* Porträt: nur ein blasses Play als Zeichen „GIF steht“. Während es läuft, ausgeblendet. */
 .portrait-play { position: absolute; z-index: 3; left: 12px; bottom: 12px; width: 36px; height: 36px; padding: 0; border: 0; background: none; display: grid; place-items: center; cursor: pointer; color: #FFFFFF; opacity: 0.5; transition: opacity var(--dur-base) var(--ease-out); }
@@ -115,7 +115,7 @@
 .sheet-reset { right: var(--tile-pad); bottom: var(--tile-pad); }
 .sheet-reset { z-index: 9999; } /* liegt immer über den Stickern */
 .sheet-reset svg path { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
-.sheet-reset:hover svg { rotate: 360deg; }
+@media (hover:hover){.sheet-reset:hover svg{ rotate: 360deg; }}
 .sheet-reset svg { transition: rotate 600ms var(--ease-out); }
 .sheet-reset[hidden] { display: grid; opacity: 0; pointer-events: none; }
 .skill.returning { transition: left 650ms var(--ease-out), top 650ms var(--ease-out), scale 200ms var(--ease-out); }
@@ -142,7 +142,7 @@
 .skill svg .thick { stroke-width: 10; }
 .skill svg text { font-family: var(--font-sans); font-weight: 600; font-size: 12px !important; /* überall gleich groß */ fill: var(--brand-ink); text-anchor: middle; stroke: none; }
 .skill svg text.light { fill: #FFFFFF; }
-.skill:hover { scale: 1.05; }
+@media (hover:hover){.skill:hover{ scale: 1.05; }}
 @media (hover: hover) { .skill:hover:not(.grabbing, .returning, .nudge) { animation: skill-wiggle 1100ms ease-in-out infinite; } }
 @keyframes skill-wiggle {
   0%, 100% { rotate: var(--r, 0deg); }

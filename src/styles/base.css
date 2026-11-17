@@ -40,9 +40,11 @@ a { color: inherit; }
   stroke-dasharray: 1 1; stroke-dashoffset: 1; stroke-width: 0;
   transition: stroke-dashoffset var(--dur-draw-out) var(--ease-draw), stroke-width var(--dur-draw-out) var(--ease-draw);
 }
-:is(.btn, .nav-links a):is(:hover, :focus-visible) .scribble path {
+:is(.btn, .nav-links a):focus-visible .scribble path{
   stroke-dashoffset: 0; stroke-width: 34; transition-duration: var(--dur-draw-in);
-}
+}@media (hover:hover){:is(.btn, .nav-links a):hover .scribble path{
+  stroke-dashoffset: 0; stroke-width: 34; transition-duration: var(--dur-draw-in);
+}}
 
 /* ---------- Buttons ---------- */
 .btn {
@@ -66,13 +68,16 @@ a { color: inherit; }
   transition: background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out);
 }
 .btn-dot svg { width: 42%; height: 42%; transition: transform var(--dur-slow) var(--ease-out); }
-.btn:is(:hover, :focus-visible) .btn-label { color: var(--btn-fill-fg); transition-delay: 340ms; }
-.btn:is(:hover, :focus-visible) .btn-dot { background: var(--btn-fill-fg); color: var(--btn-fill); }
-.btn:is(:hover, :focus-visible) .btn-dot svg { transform: rotate(45deg); }
-.btn:is(:hover, :focus-visible) {
+.btn:focus-visible .btn-label{ color: var(--btn-fill-fg); transition-delay: 340ms; }@media (hover:hover){.btn:hover .btn-label{ color: var(--btn-fill-fg); transition-delay: 340ms; }}
+.btn:focus-visible .btn-dot{ background: var(--btn-fill-fg); color: var(--btn-fill); }@media (hover:hover){.btn:hover .btn-dot{ background: var(--btn-fill-fg); color: var(--btn-fill); }}
+.btn:focus-visible .btn-dot svg{ transform: rotate(45deg); }@media (hover:hover){.btn:hover .btn-dot svg{ transform: rotate(45deg); }}
+.btn:focus-visible{
   background-color: var(--btn-fill); border-color: var(--btn-fill);
   transition: background-color 0s linear var(--dur-draw-in), border-color 0s linear var(--dur-draw-in), scale var(--dur-fast) var(--ease-out);
-}
+}@media (hover:hover){.btn:hover{
+  background-color: var(--btn-fill); border-color: var(--btn-fill);
+  transition: background-color 0s linear var(--dur-draw-in), border-color 0s linear var(--dur-draw-in), scale var(--dur-fast) var(--ease-out);
+}}
 .btn:active { scale: 0.97; background-color: var(--btn-fill); transition: background-color 0s, scale var(--dur-fast) var(--ease-out); }
 .btn:active .btn-label { color: var(--btn-fill-fg); transition-delay: 0s; transition-duration: 0s; }
 .btn:active .btn-dot { background: var(--btn-fill-fg); color: var(--btn-fill); }
@@ -94,4 +99,6 @@ a { color: inherit; }
 .arrow-btn svg { width: 14px; height: 14px; }
 .arrow-btn.prev svg { transform: rotate(-135deg); }
 .arrow-btn.next svg { transform: rotate(45deg); }
-.arrow-btn:hover { background: var(--brand-yellow); border-color: var(--brand-yellow); color: var(--brand-ink); }
+@media (hover:hover){.arrow-btn:hover{ background: var(--brand-yellow); border-color: var(--brand-yellow); color: var(--brand-ink); }}
+
+a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; }

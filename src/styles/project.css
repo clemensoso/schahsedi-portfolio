@@ -48,7 +48,7 @@
   content: ""; width: 44px; height: 5px; border-radius: 99px; background: #D3D0C9;
   transition: background var(--dur-fast) var(--ease-out), width var(--dur-base) var(--ease-out);
 }
-.sheet-grip:hover::before, .sheet.dragging .sheet-grip::before { background: #A5A198; width: 56px; }
+.sheet.dragging .sheet-grip::before{ background: #A5A198; width: 56px; }@media (hover:hover){.sheet-grip:hover::before{ background: #A5A198; width: 56px; }}
 .sheet.dragging .sheet-grip { cursor: grabbing; }
 
 .sheet-close {
@@ -60,8 +60,8 @@
   transition: background var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out), scale var(--dur-fast) var(--ease-out);
 }
 .sheet-close svg { width: 14px; height: 14px; transition: rotate var(--dur-slow) var(--ease-out); }
-.sheet-close:hover { background: var(--brand-yellow); border-color: var(--brand-yellow); }
-.sheet-close:hover svg { rotate: 90deg; }
+@media (hover:hover){.sheet-close:hover{ background: var(--brand-yellow); border-color: var(--brand-yellow); }}
+@media (hover:hover){.sheet-close:hover svg{ rotate: 90deg; }}
 .sheet-close:active { scale: 0.94; }
 @media (min-width: 720px) { .sheet-close { top: 24px; right: 24px; } }
 
@@ -160,8 +160,8 @@
 .project-next-label { grid-column: 1 / -1; color: var(--muted); }
 .project-next-title { font-size: clamp(1.4rem, 3.4vw, 3rem); }
 .project-next .btn-dot svg { transform: rotate(45deg); }
-.project-next:is(:hover, :focus-visible) .btn-dot { background: var(--brand-ink); color: #FFFFFF; }
-.project-next:is(:hover, :focus-visible) .btn-dot svg { transform: rotate(45deg) translate(0, -2px); }
+.project-next:focus-visible .btn-dot{ background: var(--brand-ink); color: #FFFFFF; }@media (hover:hover){.project-next:hover .btn-dot{ background: var(--brand-ink); color: #FFFFFF; }}
+.project-next:focus-visible .btn-dot svg{ transform: rotate(45deg) translate(0, -2px); }@media (hover:hover){.project-next:hover .btn-dot svg{ transform: rotate(45deg) translate(0, -2px); }}
 
 /* ---------- Schriftzug-Animation als Titelbild (z. B. Emmy) ---------- */
 .lettering { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; background: var(--lt-bg); }
