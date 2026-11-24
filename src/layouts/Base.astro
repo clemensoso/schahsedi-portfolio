@@ -6,10 +6,11 @@ import '../styles/global.css';
 import boldonseUrl from '@fontsource/boldonse/files/boldonse-latin-400-normal.woff2?url';
 import geistUrl from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
 
-const { title = 'Schah Sedi', description } = Astro.props;
+// tone: fester Seitenton für Unterseiten ohne Ton-Wechsel beim Scrollen (die Startseite setzt ihn per Skript)
+const { title = 'Schah Sedi', description, tone } = Astro.props;
 ---
 <!doctype html>
-<html lang="de">
+<html lang="de" data-tone={tone} data-scheme={tone === 'light' ? 'light' : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />

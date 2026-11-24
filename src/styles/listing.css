@@ -1,0 +1,69 @@
+/* ---------- Unterseiten mit Kachel-Übersicht (/projekte/, /playground/) ---------- */
+body:has(main.page) { background: #FFFFFF; color: var(--brand-ink); }
+main.page { position: relative; z-index: 1; background: #FFFFFF; padding: calc(env(safe-area-inset-top, 0px) + 128px) 0 var(--section-gap); border-radius: 0 0 clamp(28px, 4vw, 56px) clamp(28px, 4vw, 56px); }
+
+/* Kopf mittig: Umschalter, Titel, Text, Filter */
+.listing-head { display: grid; gap: var(--space-5); justify-items: center; text-align: center; margin-bottom: clamp(56px, 8vw, 112px); }
+.listing-head h1 { font-size: var(--fs-display); }
+.listing-head p { max-width: 36em; color: var(--muted); font-size: var(--fs-body-l); line-height: var(--lh-body); }
+
+/* Umschalter Projekte | Playground: dunkle Pille gleitet beim Wechsel hinüber */
+.work-switch { position: relative; display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; padding: 5px; border-radius: var(--radius-pill); background: #F1EFEA; isolation: isolate; }
+.work-switch a { position: relative; z-index: 1; padding: 10px 20px; border-radius: var(--radius-pill); font-size: var(--fs-small); font-weight: 600; color: var(--brand-ink); text-decoration: none; text-align: center; transition: color 320ms var(--ease-out); }
+.work-switch a[aria-current="page"] { color: #FFFFFF; }
+@media (hover: hover) { .work-switch a:not([aria-current]):hover { color: #000; } }
+.work-switch-ind { position: absolute; z-index: 0; top: 5px; bottom: 5px; left: 5px; width: calc(50% - 5px); border-radius: var(--radius-pill); background: var(--brand-ink); transition: translate 420ms var(--ease-out); }
+.work-switch-ind[data-at="1"] { translate: 100% 0; }
+
+/* Filter: Tasten wie die Auswahl-Chips im Kontaktformular */
+.filter { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); max-width: 760px; }
+.filter-btn {
+  border: 1px solid var(--chip-border); border-radius: var(--radius-pill); background: transparent; color: inherit;
+  padding: 9px 16px; font: 500 var(--fs-small)/1 var(--font-sans); cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+@media (hover: hover) { .filter-btn:hover { background: #F1EFEA; } }
+.filter-btn[aria-pressed="true"], .filter-btn[aria-pressed="true"]:hover { background: var(--brand-ink); color: #FFFFFF; }
+.filter-btn:active { scale: 0.96; }
+
+/* Raster mit viel Luft: 2 Spalten, ab 900 px 3 Spalten */
+.grid {
+  list-style: none; margin-top: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(20px, 6vw, 120px); row-gap: clamp(40px, 7vw, 120px); max-width: 1240px; margin-inline: auto;
+}
+@media (min-width: 900px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.card[hidden] { display: none; }
+.card-link { position: relative; display: grid; gap: clamp(14px, 2vw, 24px); color: inherit; text-decoration: none; }
+.card-media { position: relative; display: block; aspect-ratio: 1 / 1; }
+
+/* Bildstapel: oben das Hauptbild, dahinter bis zu zwei weitere leicht verdreht und versetzt */
+.stack { position: absolute; inset: 0; display: block; }
+.stack-layer {
+  position: absolute; inset: 0; overflow: hidden; border-radius: clamp(14px, 1.6vw, 22px); background: #1C1C1B;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 18px 40px -12px rgb(0 0 0 / 0.28);
+  transition: transform 700ms var(--ease-out);
+}
+.card-media.is-light .stack-layer { background: #F1EFEA; }
+.stack-layer img { display: block; width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; user-select: none; }
+.stack[data-n="2"] .l1 { transform: translate(3%, -4%) rotate(3deg); }
+.stack[data-n="3"] .l1 { transform: translate(-3%, -5%) rotate(-3.5deg); }
+.stack[data-n="3"] .l2 { transform: translate(4%, -2%) rotate(4deg); }
+.stack .l0 { transform: rotate(0deg); }
+/* Überfahren: Stapel fächert etwas weiter auf, oberstes Bild hebt sich leicht */
+@media (hover: hover) {
+  .card-link:not(.is-static):hover .l0 { transform: translateY(-2%) rotate(-1deg) scale(1.01); }
+  .card-link:not(.is-static):hover .stack[data-n="2"] .l1 { transform: translate(6%, -7%) rotate(6deg); }
+  .card-link:not(.is-static):hover .stack[data-n="3"] .l1 { transform: translate(-7%, -8%) rotate(-7deg); }
+  .card-link:not(.is-static):hover .stack[data-n="3"] .l2 { transform: translate(8%, -4%) rotate(7deg); }
+}
+@media (prefers-reduced-motion: reduce) { .stack-layer { transition: none; } }
+
+.card-text { display: grid; gap: 2px; justify-items: center; text-align: center; }
+.card-text b { font-size: clamp(0.95rem, 1.4vw, 1.1rem); font-weight: 600; line-height: var(--lh-tight); }
+.card-text small { color: var(--muted); font-size: var(--fs-small); line-height: 1.5; }
+.card-tag { margin-bottom: 4px; padding: 4px 10px; border-radius: var(--radius-pill); background: #F1EFEA; font-size: var(--fs-label); font-weight: 600; }
+.card-link:focus-visible { outline: 2px solid var(--brand-yellow); outline-offset: 10px; border-radius: 22px; }
+.listing-empty { color: var(--muted); margin-top: var(--space-6); text-align: center; }
+@media (max-width: 599px) {
+  .card-text small { font-size: var(--fs-label); }
+}

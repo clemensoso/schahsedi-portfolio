@@ -38,5 +38,11 @@
         }
       ]
     }
+  ],
+  "featured": true,
+  "order": 3,
+  "categories": [
+    "Editorial",
+    "Packaging"
   ]
 }

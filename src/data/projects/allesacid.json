@@ -1,0 +1,12 @@
+{
+  "title": "allesacid Kollektion",
+  "categories": [
+    "Fashion",
+    "Branding"
+  ],
+  "cover": "/assets/projects/tshirt-flat.webp",
+  "coverMobile": "/assets/projects/tshirt-back.webp",
+  "coverPos": "50% 52%",
+  "featured": true,
+  "order": 7
+}

@@ -1,0 +1,11 @@
+{
+  "title": "Experimental Poster Design",
+  "categories": [
+    "Poster",
+    "Typografie"
+  ],
+  "cover": "/assets/projects/sky.webp",
+  "coverPos": "50% 55%",
+  "featured": true,
+  "order": 5
+}

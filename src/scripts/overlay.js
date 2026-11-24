@@ -9,7 +9,7 @@
   var closeBtn = document.getElementById('sheet-close');
   var grip = layer.querySelector('.sheet-grip');
   var home = layer.dataset.home;
-  var homeTitle = 'Schah Sedi Startseite';
+  var homeTitle = layer.dataset.homeTitle || 'Schah Sedi Startseite';
   var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Fokus nur dann von Skript aus setzen, wenn jemand mit Tab unterwegs ist.

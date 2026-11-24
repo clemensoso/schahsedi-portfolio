@@ -1,19 +1,20 @@
 ---
-// Jedes Projekt hat eine eigene Adresse. Direkt aufgerufen liegt die Startseite dahinter und das Overlay ist schon offen.
-import Base from '../../layouts/Base.astro';
-import Home from '../../components/Home.astro';
+// Jedes Projekt hat eine eigene Adresse. Direkt aufgerufen liegt die Projekt-Sammlung dahinter und das Overlay ist schon offen.
+// Aus dem Karussell der Startseite heraus öffnet es sich dagegen über der Startseite (das Overlay lädt nur den Inhalt).
+import Page from '../../layouts/Page.astro';
 import ProjectOverlay from '../../components/ProjectOverlay.astro';
 import ProjectArticle from '../../components/ProjectArticle.astro';
-import { projects } from '../../lib/projects.js';
+import ProjectsCollection from '../../components/ProjectsCollection.astro';
+import { projects, projectsIndexUrl } from '../../lib/projects.js';
 
 export function getStaticPaths() {
   return projects.map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
 }
 const { project } = Astro.props;
 ---
-<Base title={`${project.title} · Schah Sedi`} description={project.intro}>
-  <ProjectOverlay open>
+<Page title={`${project.title} · Schah Sedi`} description={project.intro}>
+  <ProjectOverlay slot="overlay" open home={projectsIndexUrl} homeTitle="Projekte · Schah Sedi">
     <ProjectArticle project={project} />
   </ProjectOverlay>
-  <Home />
-</Base>
+  <ProjectsCollection />
+</Page>

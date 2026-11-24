@@ -1,0 +1,19 @@
+{
+  "title": "Buchmacher",
+  "type": "Werkzeug",
+  "year": "2026",
+  "text": "Bücher und Kalender als 3D-Mockup gestalten und als eigenständige Seite exportieren.",
+  "image": "/assets/playground/buch-qr.webp",
+  "imagePos": "50% 50%",
+  "href": "playground/buchmacher/",
+  "tags": [
+    "3D im Browser",
+    "Bücher",
+    "Kalender"
+  ],
+  "order": 1,
+  "images": [
+    "/assets/playground/buch-csr.webp",
+    "/assets/playground/kalender.webp"
+  ]
+}

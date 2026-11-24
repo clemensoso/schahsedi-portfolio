@@ -1,0 +1,14 @@
+---
+// Kachel mit gestapelten Bildern: oben das Hauptbild, dahinter (leicht verdreht) bis zu zwei weitere,
+// je nachdem wie viele Bilder das Projekt hat. Beim Überfahren fächert der Stapel etwas auf.
+import { asset } from '../lib/asset.js';
+const { images = [], pos } = Astro.props; // images[0] = oben
+const layers = images.filter(Boolean).slice(0, 3);
+---
+<span class="stack" data-n={layers.length}>
+  {layers.slice().reverse().map((src, i, all) => (
+    <span class:list={['stack-layer', `l${all.length - 1 - i}`]}>
+      <img src={asset(src)} alt="" loading="lazy" decoding="async" draggable="false" style={i === all.length - 1 && pos ? `object-position:${pos}` : undefined} />
+    </span>
+  ))}
+</span>

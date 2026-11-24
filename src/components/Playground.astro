@@ -2,6 +2,7 @@
 // Vorschau auf den Playground (eigene statische Seite unter public/playground/…): sitzt vor dem Kontakt
 import { asset } from '../lib/asset.js';
 import pg from '../data/playground.json';
+import { playgroundUrl } from '../lib/playground.js';
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const { tool } = pg;
@@ -23,6 +24,7 @@ const href = `${base}${tool.href}`;
       <p>{tool.text}</p>
       <ul class="pills">{tool.pills.map((p) => <li>{p}</li>)}</ul>
       <a class="btn" href={href}><span class="btn-label">{tool.button}</span><span class="btn-dot" aria-hidden="true"><svg><use href="#arrow"/></svg></span></a>
+      <a class="btn secondary" href={playgroundUrl}><span class="btn-label">Zum Playground</span><span class="btn-dot" aria-hidden="true"><svg><use href="#arrow"/></svg></span></a>
     </div>
   </article>
 </section>

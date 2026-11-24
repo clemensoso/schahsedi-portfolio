@@ -1,0 +1,27 @@
+---
+// Umschalter zwischen den beiden Bereichen der Arbeiten: Projekte und Playground hängen eng zusammen
+const { active } = Astro.props; // 'projekte' | 'playground'
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const items = [['projekte', 'Projekte', `${base}projekte/`], ['playground', 'Playground', `${base}playground/`]];
+---
+<nav class="work-switch" aria-label="Arbeiten">
+  <span class="work-switch-ind" aria-hidden="true" data-at={active === 'playground' ? '1' : '0'}></span>
+  {items.map(([key, label, href]) => <a href={href} aria-current={key === active ? 'page' : undefined}>{label}</a>)}
+</nav>
+
+<script is:inline>(function () {
+  // Beim Klick gleitet die dunkle Pille schon zur anderen Seite, dann wird navigiert
+  document.querySelectorAll('.work-switch').forEach(function (nav) {
+    nav.addEventListener('click', function (e) {
+      var a = e.target.closest('a');
+      if (!a || a.getAttribute('aria-current') || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+      e.preventDefault();
+      var ind = nav.querySelector('.work-switch-ind');
+      ind.style.translate = ind.dataset.at === '1' ? '0 0' : '100% 0';
+      nav.querySelectorAll('a').forEach(function (x) { x.style.color = x === a ? '#FFFFFF' : '#222222'; });
+      setTimeout(function () { location.href = a.href; }, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 300);
+    });
+  });
+  // Zurück-Taste (Seite aus dem Zwischenspeicher): Umschalter wieder auf den Stand dieser Seite
+  addEventListener('pageshow', function (e) { if (e.persisted) document.querySelectorAll('.work-switch .work-switch-ind, .work-switch a').forEach(function (x) { x.style.translate = ''; x.style.color = ''; }); });
+})();</script>

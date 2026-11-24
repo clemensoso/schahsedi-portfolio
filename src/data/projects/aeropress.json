@@ -1,0 +1,10 @@
+{
+  "title": "Aeropress Packaging Design",
+  "categories": [
+    "Packaging"
+  ],
+  "cover": "/assets/projects/packaging-flug.webp",
+  "coverMobile": "/assets/projects/packaging-stand.webp",
+  "featured": true,
+  "order": 4
+}

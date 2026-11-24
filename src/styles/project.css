@@ -1,7 +1,12 @@
 /* ---------- Projekt-Overlay: fährt von unten über die Seite, oben bleibt ein abgedunkelter Streifen ---------- */
 /* Die Karte fährt von unten herein und scrollt selbst, ohne sichtbaren Scrollbalken.
    Die Seite dahinter bleibt stehen (per JS), ihre Scrollbar wird nicht ausgeblendet, damit nichts springt. */
-.sheet-layer { position: fixed; inset: 0; z-index: 100; }
+.sheet-layer {
+  position: fixed; inset: 0; z-index: 100;
+  /* Test: Karte fährt weiter nach oben und hat ab Tablet seitlich etwas Luft */
+  --sheet-top: clamp(16px, 3vh, 32px); --sheet-x: 0px;
+}
+@media (min-width: 760px) { .sheet-layer { --sheet-x: clamp(16px, 2.4vw, 40px); } }
 .sheet-layer[hidden] { display: none; }
 .sheet-layer.no-anim, .sheet-layer.no-anim * { transition: none !important; }
 
@@ -13,15 +18,17 @@
   opacity: 0; transition: opacity 520ms var(--ease-out);
 }
 /* erst wenn die Karte oben angekommen ist, auf den Streifen über der Karte kürzen */
-.sheet-layer.is-open .sheet-backdrop { opacity: var(--shade, 1); height: calc(max(10vh, 48px) + clamp(28px, 4vw, 56px) + 8px); transition: opacity 520ms var(--ease-out), height 0s 660ms; }
+.sheet-layer.is-open .sheet-backdrop { opacity: var(--shade, 1); height: calc(var(--sheet-top) + clamp(28px, 4vw, 56px) + 8px); transition: opacity 520ms var(--ease-out), height 0s 660ms; }
 .sheet-layer:has(.sheet.dragging) .sheet-backdrop { height: 100%; transition: none; }
+/* Mit seitlicher Luft muss die Abdunklung auch neben der Karte liegen, also ganz nach unten reichen */
+@media (min-width: 760px) { .sheet-layer.is-open .sheet-backdrop { height: 100%; } }
 
 .sheet {
   /* immer helle Farben, egal welcher Ton gerade auf der Seite liegt */
   --bg: #FFFFFF; --fg: #222222; --muted: #5E5B55; --line: #DCD9D2;
   --accent-text: #222222; --hl-bg: #FEC31E; --sec-bg: #FFFFFF; --chip-border: #222222;
   --sheet-r: clamp(28px, 4vw, 56px); /* gleicher Radius wie Projekte- und Kontakt-Karte */
-  position: absolute; top: max(10vh, 48px); left: 0; right: 0; bottom: 0;
+  position: absolute; top: var(--sheet-top); left: var(--sheet-x); right: var(--sheet-x); bottom: 0;
   background: #FFFFFF; color: var(--fg); color-scheme: light;
   border-radius: var(--sheet-r) var(--sheet-r) 0 0;
   overflow-x: clip; overflow-y: auto; overscroll-behavior: contain;
@@ -144,7 +151,7 @@
   /* Buch bleibt beim Scrollen links stehen, rechts laufen Text und Bilder bis zum Ende durch.
      Höhe passt in den sichtbaren Teil der Karte (Fenster minus abgedunkelter Streifen oben). */
   .pb-split .pb-embed { position: sticky; top: 24px; }
-  .pb-split .pb-embed iframe { height: calc(100vh - max(10vh, 48px) - 48px); min-height: 420px; }
+  .pb-split .pb-embed iframe { height: calc(100vh - var(--sheet-top, 48px) - 48px); min-height: 420px; }
 }
 .project-blocks.is-first { margin-top: clamp(40px, 5vw, 72px); }
 .pb-embed iframe { display: block; width: 100%; height: calc(clamp(320px, 65vh, 720px) + 40px); border: 0; } /* +40px: Platz für den Schatten der Leiste */

@@ -7,10 +7,40 @@
   "cover": "/assets/projects/better-poster.webp",
   "coverMobile": "/assets/projects/better-ubahn.webp",
   "blocks": [
-    { "type": "text", "title": "Die Aufgabe", "text": "Platzhalter: Hier steht später, mit welcher Ausgangslage das Projekt gestartet ist." },
-    { "type": "image", "image": "/assets/projects/better-mayo.webp", "alt": "Better. Verpackung", "size": "full" },
-    { "type": "image", "image": "/assets/projects/better-ubahn.webp", "alt": "Better. Plakat in der U-Bahn", "size": "half" },
-    { "type": "image", "image": "/assets/projects/better-poster.webp", "alt": "Better. Plakat", "size": "half" },
-    { "type": "text", "title": "Das Ergebnis", "text": "Platzhalter: Was ist daraus geworden, wo ist es im Einsatz, und was hat es bewirkt?" }
+    {
+      "type": "text",
+      "title": "Die Aufgabe",
+      "text": "Platzhalter: Hier steht später, mit welcher Ausgangslage das Projekt gestartet ist."
+    },
+    {
+      "type": "image",
+      "image": "/assets/projects/better-mayo.webp",
+      "alt": "Better. Verpackung",
+      "size": "full"
+    },
+    {
+      "type": "image",
+      "image": "/assets/projects/better-ubahn.webp",
+      "alt": "Better. Plakat in der U-Bahn",
+      "size": "half"
+    },
+    {
+      "type": "image",
+      "image": "/assets/projects/better-poster.webp",
+      "alt": "Better. Plakat",
+      "size": "half"
+    },
+    {
+      "type": "text",
+      "title": "Das Ergebnis",
+      "text": "Platzhalter: Was ist daraus geworden, wo ist es im Einsatz, und was hat es bewirkt?"
+    }
+  ],
+  "featured": true,
+  "order": 1,
+  "categories": [
+    "Branding",
+    "Kampagne",
+    "Packaging"
   ]
 }

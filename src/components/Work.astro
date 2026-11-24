@@ -1,7 +1,7 @@
 ---
 import work from '../data/work.json';
 import Poster from './Poster.astro';
-import { projectUrl } from '../lib/projects.js';
+import { featuredProjects, projectUrl, projectsIndexUrl } from '../lib/projects.js';
 ---
 <section class="work" id="arbeiten" data-nav="Projects" aria-labelledby="arbeiten-title">
       <div class="wrap section-head reveal">
@@ -14,10 +14,10 @@ import { projectUrl } from '../lib/projects.js';
 
       <div class="slider reveal" id="slider" aria-roledescription="Karussell" aria-label="Ausgewählte Projekte">
         <div class="track" id="track">
-          {work.slides.map((s) => (
-            <a class="slide" href={s.project ? projectUrl(s.project) : '#arbeiten'} data-project={s.project} draggable="false" aria-label={s.title}>
-              <Poster image={s.image} imageMobile={s.imageMobile} pos={s.pos} />
-              <div class="cap"><span class="cap-text"><b>{s.title}</b></span><span class="btn-dot" aria-hidden="true"><svg><use href="#arrow"/></svg></span></div>
+          {featuredProjects.map((p) => (
+            <a class="slide" href={p.hasPage ? projectUrl(p.slug) : projectsIndexUrl} data-project={p.hasPage ? p.slug : undefined} draggable="false" aria-label={p.title}>
+              <Poster image={p.cover} imageMobile={p.coverMobile} pos={p.coverPos} />
+              <div class="cap"><span class="cap-text"><b>{p.title}</b></span><span class="btn-dot" aria-hidden="true"><svg><use href="#arrow"/></svg></span></div>
             </a>
           ))}
         </div>
@@ -25,7 +25,7 @@ import { projectUrl } from '../lib/projects.js';
           <div class="dots" id="dots"></div>
           <div class="slider-more">
             <p>{work.moreText}</p>
-            <a class="btn secondary" href="#arbeiten"><span class="btn-label">{work.moreButton}</span><span class="btn-dot" aria-hidden="true"><svg><use href="#arrow"/></svg></span></a>
+            <a class="btn secondary" href={projectsIndexUrl}><span class="btn-label">{work.moreButton}</span><span class="btn-dot" aria-hidden="true"><svg><use href="#arrow"/></svg></span></a>
           </div>
         </div>
       </div>

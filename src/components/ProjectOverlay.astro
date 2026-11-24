@@ -2,10 +2,11 @@
 // Overlay-Hülle: fährt von unten herein, oben bleibt ein abgedunkelter Streifen der Seite sichtbar.
 // Griff und X kleben oben in der Karte, auch beim Scrollen.
 // Schließen: X, nach unten wischen (am Griff oder ganz oben im Inhalt), Klick auf den dunklen Bereich, Esc, Zurück.
-const { open = false } = Astro.props;
+// home / homeTitle: wohin das Schließen führt, wenn das Overlay direkt aufgerufen wurde (Standard: Startseite)
+const { open = false, home, homeTitle = 'Schah Sedi Startseite' } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
-<div class:list={['sheet-layer', { 'is-open': open, 'no-anim': open }]} id="sheet-layer" data-home={base} hidden={!open}>
+<div class:list={['sheet-layer', { 'is-open': open, 'no-anim': open }]} id="sheet-layer" data-home={home || base} data-home-title={homeTitle} hidden={!open}>
   <div class="sheet-backdrop" id="sheet-backdrop" aria-hidden="true"></div>
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="project-title">
     <div class="sheet-bar" id="sheet-bar">

@@ -7,7 +7,8 @@
 // Breite (ganz und aufgeklappt) richtet sich nach dem längsten Wort aus Menü und Bereichsnamen.
 // Die Form ist ein Vektorpfad, die Bewegung kommt aus Federn.
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
-const links = [['#arbeiten', 'Projects'], ['#leistungen', 'Services'], ['#ueber-mich', 'Personal'], [`${base}playground/buchmacher/`, 'Playground'], ['#kontakt', 'Contact']];
+// Projects und Playground führen auf ihre Übersichtsseiten, die übrigen auf ihre Section der Startseite (auch von Unterseiten aus)
+const links = [[`${base}projekte/`, 'Projects'], [`${base}#leistungen`, 'Services'], [`${base}#ueber-mich`, 'Personal'], [`${base}playground/`, 'Playground'], [`${base}#kontakt`, 'Contact']];
 ---
 <div class="lq" id="lq">
   <!-- Desktop: schlichte weiße Pille mit CSS-Schatten (teilt sich nie, braucht keine flüssige Form) -->
@@ -32,7 +33,7 @@ const links = [['#arbeiten', 'Projects'], ['#leistungen', 'Services'], ['#ueber-
     <span class="lq-ind" aria-hidden="true"></span>
     {links.map(([href, label]) => <a href={href} tabindex="-1">{label}</a>)}
   </nav>
-  <a class="lq-btn lq-logo" id="lq-logo" href="#start" aria-label="Schah Sedi, zum Seitenanfang"><svg aria-hidden="true"><use href="#logo" /></svg></a>
+  <a class="lq-btn lq-logo" id="lq-logo" href={`${base}#start`} aria-label="Schah Sedi, zum Seitenanfang"><svg aria-hidden="true"><use href="#logo" /></svg></a>
   <button class="lq-btn lq-toggle" id="lq-toggle" type="button" aria-expanded="false" aria-controls="lq-links" aria-label="Menü öffnen"><i></i><i></i><i></i></button>
   <!-- Messhilfe für die Breite -->
   <span class="lq-measure" id="lq-measure" aria-hidden="true"></span>
