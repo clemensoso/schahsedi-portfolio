@@ -8,8 +8,9 @@
   var backdrop = document.getElementById('sheet-backdrop');
   var closeBtn = document.getElementById('sheet-close');
   var grip = layer.querySelector('.sheet-grip');
-  var home = layer.dataset.home;
-  var homeTitle = layer.dataset.homeTitle || 'Schah Sedi Startseite';
+  // Ziel beim Schließen: wird bei jedem Schließen frisch gelesen, weil die Arbeiten-Übersicht es beim Wechsel umstellt
+  function home() { return layer.dataset.home; }
+  function homeTitle() { return layer.dataset.homeTitle || 'Schah Sedi Startseite'; }
   var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Fokus nur dann von Skript aus setzen, wenn jemand mit Tab unterwegs ist.
@@ -80,7 +81,7 @@
     isOpen = false;
     layer.classList.remove('is-open');
     lockPage(false);
-    document.title = homeTitle;
+    document.title = homeTitle();
     hideTimer = setTimeout(function () {
       layer.hidden = true;
       sheet.style.removeProperty('--drag');
@@ -88,7 +89,7 @@
     }, calm ? 0 : 660);
     if (!fromHistory) {
       if (pushed) history.back();
-      else history.replaceState(null, '', home);
+      else history.replaceState(null, '', home());
     }
     pushed = false;
     if (opener && tabbing) opener.focus({ preventScroll: true });

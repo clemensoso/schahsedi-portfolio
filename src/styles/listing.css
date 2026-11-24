@@ -4,27 +4,46 @@ main.page { position: relative; z-index: 1; background: #FFFFFF; padding: calc(e
 
 /* Kopf mittig: Umschalter, Titel, Text, Filter */
 .listing-head { display: grid; gap: var(--space-5); justify-items: center; text-align: center; margin-bottom: clamp(56px, 8vw, 112px); }
-.listing-head h1 { font-size: var(--fs-display); }
-.listing-head p { max-width: 36em; color: var(--muted); font-size: var(--fs-body-l); line-height: var(--lh-body); }
+.listing-head h1 { font-size: var(--fs-h1); }
 
-/* Umschalter Projekte | Playground: dunkle Pille gleitet beim Wechsel hinüber */
-.work-switch { position: relative; display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; padding: 5px; border-radius: var(--radius-pill); background: #F1EFEA; isolation: isolate; }
-.work-switch a { position: relative; z-index: 1; padding: 10px 20px; border-radius: var(--radius-pill); font-size: var(--fs-small); font-weight: 600; color: var(--brand-ink); text-decoration: none; text-align: center; transition: color 320ms var(--ease-out); }
-.work-switch a[aria-current="page"] { color: #FFFFFF; }
-@media (hover: hover) { .work-switch a:not([aria-current]):hover { color: #000; } }
-.work-switch-ind { position: absolute; z-index: 0; top: 5px; bottom: 5px; left: 5px; width: calc(50% - 5px); border-radius: var(--radius-pill); background: var(--brand-ink); transition: translate 420ms var(--ease-out); }
-.work-switch-ind[data-at="1"] { translate: 100% 0; }
-
-/* Filter: Tasten wie die Auswahl-Chips im Kontaktformular */
-.filter { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); max-width: 760px; }
-.filter-btn {
-  border: 1px solid var(--chip-border); border-radius: var(--radius-pill); background: transparent; color: inherit;
-  padding: 9px 16px; font: 500 var(--fs-small)/1 var(--font-sans); cursor: pointer;
-  transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+/* Zwei Skalen: oben Projekte | Playground (dunkle Pille, Anzahl als gelbes Badge), unten der Bereich (gelbe Pille).
+   Die Pillen stehen fest in der Mitte, die Skalen laufen darunter durch (Physik in scripts/work-slider.js). */
+.sl { width: 100%; max-width: 980px; display: grid; justify-items: center; gap: clamp(22px, 3.4vw, 36px); }
+.sl-row { position: relative; width: 100%; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; outline: none; }
+.sl-row.l1 { height: 74px; } .sl-row.l2 { height: 62px; }
+.sl-row.is-drag { cursor: grabbing; }
+.sl-row:focus-visible .sl-pill { box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px var(--brand-ink); }
+.sl-scale { position: absolute; z-index: 1; inset: 0; overflow: hidden;
+  -webkit-mask: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent); mask: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent); }
+.sl-scale, .sl-pill { transition: opacity 120ms var(--ease-out); }
+.sl-row.is-out .sl-scale, .sl-row.is-out .sl-pill { opacity: 0; }
+/* feine Striche; jeder Eintrag hat einen langen Strich, der genau auf einem kurzen liegt */
+.sl-strip { position: absolute; left: 0; top: 0; bottom: 0; display: flex; padding-inline: 50vw; will-change: transform;
+  background: repeating-linear-gradient(90deg, #CFCBC2 0 1px, transparent 1px 9px) 0 100% / 100% 9px no-repeat; }
+.l2 .sl-strip { background: repeating-linear-gradient(90deg, #D8D4CC 0 1px, transparent 1px 7px) 0 100% / 100% 6px no-repeat; }
+.sl-item { position: relative; flex: none; display: flex; align-items: center; justify-content: center; padding: 0 26px 22px; white-space: nowrap;
+  color: #9A968D; font: 600 1.0625rem/1 var(--font-sans); letter-spacing: -0.01em; transition: color 200ms var(--ease-out); }
+.l2 .sl-item { font-size: 0.9375rem; font-weight: 500; padding-inline: 18px; }
+.sl-item::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 1px; height: 15px; border-radius: 1px; background: #8F8B83; }
+.l2 .sl-item::after { height: 10px; background: #ABA79E; }
+.sl-item.on { color: var(--brand-ink); }
+.l1 .sl-item.on { color: #FFFFFF; }
+.sl-pill { position: absolute; z-index: 0; left: 50%; translate: -50% 0; border-radius: var(--radius-pill); pointer-events: none; }
+.l1 .sl-pill { top: 6px; height: 40px; background: var(--brand-ink); box-shadow: 0 6px 16px -6px rgb(0 0 0 / 0.5); }
+.l2 .sl-pill { top: 4px; height: 32px; background: var(--brand-yellow); box-shadow: 0 4px 12px -5px rgb(150 105 0 / 0.5); }
+/* Anzahl als Badge oben rechts an der dunklen Pille, nur am gewählten Eintrag und erst, wenn die Skala steht */
+.sl-word { position: relative; }
+.sl-badge { position: absolute; left: 100%; bottom: 100%; translate: 9px 3px; min-width: 20px; height: 20px; padding: 0 6px; display: grid; place-items: center; border-radius: var(--radius-pill);
+  background: var(--brand-yellow); color: var(--brand-ink); box-shadow: 0 0 0 2px #FFFFFF; font: 700 0.6875rem/1 var(--font-sans); font-variant-numeric: tabular-nums; letter-spacing: 0;
+  scale: 0; opacity: 0; transition: scale 240ms var(--ease-out), opacity 160ms var(--ease-out); }
+.sl-item.sel .sl-badge { scale: 1; opacity: 1; transition: scale 380ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 120ms var(--ease-out); }
+@media (max-width: 599px) {
+  .sl-item { font-size: 1rem; }
+  .l2 .sl-item { padding-inline: 15px; font-size: 0.875rem; }
+  .sl-scale { -webkit-mask: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); mask: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
 }
-@media (hover: hover) { .filter-btn:hover { background: #F1EFEA; } }
-.filter-btn[aria-pressed="true"], .filter-btn[aria-pressed="true"]:hover { background: var(--brand-ink); color: #FFFFFF; }
-.filter-btn:active { scale: 0.96; }
+@media (prefers-reduced-motion: reduce) { .sl-badge, .sl-item.sel .sl-badge { transition: none; } }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* Raster mit viel Luft: 2 Spalten, ab 900 px 3 Spalten */
 .grid {
@@ -33,6 +52,16 @@ main.page { position: relative; z-index: 1; background: #FFFFFF; padding: calc(e
 }
 @media (min-width: 900px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .card[hidden] { display: none; }
+/* Auftritt (nur mit Skript, Klasse js): beide Skalen blenden nacheinander ein und gleiten von rechts an ihren Platz;
+   Kacheln kommen beim Sichtbarwerden von unten, danach fächert der Bildstapel auf */
+.work.js .sl-row { opacity: 0; translate: 0 12px; }
+.work.js.is-ready .sl-row { opacity: 1; translate: none; transition: opacity 500ms var(--ease-out), translate 700ms var(--ease-out); }
+.work.js.is-ready .sl-row.l2 { transition-delay: 110ms; }
+.work.js .card:not(.in) { opacity: 0; translate: 0 32px; }
+.work.js .card.in:not(.done) { transition: opacity 700ms var(--ease-out) var(--d, 0ms), translate 900ms var(--ease-out) var(--d, 0ms); }
+.work.js .card:not(.in) .stack .stack-layer { transform: none; }
+.work.js .card.in:not(.done) .stack-layer { transition-delay: calc(var(--d, 0ms) + 180ms); }
+@media (prefers-reduced-motion: reduce) { .work.js .sl-row, .work.js .card:not(.in) { opacity: 1; translate: none; } }
 .card-link { position: relative; display: grid; gap: clamp(14px, 2vw, 24px); color: inherit; text-decoration: none; }
 .card-media { position: relative; display: block; aspect-ratio: 1 / 1; }
 
@@ -51,10 +80,11 @@ main.page { position: relative; z-index: 1; background: #FFFFFF; padding: calc(e
 .stack .l0 { transform: rotate(0deg); }
 /* Überfahren: Stapel fächert etwas weiter auf, oberstes Bild hebt sich leicht */
 @media (hover: hover) {
-  .card-link:not(.is-static):hover .l0 { transform: translateY(-2%) rotate(-1deg) scale(1.01); }
-  .card-link:not(.is-static):hover .stack[data-n="2"] .l1 { transform: translate(6%, -7%) rotate(6deg); }
-  .card-link:not(.is-static):hover .stack[data-n="3"] .l1 { transform: translate(-7%, -8%) rotate(-7deg); }
-  .card-link:not(.is-static):hover .stack[data-n="3"] .l2 { transform: translate(8%, -4%) rotate(7deg); }
+  .card-link:hover .l0 { transform: translateY(-2%) rotate(-1deg) scale(1.01); }
+  .card-link:hover .stack[data-n="1"] .l0 { transform: translateY(-2%) rotate(-2.5deg) scale(1.015); } /* nur ein Bild: etwas deutlicher drehen, damit es ebenso lebendig wirkt */
+  .card-link:hover .stack[data-n="2"] .l1 { transform: translate(6%, -7%) rotate(6deg); }
+  .card-link:hover .stack[data-n="3"] .l1 { transform: translate(-7%, -8%) rotate(-7deg); }
+  .card-link:hover .stack[data-n="3"] .l2 { transform: translate(8%, -4%) rotate(7deg); }
 }
 @media (prefers-reduced-motion: reduce) { .stack-layer { transition: none; } }
 
@@ -63,7 +93,6 @@ main.page { position: relative; z-index: 1; background: #FFFFFF; padding: calc(e
 .card-text small { color: var(--muted); font-size: var(--fs-small); line-height: 1.5; }
 .card-tag { margin-bottom: 4px; padding: 4px 10px; border-radius: var(--radius-pill); background: #F1EFEA; font-size: var(--fs-label); font-weight: 600; }
 .card-link:focus-visible { outline: 2px solid var(--brand-yellow); outline-offset: 10px; border-radius: 22px; }
-.listing-empty { color: var(--muted); margin-top: var(--space-6); text-align: center; }
 @media (max-width: 599px) {
   .card-text small { font-size: var(--fs-label); }
 }

@@ -1,0 +1,78 @@
+---
+// Arbeiten-Übersicht für /projekte/ und /playground/: oben die Skala Projekte | Playground, darunter die Bereiche,
+// dann das Kachel-Raster. Beide Bereiche liegen auf jeder der zwei Seiten; initial bestimmt, welcher zuerst zu sehen ist.
+// Projekte mit eigener Seite öffnen sich im Projekt-Overlay, Playground-Arbeiten verlinken auf ihre eigene Seite.
+import CardStack from './CardStack.astro';
+import { allProjects, projectCategories, projectUrl, projectsIndexUrl } from '../lib/projects.js';
+import { playgroundItems, playgroundTypes, playgroundUrl } from '../lib/playground.js';
+
+const { initial = 'projekte' } = Astro.props; // 'projekte' | 'playground'
+const groups = [
+  { key: 'projekte', label: 'Projekte', url: projectsIndexUrl, title: 'Projekte · Schah Sedi', count: allProjects.length, cats: projectCategories },
+  { key: 'playground', label: 'Playground', url: playgroundUrl, title: 'Playground · Schah Sedi', count: playgroundItems.length, cats: playgroundTypes },
+];
+const current = groups.find((g) => g.key === initial) || groups[0];
+const projectPics = (p) => [...new Set([p.cover, ...(p.blocks || []).filter((b) => b.type === 'image' && b.image).map((b) => b.image), p.coverMobile].filter(Boolean))];
+---
+<section class="listing work" data-initial={current.key} aria-labelledby="listing-title">
+  <script is:inline>document.currentScript.parentElement.classList.add('js'); // Auftritt vorbereiten, bevor etwas sichtbar ist</script>
+  <header class="wrap listing-head">
+    <h1 class="sr-only" id="listing-title">{current.label}</h1>
+    <div class="sl" data-groups={JSON.stringify(groups)}>
+      <div class="sl-row l1" tabindex="0" role="listbox" aria-label="Arbeiten" data-pitch="9">
+        <span class="sl-pill" aria-hidden="true"></span>
+        <div class="sl-scale"><div class="sl-strip">
+          {groups.map((g) => (
+            <span class:list={['sl-item', { on: g === current, sel: g === current }]} role="option" aria-selected={g === current ? 'true' : 'false'}>
+              <span class="sl-word">{g.label}<b class="sl-badge" aria-label={`${g.count} Arbeiten`}>{g.count}</b></span>
+            </span>
+          ))}
+        </div></div>
+      </div>
+      <div class="sl-row l2" tabindex="0" role="listbox" aria-label="Bereich" data-pitch="7">
+        <span class="sl-pill" aria-hidden="true"></span>
+        <div class="sl-scale"><div class="sl-strip">
+          {['Alle', ...current.cats].map((c, i) => <span class:list={['sl-item', { on: i === 0 }]} role="option" aria-selected={i === 0 ? 'true' : 'false'}>{c}</span>)}
+        </div></div>
+      </div>
+    </div>
+  </header>
+
+  <ul class="wrap grid">
+    {allProjects.map((p) => {
+      const meta = [p.year, p.categories.join(', ')].filter(Boolean).join(' · ');
+      const inner = (
+        <>
+          <span class="card-media"><CardStack images={projectPics(p)} pos={p.coverPos} /></span>
+          <span class="card-text"><b>{p.title}</b>{meta && <small>{meta}</small>}</span>
+        </>
+      );
+      return (
+        <li class="card" data-kind="projekte" data-cats={JSON.stringify(p.categories)} hidden={current.key !== 'projekte'}>
+          {p.hasPage
+            ? <a class="card-link" href={projectUrl(p.slug)} data-project={p.slug}>{inner}</a>
+            : <div class="card-link is-static">{inner}</div>}
+        </li>
+      );
+    })}
+    {playgroundItems.map((it) => {
+      const Tag = it.href ? 'a' : 'div';
+      return (
+        <li class="card" data-kind="playground" data-cats={JSON.stringify([it.type].filter(Boolean))} hidden={current.key !== 'playground'}>
+          <Tag class:list={['card-link', { 'is-static': !it.href }]} href={it.href} target={it.external ? '_blank' : undefined} rel={it.external ? 'noopener' : undefined}>
+            <span class="card-media is-light"><CardStack images={[it.image, ...(it.images || [])]} pos={it.imagePos} /></span>
+            <span class="card-text">
+              {it.type && <span class="card-tag">{it.type}</span>}
+              <b>{it.title}</b>
+              {it.text && <small>{it.text}</small>}
+            </span>
+          </Tag>
+        </li>
+      );
+    })}
+  </ul>
+</section>
+
+<script>
+  import '../scripts/work-slider.js';
+</script>

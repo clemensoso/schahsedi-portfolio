@@ -4,7 +4,7 @@
 import Page from '../../layouts/Page.astro';
 import ProjectOverlay from '../../components/ProjectOverlay.astro';
 import ProjectArticle from '../../components/ProjectArticle.astro';
-import ProjectsCollection from '../../components/ProjectsCollection.astro';
+import WorkCollection from '../../components/WorkCollection.astro';
 import { projects, projectsIndexUrl } from '../../lib/projects.js';
 
 export function getStaticPaths() {
@@ -16,5 +16,5 @@ const { project } = Astro.props;
   <ProjectOverlay slot="overlay" open home={projectsIndexUrl} homeTitle="Projekte · Schah Sedi">
     <ProjectArticle project={project} />
   </ProjectOverlay>
-  <ProjectsCollection />
+  <WorkCollection initial="projekte" />
 </Page>

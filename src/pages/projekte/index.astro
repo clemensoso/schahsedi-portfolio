@@ -2,10 +2,10 @@
 // Sammlung aller Projekte. Projekte mit eigener Seite öffnen sich als Overlay über dieser Seite.
 import Page from '../../layouts/Page.astro';
 import ProjectOverlay from '../../components/ProjectOverlay.astro';
-import ProjectsCollection from '../../components/ProjectsCollection.astro';
+import WorkCollection from '../../components/WorkCollection.astro';
 import { projectsIndexUrl } from '../../lib/projects.js';
 ---
 <Page title="Projekte · Schah Sedi" description="Alle Projekte von Schah Sedi: Branding, Packaging, Editorial und mehr.">
   <ProjectOverlay slot="overlay" home={projectsIndexUrl} homeTitle="Projekte · Schah Sedi" />
-  <ProjectsCollection />
+  <WorkCollection initial="projekte" />
 </Page>

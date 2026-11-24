@@ -1,8 +1,12 @@
 ---
 // Übersicht aller Playground-Arbeiten. Die Werkzeuge selbst liegen als eigene Seiten darunter (z. B. /playground/buchmacher/).
+// Über die obere Skala wechselt man auf derselben Seite zu den Projekten; die öffnen sich dann im Projekt-Overlay.
 import Page from '../../layouts/Page.astro';
-import PlaygroundCollection from '../../components/PlaygroundCollection.astro';
+import ProjectOverlay from '../../components/ProjectOverlay.astro';
+import WorkCollection from '../../components/WorkCollection.astro';
+import { playgroundUrl } from '../../lib/playground.js';
 ---
 <Page title="Playground · Schah Sedi" description="Werkzeuge und Experimente aus dem Studio von Schah Sedi.">
-  <PlaygroundCollection />
+  <ProjectOverlay slot="overlay" home={playgroundUrl} homeTitle="Playground · Schah Sedi" />
+  <WorkCollection initial="playground" />
 </Page>
