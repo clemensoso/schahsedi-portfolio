@@ -144,12 +144,13 @@ function Dial(row, opts) {
     else if (e.key === 'End') { e.preventDefault(); go(items.length - 1); }
   });
   function refresh() { if (!strip.children.length) return; measure(); stop(); x = target = xFor(idx); v = 0; paint(); }
-  if (window.ResizeObserver) new ResizeObserver(refresh).observe(row);
+  // nur bei echter Größenänderung neu messen; der erste Aufruf direkt nach dem Beobachten würde sonst den Auftritt abbrechen
+  if (window.ResizeObserver) new ResizeObserver(function () { if (row.clientWidth !== W) refresh(); }).observe(row);
   return {
     refresh: refresh,
     jump: function (i) { idx = i; refresh(); },
-    // Auftritt: Skala steht seitlich versetzt und gleitet mit weicherer Feder an ihren Platz, wie ein Sender, der einrastet
-    intro: function (offset) { refresh(); x = target + offset; paint(); go(idx, 0); spring(150); },
+    // Auftritt: Skala steht seitlich versetzt und gleitet mit derselben Feder an ihren Platz wie beim Klicken
+    intro: function (offset) { refresh(); x = target + offset; paint(); go(idx, 0); },
     // neue Einträge; die Skala fährt von der Seite her auf den ersten
     set: function (html, i, from) {
       stop(); strip.innerHTML = html; live = -1; measure(); idx = i || 0;
