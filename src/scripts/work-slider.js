@@ -73,7 +73,9 @@ function Dial(row, opts) {
     if (!drag.moved) {
       if (Math.abs(dx) < 4) return;
       drag.moved = true; drag.x0 = e.clientX; dx = 0; drag.start = x;
-      row.classList.add('is-drag'); try { row.setPointerCapture(e.pointerId); } catch (err) {}
+      // Finger sind ohnehin an das Element gebunden; ausdrücklich fangen nur bei Maus und Stift.
+      // (iOS Safari meldet sonst sofort „Zeiger verloren“ und die Geste bräche ab.)
+      row.classList.add('is-drag'); if (e.pointerType !== 'touch') try { row.setPointerCapture(e.pointerId); } catch (err) {}
     }
     // ohne Raw-Ereignisse wirkt der Finger auf schnellen Displays manchmal ruckelig: alle Zwischenpunkte mitnehmen
     x = rubber(drag.start + dx);
@@ -101,8 +103,19 @@ function Dial(row, opts) {
   }
   row.addEventListener('pointerup', function (e) { release(e, false); });
   row.addEventListener('pointercancel', function (e) { release(e, true); });
-  row.addEventListener('lostpointercapture', function (e) { if (drag && drag.moved) release(e, false); });
+  row.addEventListener('lostpointercapture', function (e) { if (e.pointerType !== 'touch' && drag && drag.moved) release(e, false); });
   row.addEventListener('dragstart', function (e) { e.preventDefault(); });
+  // iOS Safari: touch-action allein reicht dort nicht, Safari nimmt sich die waagerechte Geste und bricht die
+  // Zeiger-Ereignisse ab. Sobald klar ist, dass seitlich gewischt wird, die Touch-Bewegung selbst behalten.
+  var t0 = null;
+  row.addEventListener('touchstart', function (e) { var t = e.touches[0]; t0 = { x: t.clientX, y: t.clientY, dir: 0 }; }, { passive: true });
+  row.addEventListener('touchmove', function (e) {
+    if (!t0 || e.touches.length > 1) return;
+    var t = e.touches[0], dx = t.clientX - t0.x, dy = t.clientY - t0.y;
+    if (!t0.dir && (Math.abs(dx) > 3 || Math.abs(dy) > 3)) t0.dir = Math.abs(dx) > Math.abs(dy) ? 1 : 2;
+    if (t0.dir === 1 && e.cancelable) e.preventDefault();
+  }, { passive: false });
+  row.addEventListener('touchend', function () { t0 = null; });
   // Trackpad und Mausrad (seitlich oder mit Shift); senkrechtes Scrollen bleibt bei der Seite.
   // macOS schickt nach dem Loslassen noch lange abklingende Ereignisse (Nachlauf). Sobald der Nachlauf beginnt,
   // übernimmt die eigene Physik mit der gemessenen Geschwindigkeit, der Rest des Nachlaufs wird ignoriert.
@@ -183,13 +196,10 @@ function initWork(root) {
   function subs(k) { return [['', 'Alle']].concat(group(k).cats.map(function (c) { return [c, c]; })); }
   function subHtml(list) { return list.map(function (o, j) { return '<span class="sl-item" role="option" aria-selected="' + (j === 0) + '">' + esc(o[1]) + '</span>'; }).join(''); }
   var calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var revealHidden = function () {};
   function show() {
     cards.forEach(function (c) {
       var on = c.dataset.kind === s.l1 && (!s.l2 || JSON.parse(c.dataset.cats).indexOf(s.l2) >= 0);
-      // durch den Filter wieder sichtbar: kurz von unten einblenden
-      if (on && c.hidden && c.animate && !calm) c.animate([{ opacity: 0, translate: '0 12px' }, { opacity: 1, translate: '0 0' }], { duration: 420, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });
-      if (on && c.hidden) revealHidden(c); // durch den Filter sichtbar: eigene Einblendung, ohne Warten aufs Scrollen
+      // durch den Filter sichtbar gewordene Kacheln blendet der Beobachter ein wie beim Scrollen
       c.hidden = !on;
     });
   }
@@ -228,26 +238,32 @@ function initWork(root) {
   }
   if (document.fonts) { document.fonts.ready.then(intro); setTimeout(intro, 500); } else intro();
 
-  // Kacheln: beim ersten Sichtbarwerden von unten einblenden, der Bildstapel fächert danach auf.
+  // Kacheln: jedes Mal, wenn sie ins Bild kommen, von unten einblenden; der Bildstapel fächert danach auf.
   // Was zusammen sichtbar wird, kommt leicht versetzt nacheinander; beim ersten Laden nach den Skalen.
+  // Ganz aus dem Bild verschwunden, gehen sie wieder in den Ausgangszustand (unsichtbar), damit der Auftritt erneut spielt.
   var first = true;
   function reveal(list) {
     list.sort(function (a, b) { var r = a.getBoundingClientRect(), q = b.getBoundingClientRect(); return r.top - q.top || r.left - q.left; });
     list.forEach(function (c, i) {
-      c.style.setProperty('--d', ((first ? 220 : 0) + i * 90) + 'ms');
+      var d = (first ? 220 : 0) + i * 90;
+      clearTimeout(c._t); c.classList.remove('done');
+      c.style.setProperty('--d', d + 'ms');
       c.classList.add('in');
-      setTimeout(function () { c.classList.add('done'); c.style.removeProperty('--d'); }, (first ? 220 : 0) + i * 90 + 1400);
+      c._t = setTimeout(function () { c.classList.add('done'); c.style.removeProperty('--d'); }, d + 1400);
     });
     first = false;
   }
+  function reset(c) { clearTimeout(c._t); c.classList.remove('in', 'done'); c.style.removeProperty('--d'); }
   if (calm || !window.IntersectionObserver) cards.forEach(function (c) { c.classList.add('in', 'done'); });
   else {
-    var io = new IntersectionObserver(function (entries) {
-      var list = entries.filter(function (e) { return e.isIntersecting; }).map(function (e) { io.unobserve(e.target); return e.target; });
+    var show_ = new IntersectionObserver(function (entries) {
+      var list = entries.filter(function (e) { return e.isIntersecting && !e.target.classList.contains('in'); }).map(function (e) { return e.target; });
       if (list.length) reveal(list);
     }, { rootMargin: '0px 0px -8% 0px' });
-    cards.forEach(function (c) { if (!c.hidden) io.observe(c); });
-    revealHidden = function (c) { io.unobserve(c); c.classList.add('in', 'done'); };
+    var hide_ = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (!e.isIntersecting) reset(e.target); });
+    });
+    cards.forEach(function (c) { show_.observe(c); hide_.observe(c); });
   }
 }
 

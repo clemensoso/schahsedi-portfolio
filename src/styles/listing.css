@@ -52,6 +52,8 @@ main.page { position: relative; z-index: 1; background: #FFFFFF; padding: calc(e
   column-gap: clamp(20px, 6vw, 120px); row-gap: clamp(40px, 7vw, 120px); max-width: 1240px; margin-inline: auto;
 }
 @media (min-width: 900px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+/* Handy: mehr Rand, damit die leicht gedrehten Bilder nicht an den Bildschirmrand stoßen */
+@media (max-width: 719px) { .grid { padding-left: max(30px, env(safe-area-inset-left, 0px)); padding-right: max(30px, env(safe-area-inset-right, 0px)); column-gap: 26px; } }
 .card[hidden] { display: none; }
 /* Auftritt (nur mit Skript, Klasse js): beide Skalen blenden nacheinander ein und gleiten von rechts an ihren Platz;
    Kacheln kommen beim Sichtbarwerden von unten, danach fächert der Bildstapel auf */
