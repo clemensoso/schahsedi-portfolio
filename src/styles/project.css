@@ -3,10 +3,12 @@
    Die Seite dahinter bleibt stehen (per JS), ihre Scrollbar wird nicht ausgeblendet, damit nichts springt. */
 .sheet-layer {
   position: fixed; inset: 0; z-index: 100;
-  /* Test: Karte fährt weiter nach oben und hat ab Tablet seitlich etwas Luft */
-  --sheet-top: clamp(16px, 3vh, 32px); --sheet-x: 0px;
+  /* Karte fährt weit nach oben; ab Tablet gleicher Abstand oben, links und rechts.
+     Eckenradius = Abstand des Schließen-Knopfs vom Rand + sein Radius: so laufen Ecke und Kreis parallel */
+  --sheet-top: clamp(16px, 3vh, 32px); --sheet-x: 0px; --sheet-r: 40px;
 }
-@media (min-width: 760px) { .sheet-layer { --sheet-x: clamp(16px, 2.4vw, 40px); } }
+@media (min-width: 720px) { .sheet-layer { --sheet-r: 48px; } }
+@media (min-width: 760px) { .sheet-layer { --sheet-top: clamp(16px, 2.2vw, 32px); --sheet-x: var(--sheet-top); } }
 .sheet-layer[hidden] { display: none; }
 .sheet-layer.no-anim, .sheet-layer.no-anim * { transition: none !important; }
 
@@ -18,7 +20,7 @@
   opacity: 0; transition: opacity 520ms var(--ease-out);
 }
 /* erst wenn die Karte oben angekommen ist, auf den Streifen über der Karte kürzen */
-.sheet-layer.is-open .sheet-backdrop { opacity: var(--shade, 1); height: calc(var(--sheet-top) + clamp(28px, 4vw, 56px) + 8px); transition: opacity 520ms var(--ease-out), height 0s 660ms; }
+.sheet-layer.is-open .sheet-backdrop { opacity: var(--shade, 1); height: calc(var(--sheet-top) + var(--sheet-r) + 8px); transition: opacity 520ms var(--ease-out), height 0s 660ms; }
 .sheet-layer:has(.sheet.dragging) .sheet-backdrop { height: 100%; transition: none; }
 /* Mit seitlicher Luft muss die Abdunklung auch neben der Karte liegen, also ganz nach unten reichen */
 @media (min-width: 760px) { .sheet-layer.is-open .sheet-backdrop { height: 100%; } }
@@ -27,7 +29,6 @@
   /* immer helle Farben, egal welcher Ton gerade auf der Seite liegt */
   --bg: #FFFFFF; --fg: #222222; --muted: #5E5B55; --line: #DCD9D2;
   --accent-text: #222222; --hl-bg: #FEC31E; --sec-bg: #FFFFFF; --chip-border: #222222;
-  --sheet-r: clamp(28px, 4vw, 56px); /* gleicher Radius wie Projekte- und Kontakt-Karte */
   position: absolute; top: var(--sheet-top); left: var(--sheet-x); right: var(--sheet-x); bottom: 0;
   background: #FFFFFF; color: var(--fg); color-scheme: light;
   border-radius: var(--sheet-r) var(--sheet-r) 0 0;
